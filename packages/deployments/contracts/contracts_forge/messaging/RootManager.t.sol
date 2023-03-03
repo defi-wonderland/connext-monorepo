@@ -382,6 +382,7 @@ contract RootManager_ProposeAggregateRoot is Base {
 
   function setUp() public virtual override {
     super.setUp();
+    // custom stuff for this particular function
   }
 
   function test_expectRevertInvalidDomains(
