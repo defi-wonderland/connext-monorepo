@@ -174,6 +174,34 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
   // ============ Public Functions ============
 
   /**
+   * @notice Propose a new aggregate root
+   * @dev The array snapshot roots is only provided for DA. Also it needed to check in the moment of the propose what are
+   * the the valid domains and store them on the propose data
+   * This is gonna be used by the off-chain scripts to know which domains to check when validating the proposition.
+   * This is to avoid problems if a new domains is added in the middle of an on-going propose
+   *
+   * @param _snapshotId The snapshot root
+   * @param _aggregateRoot The new aggregate root
+   * @param _snapshotsRoots The array with all snapshots roots used to generate the aggregateRoot
+   * @param _domains The array with all the domains in the correct order
+   */
+  function proposeAggregateRoot(
+    uint256 _snapshotId,
+    bytes32 _aggregateRoot,
+    bytes32[] calldata _snapshotsRoots,
+    uint32[] calldata _domains
+  ) external onlyOptimisticMode checkDomains(_domains) {
+    if (_snapshotId == 0 || _aggregateRoot == 0) revert InvalidAggregateRoot();
+    if (_snapshotId != block.timestamp / 30 minutes) revert InvalidSnapshotId(_snapshotId);
+    if (proposedAggregateRoot.aggregateRoot > 0) revert AggregateRootInProgress();
+
+    uint256 _disputeCliff = block.timestamp + DISPUTE_TIME;
+    proposedAggregateRoot = ProposedData(_snapshotId, _disputeCliff, _aggregateRoot, _snapshotsRoots, _domains);
+
+    emit ProposeAggregateRoot(_snapshotId, _disputeCliff, _aggregateRoot, _snapshotsRoots, _domains);
+  }
+
+  /**
    * @notice This is called by relayers to take the current aggregate tree root and propagate it to all
    * spoke domains (via their respective hub connectors).
    * @dev Should be called by relayers at a regular interval.
