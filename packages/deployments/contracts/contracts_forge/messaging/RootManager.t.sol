@@ -2,6 +2,7 @@
 pragma solidity 0.8.17;
 
 import {RootManager} from "../../contracts/messaging/RootManager.sol";
+import {DomainIndexer} from "../../contracts/messaging/libraries/DomainIndexer.sol";
 import {IHubConnector} from "../../contracts/messaging/interfaces/IHubConnector.sol";
 import {MerkleTreeManager} from "../../contracts/messaging/MerkleTreeManager.sol";
 import {WatcherManager} from "../../contracts/messaging/WatcherManager.sol";
@@ -14,7 +15,40 @@ contract ReverterConnector {
   }
 }
 
-contract RootManagerTest is ForgeHelper {
+contract RootManagerForTest is DomainIndexer, RootManager {
+  constructor(
+    uint256 _delayBlocks,
+    address _merkle,
+    address _watcherManager
+  ) RootManager(_delayBlocks, _merkle, _watcherManager) {}
+
+  function forTest_SwitchMode() public {
+    optimisticMode = !optimisticMode;
+  }
+
+  function forTest_generateAndAddDomains(uint32[] memory _domains, address[] memory _connectors) public {
+    for (uint256 i; i < _domains.length; i++) {
+      addDomain(_domains[i], _connectors[i]);
+    }
+  }
+
+  function forTest_setProposeData(
+    uint256 _snapshotId,
+    bytes32 _aggregateRoot,
+    bytes32[] calldata _snapshotsRoots,
+    uint32[] calldata _domains
+  ) public {
+    proposedAggregateRoot = ProposedData(
+      _snapshotId,
+      block.timestamp + 30 minutes,
+      _aggregateRoot,
+      _snapshotsRoots,
+      _domains
+    );
+  }
+}
+
+contract Base is ForgeHelper {
   // ============ Errors ============
   error ProposedOwnable__onlyOwner_notOwner();
 
@@ -32,8 +66,10 @@ contract RootManagerTest is ForgeHelper {
   event PropagateFailed(uint32 domain, address connector);
 
   // ============ Storage ============
-  RootManager _rootManager;
+  RootManagerForTest _rootManager;
   uint256 _delayBlocks = 40;
+  bool _optimisticMode = true;
+  uint256 _disputeTime = 30 minutes;
   address _merkle;
   uint32[] _domains;
   address[] _connectors;
@@ -44,7 +80,7 @@ contract RootManagerTest is ForgeHelper {
   address watcherManager = address(2);
   address watcher = address(3);
 
-  function setUp() public {
+  function setUp() public virtual {
     _domains.push(1000);
     _connectors.push(address(1000));
     _fees.push(0);
@@ -59,7 +95,7 @@ contract RootManagerTest is ForgeHelper {
     MerkleTreeManager(_merkle).initialize(address(_rootManager));
 
     vm.prank(owner);
-    _rootManager = new RootManager(_delayBlocks, _merkle, watcherManager);
+    _rootManager = new RootManagerForTest(_delayBlocks, _merkle, watcherManager);
     MerkleTreeManager(_merkle).setArborist(address(_rootManager));
 
     // Env: roll ahead to an arbitrary block so we don't start at block zero.
@@ -108,7 +144,9 @@ contract RootManagerTest is ForgeHelper {
       }
     }
   }
+}
 
+contract RootManager_General is Base {
   // ============ RootManager.addConnector ============
   function test_RootManager__addConnector_shouldWork() public {
     uint32[] memory domains = new uint32[](1);
@@ -323,5 +361,102 @@ contract RootManagerTest is ForgeHelper {
 
     _rootManager.propagate(_connectors, _fees, _encodedData);
     assertEq(_rootManager.getPendingInboundRootsCount(), 0);
+  }
+}
+
+contract RootManager_Constructor is Base {
+  function test_checkConstructorArguments() public {
+    assertEq(_rootManager.DISPUTE_TIME(), _disputeTime);
+    assertEq(_rootManager.optimisticMode(), _optimisticMode);
+  }
+}
+
+contract RootManager_ProposeAggregateRoot is Base {
+  event ProposeAggregateRoot(
+    uint256 snapshotId,
+    uint256 timestamp,
+    bytes32 aggregateRoot,
+    bytes32[] snapshotsRoots,
+    uint32[] domains
+  );
+
+  function setUp() public virtual override {
+    super.setUp();
+  }
+
+  function test_expectRevertInvalidDomains(
+    uint256 snapshotId,
+    bytes32 aggregateRoot,
+    bytes32[] memory snapshotsRoots,
+    uint32[] memory domains
+  ) public {
+    vm.expectRevert(abi.encodeWithSelector(RootManager.InvalidDomains.selector));
+    _rootManager.proposeAggregateRoot(snapshotId, aggregateRoot, snapshotsRoots, domains);
+  }
+
+  function test_expectRevertSlowMode(
+    uint256 snapshotId,
+    bytes32 aggregateRoot,
+    bytes32[] memory snapshotsRoots
+  ) public {
+    _rootManager.forTest_generateAndAddDomains(_domains, _connectors);
+    _rootManager.forTest_SwitchMode();
+
+    vm.expectRevert(abi.encodeWithSelector(RootManager.SlowMode.selector));
+    _rootManager.proposeAggregateRoot(snapshotId, aggregateRoot, snapshotsRoots, _domains);
+  }
+
+  function test_expectRevertInvalidAggregateRootSnapshotId(bytes32 aggregateRoot, bytes32[] memory snapshotsRoots)
+    public
+  {
+    _rootManager.forTest_generateAndAddDomains(_domains, _connectors);
+
+    vm.expectRevert(abi.encodeWithSelector(RootManager.InvalidAggregateRoot.selector));
+    _rootManager.proposeAggregateRoot(0, aggregateRoot, snapshotsRoots, _domains);
+  }
+
+  function test_expectRevertInvalidAggregateRootAgreggateRoot(uint256 snapshotId, bytes32[] memory snapshotsRoots)
+    public
+  {
+    _rootManager.forTest_generateAndAddDomains(_domains, _connectors);
+
+    vm.expectRevert(abi.encodeWithSelector(RootManager.InvalidAggregateRoot.selector));
+    _rootManager.proposeAggregateRoot(snapshotId, 0, snapshotsRoots, _domains);
+  }
+
+  function test_expectRevertInvalidSnapshotId(
+    uint256 snapshotId,
+    bytes32 aggregateRoot,
+    bytes32[] memory snapshotsRoots
+  ) public {
+    vm.assume(snapshotId > 0 && aggregateRoot > 0 && snapshotId != block.timestamp / 30 minutes);
+
+    _rootManager.forTest_generateAndAddDomains(_domains, _connectors);
+
+    vm.expectRevert(abi.encodeWithSelector(RootManager.InvalidSnapshotId.selector, snapshotId));
+    _rootManager.proposeAggregateRoot(snapshotId, aggregateRoot, snapshotsRoots, _domains);
+  }
+
+  function test_expectRevertAggregateRootInProgress(bytes32 aggregateRoot, bytes32[] memory snapshotsRoots) public {
+    vm.assume(aggregateRoot > 0);
+
+    uint256 snapshotId = block.timestamp / 30 minutes;
+    _rootManager.forTest_generateAndAddDomains(_domains, _connectors);
+    _rootManager.forTest_setProposeData(snapshotId, aggregateRoot, snapshotsRoots, _domains);
+
+    vm.expectRevert(abi.encodeWithSelector(RootManager.AggregateRootInProgress.selector));
+    _rootManager.proposeAggregateRoot(snapshotId, aggregateRoot, snapshotsRoots, _domains);
+  }
+
+  function test_expectEmitProposeAggregateRoot(bytes32 aggregateRoot, bytes32[] memory snapshotsRoots) public {
+    vm.assume(aggregateRoot > 0);
+
+    _rootManager.forTest_generateAndAddDomains(_domains, _connectors);
+    uint256 snapshotId = block.timestamp / 30 minutes;
+
+    vm.expectEmit(true, true, true, true);
+    emit ProposeAggregateRoot(snapshotId, block.timestamp + 30 minutes, aggregateRoot, snapshotsRoots, _domains);
+
+    _rootManager.proposeAggregateRoot(snapshotId, aggregateRoot, snapshotsRoots, _domains);
   }
 }
