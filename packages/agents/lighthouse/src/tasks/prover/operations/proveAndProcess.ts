@@ -50,6 +50,7 @@ export const proveAndProcess = async () => {
   await Promise.all(
     domains.map(async (destinationDomain) => {
       try {
+        // We have this data from event: AggregateRootReceived(root)
         const curDestAggRoot: ReceivedAggregateRoot | undefined = await database.getLatestAggregateRoot(
           destinationDomain,
         );
@@ -66,6 +67,8 @@ export const proveAndProcess = async () => {
             .filter((domain) => domain != destinationDomain)
             .map(async (originDomain) => {
               try {
+                // Do we have this data? Is this messageRoot added through the propagate workflow?
+                // Fethces latest originDomain messageRoot
                 const latestMessageRoot: RootMessage | undefined = await database.getLatestMessageRoot(
                   originDomain,
                   curDestAggRoot.root,
@@ -83,6 +86,7 @@ export const proveAndProcess = async () => {
                     methodContext,
                     { batchSize: config.proverBatchSize, offset, originDomain, destinationDomain },
                   );
+                  // will we be able to identify which messages correspond to a snapshotRoot/ optistic spoke root?
                   const unprocessed: XMessage[] = await database.getUnProcessedMessagesByIndex(
                     originDomain,
                     destinationDomain,
@@ -170,17 +174,21 @@ export const processMessages = async (
   } = getContext();
   const { requestContext, methodContext } = createLoggingContext("processUnprocessedMessage", _requestContext);
 
+  // is this from the spokeConnector.send flow? When do you save data to have this inboundRoot matched with leaf count?
   // Count of leaf nodes in origin domain`s outbound tree with the targetMessageRoot as root
   const messageRootCount = await database.getMessageRootCount(originDomain, targetMessageRoot);
   if (messageRootCount === undefined) {
     throw new NoMessageRootCount(originDomain, targetMessageRoot);
   }
+  // Quest: which event is this data from? At what part of the flow on-chain is this data saved? We should probably
+  // be able to use the new rootManager.finalize() function to emit the aggregateRoot and the snapshotRoots added on it.
   // Index of messageRoot leaf node in aggregate tree.
   const messageRootIndex = await database.getMessageRootIndex(config.hubDomain, targetMessageRoot);
   if (messageRootIndex === undefined) {
     throw new NoMessageRootIndex(originDomain, targetMessageRoot);
   }
 
+  // Question: could we use rootManager.finalize() here too?
   // Get the currentAggregateRoot from on-chain state (or pending, if the validation period
   // has elapsed!) to determine which tree snapshot we should be generating the proof from.
   const targetAggregateRoot = await database.getAggregateRoot(targetMessageRoot);
@@ -188,11 +196,16 @@ export const processMessages = async (
     throw new NoAggregatedRoot();
   }
 
+  // question: could we use rootManager.finalize() here too?
   // Count of leafs in aggregate tree at targetAggregateRoot.
   const aggregateRootCount = await database.getAggregateRootCount(targetAggregateRoot);
   if (!aggregateRootCount) {
     throw new NoAggregateRootCount(targetAggregateRoot);
   }
+
+  // How these properties will be afected by the fact that in some periods of time all the insertions will be virtually and
+  // in others it will be done on-chain?
+  // can we achieve the same behaviour and functionallity of this script with optimistic mode and slow mode?
   // TODO: Move to per domain storage adapters in context
   const spokeStore = new SpokeDBHelper(originDomain, messageRootCount + 1, database);
   const hubStore = new HubDBHelper("hub", aggregateRootCount, database);
@@ -246,6 +259,7 @@ export const processMessages = async (
     return;
   }
 
+  // Possible problem too.
   // Proof path for proving inclusion of messageRoot in aggregateRoot.
   const messageRootProof = await hubSMT.getProof(messageRootIndex);
   if (!messageRootProof) {
