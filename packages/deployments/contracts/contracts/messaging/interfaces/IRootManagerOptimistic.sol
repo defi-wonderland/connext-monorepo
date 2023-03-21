@@ -40,32 +40,49 @@ interface IRootManager {
 
   /**
     @notice Emitted when a new aggregate root is proposed.
+    @dev Only emitted in Optimistic mode.
     @param _snapshotId The id of the snapshots used
     @param _disputeCliff The timestamp when the dispute period is over
     @param _aggregateRoot The new aggregate root
     @param _snapshotsRoots The list of the new roots added to aggregate tree
     @param _domains The list of domains used to fetch the inbound roots from
+    @param _baseAggregateRootUsed Aggregate root of the tree used to insert the inboundRoots. Subgraph DA. Naming could change.
   */
   event AggregateRootProposed(
     uint256 _snapshotId,
     uint256 _disputeCliff,
     bytes32 _aggregateRoot,
     bytes32[] _snapshotsRoots,
-    uint32[] _domains
+    uint32[] _domains,
+    bytes32 _baseAggregateRootUsed
   );
 
   /**
     @notice Emitted when a proposed root is finalized after dispute time is over.
+    @dev Only emitted in Optimistic mode.
     @param _snapshotId The id of the snapshots used
     @param _aggregateRoot The new aggregate root
     @param _snapshotsRoots The list of the new roots added to aggregate tree
     @param _domains The list of domains
+    @param _baseAggregateRootUsed Aggregate root of the tree used to insert the inboundRoots. Subgraph DA. Naming could change.
   */
   event ProposedRootFinalized(
     uint256 _snapshotId,
     bytes32 _aggregateRoot,
     bytes32[] _snapshotsRoots,
-    uint32[] _domains
+    uint32[] _domains,
+    bytes32 _baseAggregateRootUsed
+  );
+
+  /**
+    @notice Emitted when a optimistic aggregate root is propagated.
+    @dev Only emitted in Optimistic mode.
+    @param _aggregateRoot The aggregate root propagated
+    @param _domainsHash Hash generated from every supported domain.
+  */
+  event OptimisticRootPropagated(
+    bytes32 _aggregateRoot,
+    bytes32 _domainsHash
   );
 
   /*///////////////////////////////////////////////////////////////
