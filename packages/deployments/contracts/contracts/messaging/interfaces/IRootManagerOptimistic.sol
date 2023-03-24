@@ -10,18 +10,12 @@ interface IRootManager {
    * @notice Struct to store the proposed data
    * @dev The list of the snapshots roots and the domains must be in the
    * same order as the roots insertions on the tree and have the same length.
-   * @param snapshotId The id of the snapshots used
-   * @param disputeCliff The timestamp when the dispute period is over
    * @param aggregateRoot The new aggregate root
-   * @param snapshotsRoots The list of the new roots added to aggregate tree
-   * @param domains The list of domains used to fetch the inbound roots from
+   * @param disputeCliff The timestamp when the dispute period is over
    */
   struct ProposedData {
-    uint256 snapshotId;
-    uint256 disputeCliff;
     bytes32 aggregateRoot;
-    bytes32[] snapshotsRoots;
-    uint32[] domains;
+    uint256 disputeCliff;
   }
 
   /*///////////////////////////////////////////////////////////////
@@ -60,19 +54,9 @@ interface IRootManager {
   /**
     @notice Emitted when a proposed root is finalized after dispute time is over.
     @dev Only emitted in Optimistic mode.
-    @param _snapshotId The id of the snapshots used
     @param _aggregateRoot The new aggregate root
-    @param _snapshotsRoots The list of the new roots added to aggregate tree
-    @param _domains The list of domains
-    @param _baseAggregateRootUsed Aggregate root of the tree used to insert the inboundRoots. Subgraph DA. Naming could change.
   */
-  event ProposedRootFinalized(
-    uint256 _snapshotId,
-    bytes32 _aggregateRoot,
-    bytes32[] _snapshotsRoots,
-    uint32[] _domains,
-    bytes32 _baseAggregateRootUsed
-  );
+  event ProposedRootFinalized(bytes32 _aggregateRoot);
 
   /**
     @notice Emitted when a optimistic aggregate root is propagated.
@@ -131,9 +115,9 @@ interface IRootManager {
 
   /**
     @notice The last finalized aggregate root
-    @return _proposeData The data that was proposed optimistically
+    @return _aggregateRoot The new aggregate root
    */
-  function lastFinalizedAggregateRoot() external returns (ProposedData memory _proposeData);
+  function lastFinalizedAggregateRoot() external returns (bytes32 _aggregateRoot);
 
   /*///////////////////////////////////////////////////////////////
                               LOGIC
