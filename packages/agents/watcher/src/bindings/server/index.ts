@@ -8,7 +8,7 @@ import {
 } from "@connext/nxtp-utils";
 
 import { getContext } from "../../watcher";
-import { pauseAndAlert } from "../../operations/validateAndPause";
+import { pauseAndAlert, switchAndAlert } from "../../operations";
 
 import {
   ConfigResponse,
@@ -17,6 +17,9 @@ import {
   PauseRequestSchema,
   PauseResponse,
   PauseResponseSchema,
+  SlowRequest,
+  SlowRequestSchema,
+  SlowResponse,
   WatcherApiErrorResponse,
   WatcherApiErrorResponseSchema,
 } from "./schema";
@@ -77,6 +80,37 @@ export const bindServer = async (): Promise<void> => {
 
         const paused = await pauseAndAlert(requestContext, "TODO");
         return res.status(200).send(paused);
+      } catch (err: unknown) {
+        return res.status(500).send({ error: jsonifyError(err as NxtpError), message: "Error pausing" });
+      }
+    },
+  );
+
+  // Endpoint switches to slow mode
+  server.post<{
+    Body: SlowRequest;
+    Reply: SlowResponse | WatcherApiErrorResponse;
+  }>(
+    "/slow",
+    {
+      schema: {
+        body: SlowRequestSchema,
+        response: {
+          200: PauseResponseSchema,
+          500: WatcherApiErrorResponseSchema,
+        },
+      },
+    },
+    async (req, res) => {
+      const { requestContext } = createLoggingContext("POST /pause endpoint");
+      try {
+        const { adminToken } = req.body;
+        if (adminToken !== config.server.adminToken) {
+          return res.status(401).send({ message: "Unauthorized to perform this operation" });
+        }
+
+        const switched = await switchAndAlert(requestContext, "Admin request");
+        return res.status(200).send(switched);
       } catch (err: unknown) {
         return res.status(500).send({ error: jsonifyError(err as NxtpError), message: "Error pausing" });
       }
