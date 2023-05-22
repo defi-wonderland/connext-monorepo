@@ -71,14 +71,14 @@ export const bindServer = async (): Promise<void> => {
       },
     },
     async (req, res) => {
-      const { requestContext } = createLoggingContext("GET /pause endpoint");
+      const { requestContext } = createLoggingContext("POST /pause endpoint");
       try {
         const { adminToken } = req.body;
         if (adminToken !== config.server.adminToken) {
           return res.status(401).send({ message: "Unauthorized to perform this operation" });
         }
 
-        const paused = await pauseAndAlert(requestContext, "TODO");
+        const paused = await pauseAndAlert(requestContext, "Admin request");
         return res.status(200).send(paused);
       } catch (err: unknown) {
         return res.status(500).send({ error: jsonifyError(err as NxtpError), message: "Error pausing" });
