@@ -1,5 +1,6 @@
 import { SwitchResponse, ReportEventType } from "@connext/nxtp-adapters-watcher";
 import { createMethodContext, RequestContext } from "@connext/nxtp-utils";
+
 import { getContext } from "../watcher";
 
 export const validateAndSwitch = async (requestContext: RequestContext, transactions?: Record<string, string[]>) => {
