@@ -195,11 +195,6 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   bytes32 public proposedAggregateRootHash = 0x0000000000000000000000000000000000000000000000000000000000000001;
 
   /*
-    @notice The timestamp at which the latest proposed aggregate root was finalized and therefore deemed valid. 
-  */
-  uint256 public latestAggregateRootTimestamp;
-
-  /*
     @notice The number of blocks off-chain agents have to dispute a given proposal.
   */
   uint256 public disputeBlocks;
