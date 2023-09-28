@@ -116,6 +116,22 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    */
   event MessageProven(bytes32 indexed leaf, bytes32 indexed aggregateRoot, uint256 aggregateIndex);
 
+  /**
+   * @notice Emitted when slow mode is activated
+   * @param watcher The address of the watcher who called the function
+   */
+  event SlowModeActivated(address indexed watcher);
+
+  /**
+   * @notice Emitted when optimistic mode is activated
+   */
+  event OptimisticModeActivated();
+
+  // ============ Errors ============
+
+  error SpokeConnector_onlyOptimisticMode__SlowModeOn();
+  error SpokeConnector_activateOptimisticMode__OptimisticModeOn();
+
   // ============ Structs ============
 
   /**
@@ -243,6 +259,14 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    */
   modifier onlyAllowlistedProposer() {
     require(allowlistedProposers[msg.sender], "!allowlisted");
+    _;
+  }
+
+  /**
+   * @notice Checks if this spoke connector is working in optimistic mode
+   */
+  modifier onlyOptimisticMode() {
+    if (!optimisticMode) revert SpokeConnector_onlyOptimisticMode__SlowModeOn();
     _;
   }
 
@@ -378,6 +402,25 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    */
   function renounceOwnership() public virtual override(ProposedOwnable, WatcherClient) onlyOwner {
     require(false, "prohibited");
+  }
+
+  /**
+   * @notice Watcher can set the system in slow mode.
+   * @dev Sets the proposed aggregate root hash to FINALIZED_HASH, invalidating it.
+   */
+  function activateSlowMode() external onlyWatcher onlyOptimisticMode {
+    optimisticMode = false;
+    proposedAggregateRootHash = FINALIZED_HASH;
+    emit SlowModeActivated(msg.sender);
+  }
+
+  /**
+   * @notice Owner can set the system to optimistic mode.
+   */
+  function activateOptimisticMode() external onlyOwner {
+    if (optimisticMode) revert SpokeConnector_activateOptimisticMode__OptimisticModeOn();
+    optimisticMode = true;
+    emit OptimisticModeActivated();
   }
 
   // ============ Public Functions ============

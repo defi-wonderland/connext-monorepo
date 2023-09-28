@@ -4,12 +4,14 @@ pragma solidity 0.8.17;
 import {MockSpokeConnector} from "../../utils/Mock.sol";
 import {SpokeConnector} from "../../../contracts/messaging/connectors/SpokeConnector.sol";
 import {WatcherManager} from "../../../contracts/messaging/WatcherManager.sol";
+import {RootManager} from "../../../contracts/messaging/RootManager.sol";
 import {MerkleTreeManager} from "../../../contracts/messaging/MerkleTreeManager.sol";
 import {Message} from "../../../contracts/messaging/libraries/Message.sol";
 import {RateLimited} from "../../../contracts/messaging/libraries/RateLimited.sol";
 import {TypeCasts} from "../../../contracts/shared/libraries/TypeCasts.sol";
 import {MerkleLib} from "../../../contracts/messaging/libraries/MerkleLib.sol";
 import {SnapshotId} from "../../../contracts/messaging/libraries/SnapshotId.sol";
+import {ProposedOwnable} from "../../../contracts/shared/ProposedOwnable.sol";
 
 import "../../utils/ForgeHelper.sol";
 
@@ -317,6 +319,15 @@ contract SpokeConnector_Dispatch is Base {
 }
 
 contract SpokeConnector_AddProposer is Base {
+  function test_addProposerOnlyOwner(address _caller, address _proposer) public {
+    vm.assume(_proposer != address(0));
+    vm.assume(_caller != owner);
+
+    vm.prank(_caller);
+    vm.expectRevert(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector);
+    spokeConnector.addProposer(_proposer);
+  }
+
   function test_addProposer(address _proposer) public {
     vm.assume(_proposer != address(0));
 
@@ -331,6 +342,15 @@ contract SpokeConnector_AddProposer is Base {
 }
 
 contract SpokeConnector_RemoveProposer is Base {
+  function test_removeProposerOnlyOwner(address _caller, address _proposer) public {
+    vm.assume(_proposer != address(0));
+    vm.assume(_caller != owner);
+
+    vm.prank(_caller);
+    vm.expectRevert(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector);
+    spokeConnector.removeProposer(_proposer);
+  }
+
   function test_removeProposer(address _proposer) public {
     vm.assume(_proposer != address(0));
     vm.startPrank(owner);
@@ -345,12 +365,98 @@ contract SpokeConnector_RemoveProposer is Base {
   }
 }
 
-contract SpokeConnector_GetLastCompletedSnapshotId is Base {
-  function test_getLastCompletedSnapshotIdExternal(uint128 _snapshotId) public {
-    vm.assume(_snapshotId > 0);
+contract SpokeConnector_activateSlowMode is Base {
+  event SlowModeActivated(address indexed watcher);
 
-    vm.warp(SNAPSHOT_DURATION * _snapshotId);
-    assertEq(spokeConnector.getLastCompletedSnapshotId(), _snapshotId);
+  function setUp() public virtual override {
+    super.setUp();
+    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(true);
+
+    vm.mockCall(
+      address(_watcherManager),
+      abi.encodeWithSelector(WatcherManager(_watcherManager).isWatcher.selector),
+      abi.encode(true)
+    );
+  }
+
+  function test_revertIfCallerIsNotWatcher(address caller) public {
+    vm.mockCall(
+      address(_watcherManager),
+      abi.encodeWithSelector(WatcherManager(_watcherManager).isWatcher.selector),
+      abi.encode(false)
+    );
+    vm.expectRevert(bytes("!watcher"));
+    vm.prank(caller);
+    spokeConnector.activateSlowMode();
+  }
+
+  function test_revertIfSlowModeOn() public {
+    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(false);
+
+    vm.expectRevert(abi.encodeWithSelector(SpokeConnector.SpokeConnector_onlyOptimisticMode__SlowModeOn.selector));
+    vm.prank(owner);
+    spokeConnector.activateSlowMode();
+  }
+
+  function test_cleanProposedAggregateRoot(bytes32 _proposedAggregateRootHash) public {
+    vm.assume(_proposedAggregateRootHash != spokeConnector.FINALIZED_HASH());
+    MockSpokeConnector(payable(address(spokeConnector))).setProposedAggregateRootHash(_proposedAggregateRootHash);
+    spokeConnector.activateSlowMode();
+    assertEq(spokeConnector.proposedAggregateRootHash(), spokeConnector.FINALIZED_HASH());
+  }
+
+  function test_emitSlowModeActivated() public {
+    vm.expectEmit(true, true, true, true);
+    emit SlowModeActivated(owner);
+
+    vm.prank(owner);
+    spokeConnector.activateSlowMode();
+  }
+}
+
+contract SpokeConnector_activateOptimisticMode is Base {
+  event OptimisticModeActivated();
+
+  function setUp() public virtual override {
+    super.setUp();
+  }
+
+  function test_revertIfCallerIsNotOwner() public {
+    vm.prank(makeAddr("stranger"));
+    vm.expectRevert(abi.encodeWithSelector(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector));
+    spokeConnector.activateOptimisticMode();
+  }
+
+  function test_revertIfOptimisticModeOn() public {
+    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(true);
+    vm.expectRevert(
+      abi.encodeWithSelector(SpokeConnector.SpokeConnector_activateOptimisticMode__OptimisticModeOn.selector)
+    );
+
+    vm.prank(owner);
+    spokeConnector.activateOptimisticMode();
+  }
+
+  function test_optimisticModeIsTrue() public {
+    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(false);
+    bool beforeMode = spokeConnector.optimisticMode();
+
+    vm.prank(owner);
+    spokeConnector.activateOptimisticMode();
+    bool afterMode = spokeConnector.optimisticMode();
+
+    assertEq(beforeMode, false);
+    assertEq(afterMode, true);
+  }
+
+  function test_emitIfOptimisticModeIsActivated() public {
+    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(false);
+
+    vm.expectEmit(true, true, true, true);
+    emit OptimisticModeActivated();
+
+    vm.prank(owner);
+    spokeConnector.activateOptimisticMode();
   }
 }
 
