@@ -10,6 +10,7 @@ import {RateLimited} from "../../../contracts/messaging/libraries/RateLimited.so
 import {TypeCasts} from "../../../contracts/shared/libraries/TypeCasts.sol";
 import {MerkleLib} from "../../../contracts/messaging/libraries/MerkleLib.sol";
 import {SnapshotId} from "../../../contracts/messaging/libraries/SnapshotId.sol";
+import {ProposedOwnable} from "../../../contracts/shared/ProposedOwnable.sol";
 
 import "../../utils/ForgeHelper.sol";
 
@@ -317,6 +318,15 @@ contract SpokeConnector_Dispatch is Base {
 }
 
 contract SpokeConnector_AddProposer is Base {
+  function test_addProposerOnlyOwner(address _caller, address _proposer) public {
+    vm.assume(_proposer != address(0));
+    vm.assume(_caller != owner);
+
+    vm.prank(_caller);
+    vm.expectRevert(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector);
+    spokeConnector.addProposer(_proposer);
+  }
+
   function test_addProposer(address _proposer) public {
     vm.assume(_proposer != address(0));
 
@@ -331,6 +341,15 @@ contract SpokeConnector_AddProposer is Base {
 }
 
 contract SpokeConnector_RemoveProposer is Base {
+  function test_removeProposerOnlyOwner(address _caller, address _proposer) public {
+    vm.assume(_proposer != address(0));
+    vm.assume(_caller != owner);
+
+    vm.prank(_caller);
+    vm.expectRevert(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector);
+    spokeConnector.removeProposer(_proposer);
+  }
+
   function test_removeProposer(address _proposer) public {
     vm.assume(_proposer != address(0));
     vm.startPrank(owner);
