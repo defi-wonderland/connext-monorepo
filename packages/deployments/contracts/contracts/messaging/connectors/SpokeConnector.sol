@@ -188,11 +188,11 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   mapping(uint256 => bytes32) public snapshotRoots;
 
   /**
-   * @notice Hash of the latest proposal.
-   * @dev It's the resulting hash of keccaking the proposed aggregate root, the timestamp at which it was finalized in the root manager
+   * @notice The resulting hash of keccaking the proposed aggregate root, the timestamp at which it was finalized in the root manager
    *      and the block at which the time to dispute it ends.
+   * @dev Set to 0x1 to prevent someone from calling finalize() the moment the contract is deployed.
    */
-  bytes32 public proposal;
+  bytes32 public proposedAggregateRootHash = 0x0000000000000000000000000000000000000000000000000000000000000001;
 
   /*
     @notice The timestamp at which the latest proposed aggregate root was finalized and therefore deemed valid. 
