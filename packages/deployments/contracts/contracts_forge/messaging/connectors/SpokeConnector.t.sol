@@ -15,6 +15,8 @@ import "../../utils/ForgeHelper.sol";
 
 contract Base is ForgeHelper {
   event MessageSent(bytes data, bytes encodedData, address caller);
+  event ProposerAdded(address indexed _proposer);
+  event ProposerRemoved(address indexed _proposer);
 
   using stdStorage for StdStorage;
 
@@ -311,6 +313,35 @@ contract SpokeConnector_Dispatch is Base {
 
     vm.prank(allowedCaller);
     spokeConnector.dispatch(_destinationDomain, _recipientAddress, _messageBody);
+  }
+}
+
+contract SpokeConnector_AddProposer is Base {
+  function test_addProposer(address _proposer) public {
+    vm.assume(_proposer != address(0));
+
+    vm.expectEmit(true, true, true, true);
+    emit ProposerAdded(_proposer);
+
+    vm.prank(owner);
+    spokeConnector.addProposer(_proposer);
+
+    assertEq(spokeConnector.allowlistedProposers(_proposer), true);
+  }
+}
+
+contract SpokeConnector_RemoveProposer is Base {
+  function test_removeProposer(address _proposer) public {
+    vm.assume(_proposer != address(0));
+    vm.startPrank(owner);
+
+    spokeConnector.addProposer(_proposer);
+
+    vm.expectEmit(true, true, true, true);
+    emit ProposerRemoved(_proposer);
+
+    spokeConnector.removeProposer(_proposer);
+    assertEq(spokeConnector.allowlistedProposers(_proposer), false);
   }
 }
 

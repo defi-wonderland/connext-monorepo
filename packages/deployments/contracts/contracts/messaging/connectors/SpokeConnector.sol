@@ -51,6 +51,18 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   event SenderRemoved(address indexed sender);
 
   /**
+   * @notice Emitted when a new proposer is added
+   * @param proposer The address of the proposer
+   */
+  event ProposerAdded(address indexed proposer);
+
+  /**
+   * @notice Emitted when a proposer is removed
+   * @param proposer The address of the proposer
+   */
+  event ProposerRemoved(address indexed proposer);
+
+  /**
    * @notice Emitted when a new aggregate root is delivered from the hub
    * @param root Delivered root
    */
@@ -188,11 +200,11 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   mapping(uint256 => bytes32) public snapshotRoots;
 
   /**
-   * @notice Hash of the latest proposal.
-   * @dev It's the resulting hash of keccaking the proposed aggregate root, the timestamp at which it was finalized in the root manager
+   * @notice The resulting hash of keccaking the proposed aggregate root, the timestamp at which it was finalized in the root manager
    *      and the block at which the time to dispute it ends.
+   * @dev Set to 0x1 to prevent someone from calling finalize() the moment the contract is deployed.
    */
-  bytes32 public proposal;
+  bytes32 public proposedAggregateRootHash = 0x0000000000000000000000000000000000000000000000000000000000000001;
 
   /*
     @notice The timestamp at which the latest proposed aggregate root was finalized and therefore deemed valid. 
@@ -228,6 +240,14 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    */
   modifier onlyAllowlistedSender() {
     require(allowlistedSenders[msg.sender], "!allowlisted");
+    _;
+  }
+
+  /**
+   * @notice Ensures the msg.sender is an allowlisted proposer
+   */
+  modifier onlyAllowlistedProposer() {
+    require(allowlistedProposers[msg.sender], "!allowlisted");
     _;
   }
 
@@ -297,6 +317,24 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
     require(allowlistedSenders[_sender], "!allowed");
     delete allowlistedSenders[_sender];
     emit SenderRemoved(_sender);
+  }
+
+  /**
+   * @notice Adds a proposer to the allowlist.
+   * @dev Only allowlisted proposers can call `proposeAggregateRoot`.
+   */
+  function addProposer(address _proposer) external onlyOwner {
+    allowlistedProposers[_proposer] = true;
+    emit ProposerAdded(_proposer);
+  }
+
+  /**
+   * @notice Removes a proposer from the allowlist.
+   * @dev Only allowlisted proposers can call `proposeAggregateRoot`.
+   */
+  function removeProposer(address _proposer) external onlyOwner {
+    delete allowlistedProposers[_proposer];
+    emit ProposerRemoved(_proposer);
   }
 
   /**
