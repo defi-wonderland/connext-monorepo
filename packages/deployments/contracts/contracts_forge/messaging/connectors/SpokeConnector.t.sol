@@ -476,13 +476,13 @@ contract SpokeConnector_ProposeAggregateRoot is Base {
     MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(true);
   }
 
-  function test_revertIfCallerIsNotProposer(address caller, bytes32 aggregateRoot, uint256 rootTimestamp) public {
-    vm.assume(caller != _proposer);
+  function test_revertIfCallerIsNotProposer(address stranger, bytes32 aggregateRoot, uint256 rootTimestamp) public {
+    vm.assume(stranger != _proposer);
 
     vm.expectRevert(
       abi.encodeWithSelector(SpokeConnector.SpokeConnector_onlyProposer__NotAllowlistedProposer.selector)
     );
-    vm.prank(caller);
+    vm.prank(stranger);
     spokeConnector.proposeAggregateRoot(aggregateRoot, rootTimestamp);
   }
 
