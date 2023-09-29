@@ -100,6 +100,13 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    */
   event ProposedRootFinalized(bytes32 aggregateRoot);
 
+  /**
+   * @notice Emitted when an aggregate root is added to the validAggregateRoots map.
+   * @param aggregateRoot The aggregate root finalized
+   * @param rootTimestamp The timestamp at which the aggregate root was saved.
+   */
+  event AggregateRootSaved(bytes32 aggregateRoot, uint256 rootTimestamp);
+
   // ============ Errors ============
 
   error RootManager_proposeAggregateRoot__InvalidSnapshotId(uint256 snapshotId);
@@ -677,6 +684,10 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
     // aggregate root and count).
     (bytes32 _aggregateRoot, uint256 _count) = MERKLE.insert(_verifiedInboundRoots);
 
+    validAggregateRoots[block.timestamp] = _aggregateRoot;
+    lastSavedAggregateRootTimestamp = block.timestamp;
+
+    emit AggregateRootSaved(_aggregateRoot, block.timestamp);
     emit RootsAggregated(_aggregateRoot, _count, _verifiedInboundRoots);
 
     return (_aggregateRoot, _count);
