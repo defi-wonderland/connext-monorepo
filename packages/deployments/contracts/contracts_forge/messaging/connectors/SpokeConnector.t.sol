@@ -488,7 +488,7 @@ contract SpokeConnector_Finalize is Base {
     spokeConnector.finalize(aggregateRoot, randomRootTimestamp, randomEndOfDispute);
   }
 
-  function test_revertIfAggregateRootDataIsInvalidNoPropose(
+  function test_revertIfProposedHashIsFinalizedHash(
     bytes32 randomRoot,
     uint256 randomRootTimestamp,
     uint256 randomEndOfDispute
