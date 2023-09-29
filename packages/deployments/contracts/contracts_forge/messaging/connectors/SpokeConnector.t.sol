@@ -321,19 +321,11 @@ contract SpokeConnector_Dispatch is Base {
 }
 
 contract SpokeConnector_AddProposer is Base {
-<<<<<<< HEAD
   function test_revertIfCallerIsNotOwner(address _stranger, address _proposer) public {
     vm.assume(_proposer != address(0));
     vm.assume(_stranger != owner);
 
     vm.prank(_stranger);
-=======
-  function test_addProposerOnlyOwner(address _caller, address _proposer) public {
-    vm.assume(_proposer != address(0));
-    vm.assume(_caller != owner);
-
-    vm.prank(_caller);
->>>>>>> c89073ae4f99dfbee3a71a711fb06c56f0b3c93f
     vm.expectRevert(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector);
     spokeConnector.addProposer(_proposer);
   }
@@ -352,19 +344,11 @@ contract SpokeConnector_AddProposer is Base {
 }
 
 contract SpokeConnector_RemoveProposer is Base {
-<<<<<<< HEAD
   function test_revertIfCallerIsNotOwner(address _stranger, address _proposer) public {
     vm.assume(_proposer != address(0));
     vm.assume(_stranger != owner);
 
     vm.prank(_stranger);
-=======
-  function test_removeProposerOnlyOwner(address _caller, address _proposer) public {
-    vm.assume(_proposer != address(0));
-    vm.assume(_caller != owner);
-
-    vm.prank(_caller);
->>>>>>> c89073ae4f99dfbee3a71a711fb06c56f0b3c93f
     vm.expectRevert(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector);
     spokeConnector.removeProposer(_proposer);
   }
