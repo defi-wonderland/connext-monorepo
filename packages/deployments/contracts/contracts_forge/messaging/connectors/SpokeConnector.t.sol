@@ -461,7 +461,7 @@ contract SpokeConnector_activateOptimisticMode is Base {
 }
 
 contract SpokeConnector_SetMinDisputeBlocks is Base {
-  event MinDisputeBlocksUpdated(uint256 _newBlocks, uint256 _prevBlocks);
+  event MinDisputeBlocksUpdated(uint256 _previous, uint256 _updated);
 
   function setUp() public virtual override {
     super.setUp();
@@ -506,7 +506,7 @@ contract SpokeConnector_SetMinDisputeBlocks is Base {
 }
 
 contract SpokeConnector_SetDisputeBlocks is Base {
-  event DisputeBlocksUpdated(uint256 _newBlocks, uint256 _prevBlocks);
+  event DisputeBlocksUpdated(uint256 _previous, uint256 _updated);
 
   function setUp() public virtual override {
     super.setUp();
