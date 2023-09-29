@@ -139,7 +139,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   error SpokeConnector_activateOptimisticMode__OptimisticModeOn();
   error SpokeConnector_finalize__ProposeInProgress();
   error SpokeConnector_finalize__InvalidInputHash();
-  error SpokeConnector_finalize__InvalidAggregateRoot();
+  error SpokeConnector_finalize__ProposedHashIsFinalizedHash();
 
   // ============ Structs ============
 
@@ -534,7 +534,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
     if (_endOfDispute > block.number) revert SpokeConnector_finalize__ProposeInProgress();
 
     bytes32 _proposedAggregateRootHash = proposedAggregateRootHash;
-    if (_proposedAggregateRootHash == FINALIZED_HASH) revert SpokeConnector_finalize__InvalidAggregateRoot();
+    if (_proposedAggregateRootHash == FINALIZED_HASH) revert SpokeConnector_finalize__ProposedHashIsFinalizedHash();
 
     bytes32 _userInputHash = keccak256(abi.encode(_proposedAggregateRoot, _rootTimestamp, _endOfDispute));
     if (_userInputHash != _proposedAggregateRootHash) revert SpokeConnector_finalize__InvalidInputHash();

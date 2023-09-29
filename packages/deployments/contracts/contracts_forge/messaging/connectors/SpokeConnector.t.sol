@@ -497,7 +497,7 @@ contract SpokeConnector_Finalize is Base {
     vm.assume(randomEndOfDispute < block.number);
     vm.roll(block.number + spokeConnector.disputeBlocks());
 
-    vm.expectRevert(SpokeConnector.SpokeConnector_finalize__InvalidAggregateRoot.selector);
+    vm.expectRevert(SpokeConnector.SpokeConnector_finalize__ProposedHashIsFinalizedHash.selector);
     spokeConnector.finalize(randomRoot, randomRootTimestamp, randomEndOfDispute);
   }
 
@@ -510,7 +510,9 @@ contract SpokeConnector_Finalize is Base {
     vm.roll(block.number + spokeConnector.disputeBlocks());
     MockSpokeConnector(payable(address(spokeConnector))).setProposedAggregateRootHash(spokeConnector.FINALIZED_HASH());
 
-    vm.expectRevert(abi.encodeWithSelector(SpokeConnector.SpokeConnector_finalize__InvalidAggregateRoot.selector));
+    vm.expectRevert(
+      abi.encodeWithSelector(SpokeConnector.SpokeConnector_finalize__ProposedHashIsFinalizedHash.selector)
+    );
 
     spokeConnector.finalize(randomRoot, randomRootTimestamp, randomEndOfDispute);
   }
