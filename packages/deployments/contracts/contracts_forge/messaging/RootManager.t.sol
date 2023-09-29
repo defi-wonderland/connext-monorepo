@@ -140,6 +140,8 @@ contract Base is ForgeHelper {
 
   event AggregateRootSaved(bytes32 aggregateRoot, uint256 rootTimestamp);
 
+  event ProposedRootFinalized(bytes32 aggregateRoot);
+
   // ============ Storage ============
   RootManagerForTest _rootManager;
   uint256 _delayBlocks = 40;
@@ -605,9 +607,6 @@ contract RootManager_ProposeAggregateRoot is Base {
 }
 
 contract RootManager_Finalize is Base {
-  event AggregateRootSaved(bytes32 aggregateRoot, uint256 rootTimestamp);
-  event ProposedRootFinalized(bytes32 aggregateRoot);
-
   function test_revertIfSlowModeOn() public {
     _rootManager.forTest_setOptimisticMode(false);
 
