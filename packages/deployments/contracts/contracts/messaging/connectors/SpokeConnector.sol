@@ -128,6 +128,12 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   event OptimisticModeActivated();
 
   /**
+   * @notice Emitted when the current proposed root is finalized
+   * @param aggregateRoot The aggregate root finalized
+   */
+  event ProposedRootFinalized(bytes32 aggregateRoot);
+
+  /**
    * @notice Emitted when the number of dispute blocks is updated
    * @param previous The previous number of blocks off-chain agents had to dispute a proposed root
    * @param updated  The new number of blocks off-chain agents have to dispute a proposed root
@@ -145,6 +151,9 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
 
   error SpokeConnector_onlyOptimisticMode__SlowModeOn();
   error SpokeConnector_activateOptimisticMode__OptimisticModeOn();
+  error SpokeConnector_finalize__ProposeInProgress();
+  error SpokeConnector_finalize__InvalidInputHash();
+  error SpokeConnector_finalize__ProposedHashIsFinalizedHash();
   error SpokeConnector_setMinDisputeBlocks__SameMinDisputeBlocksAsBefore();
   error SpokeConnector_setDisputeBlocks__DisputeBlocksLowerThanMin();
   error SpokeConnector_setDisputeBlocks__SameDisputeBlocksAsBefore();
@@ -552,6 +561,32 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
     // NOTE: Current leaf index is count - 1 since new leaf has already been inserted.
     emit Dispatch(_messageHash, _count - 1, _root, _message);
     return (_messageHash, _message);
+  }
+
+  /**
+   * @notice Finalizes the proposed aggregate root. This confirms the root validity. Therefore, it can be proved and processed.
+   * @dev Finalized roots won't be monitored by off-chain agents as they are deemed valid.
+   *
+   * @param _proposedAggregateRoot The aggregate root currently proposed
+   * @param _endOfDispute          The block in which the dispute period for proposedAggregateRootHash concludes
+   */
+  function finalize(
+    bytes32 _proposedAggregateRoot,
+    uint256 _rootTimestamp,
+    uint256 _endOfDispute
+  ) external onlyOptimisticMode {
+    if (_endOfDispute > block.number) revert SpokeConnector_finalize__ProposeInProgress();
+
+    bytes32 _proposedAggregateRootHash = proposedAggregateRootHash;
+    if (_proposedAggregateRootHash == FINALIZED_HASH) revert SpokeConnector_finalize__ProposedHashIsFinalizedHash();
+
+    bytes32 _userInputHash = keccak256(abi.encode(_proposedAggregateRoot, _rootTimestamp, _endOfDispute));
+    if (_userInputHash != _proposedAggregateRootHash) revert SpokeConnector_finalize__InvalidInputHash();
+
+    provenAggregateRoots[_proposedAggregateRoot] = true;
+    proposedAggregateRootHash = FINALIZED_HASH;
+
+    emit ProposedRootFinalized(_proposedAggregateRoot);
   }
 
   /**
