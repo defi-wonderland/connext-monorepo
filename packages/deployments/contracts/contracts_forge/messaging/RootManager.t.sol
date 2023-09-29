@@ -1097,6 +1097,10 @@ contract RootManager_Propagate is Base {
     vm.expectRevert(bytes("invalid lengths"));
     _rootManager.propagate(_connectors, _fees, randomEncodedData);
   }
+
+  function test_emitIfAggregateRootPropagated() public {
+    // TODO
+  }
 }
 
 contract RootManager_SendRootToHubs is Base {
