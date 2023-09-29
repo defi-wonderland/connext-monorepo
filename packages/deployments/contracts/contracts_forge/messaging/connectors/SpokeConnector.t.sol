@@ -465,7 +465,7 @@ contract SpokeConnector_SetMinDisputeBlocks is Base {
 
   function setUp() public virtual override {
     super.setUp();
-    vm.startPrank(owner);
+    vm.prank(owner);
     spokeConnector.setMinDisputeBlocks(100);
   }
 
@@ -513,6 +513,7 @@ contract SpokeConnector_SetDisputeBlocks is Base {
     vm.startPrank(owner);
     spokeConnector.setMinDisputeBlocks(100);
     spokeConnector.setDisputeBlocks(120);
+    vm.stopPrank();
   }
 
   function test_revertIfCallerIsNotOwner(address stranger) public {
