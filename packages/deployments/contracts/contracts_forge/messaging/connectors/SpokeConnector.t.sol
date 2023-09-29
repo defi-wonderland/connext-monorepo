@@ -526,6 +526,201 @@ contract SpokeConnector_ProposeAggregateRoot is Base {
   }
 }
 
+contract SpokeConnector_Finalize is Base {
+  event ProposedRootFinalized(bytes32 aggregateRoot);
+
+  function setUp() public virtual override {
+    super.setUp();
+    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(true);
+  }
+
+  function test_revertIfSlowModeOn(bytes32 randomRoot, uint256 randomRootTimestamp, uint256 randomEndOfDispute) public {
+    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(false);
+
+    vm.expectRevert(abi.encodeWithSelector(SpokeConnector.SpokeConnector_onlyOptimisticMode__SlowModeOn.selector));
+    spokeConnector.finalize(randomRoot, randomRootTimestamp, randomEndOfDispute);
+  }
+
+  function test_revertIfProposeInProgress(
+    bytes32 randomProposedHash,
+    uint256 randomRootTimestamp,
+    uint256 randomEndOfDispute
+  ) public {
+    vm.assume(randomProposedHash != spokeConnector.FINALIZED_HASH());
+    vm.assume(randomEndOfDispute > block.number);
+    MockSpokeConnector(payable(address(spokeConnector))).setProposedAggregateRootHash(randomProposedHash);
+
+    vm.expectRevert(abi.encodeWithSelector(SpokeConnector.SpokeConnector_finalize__ProposeInProgress.selector));
+    spokeConnector.finalize(randomProposedHash, randomRootTimestamp, randomEndOfDispute);
+  }
+
+  function test_revertIfProposedHashIsFinalizedHash(
+    bytes32 randomRoot,
+    uint256 randomRootTimestamp,
+    uint256 randomEndOfDispute
+  ) public {
+    vm.assume(randomRoot != spokeConnector.FINALIZED_HASH());
+    vm.assume(randomEndOfDispute < block.number);
+    vm.roll(block.number + spokeConnector.disputeBlocks());
+
+    vm.expectRevert(SpokeConnector.SpokeConnector_finalize__ProposedHashIsFinalizedHash.selector);
+    spokeConnector.finalize(randomRoot, randomRootTimestamp, randomEndOfDispute);
+  }
+
+  function test_revertIfAggregateRootDataIsInvalid(
+    bytes32 randomRoot,
+    uint256 randomRootTimestamp,
+    uint256 randomEndOfDispute
+  ) public {
+    vm.assume(randomEndOfDispute < block.number);
+    vm.roll(block.number + spokeConnector.disputeBlocks());
+    MockSpokeConnector(payable(address(spokeConnector))).setProposedAggregateRootHash(spokeConnector.FINALIZED_HASH());
+
+    vm.expectRevert(
+      abi.encodeWithSelector(SpokeConnector.SpokeConnector_finalize__ProposedHashIsFinalizedHash.selector)
+    );
+
+    spokeConnector.finalize(randomRoot, randomRootTimestamp, randomEndOfDispute);
+  }
+
+  function test_revertIfAggregateRootHashIsInvalid(
+    bytes32 aggregateRoot,
+    uint256 validRootTimestamp,
+    uint256 invalidRootTimestamp
+  ) public {
+    vm.assume(aggregateRoot != spokeConnector.FINALIZED_HASH());
+    vm.assume(validRootTimestamp != invalidRootTimestamp);
+
+    bytes32 _placeholderProposedRoot = bytes32("Placeholder Root");
+    uint256 _placeholderEndOfDispute = block.number - spokeConnector.disputeBlocks() - 1;
+    bytes32 _placeHolderProposedRootHash = keccak256(
+      abi.encode(_placeholderProposedRoot, validRootTimestamp, _placeholderEndOfDispute)
+    );
+    MockSpokeConnector(payable(address(spokeConnector))).setProposedAggregateRootHash(_placeHolderProposedRootHash);
+
+    vm.expectRevert(abi.encodeWithSelector(SpokeConnector.SpokeConnector_finalize__InvalidInputHash.selector));
+    spokeConnector.finalize(aggregateRoot, invalidRootTimestamp, _placeholderEndOfDispute);
+  }
+
+  function test_setFinalizedAggregateRoot(bytes32 aggregateRoot, uint256 rootTimestamp, uint256 endOfDispute) public {
+    vm.assume(aggregateRoot != spokeConnector.FINALIZED_HASH());
+    vm.assume(endOfDispute < block.number);
+
+    bytes32 _proposedRootHash = keccak256(abi.encode(aggregateRoot, rootTimestamp, endOfDispute));
+    MockSpokeConnector(payable(address(spokeConnector))).setProposedAggregateRootHash(_proposedRootHash);
+
+    vm.roll(block.number + spokeConnector.disputeBlocks());
+
+    vm.expectEmit(true, true, true, true);
+    emit ProposedRootFinalized(aggregateRoot);
+
+    spokeConnector.finalize(aggregateRoot, rootTimestamp, endOfDispute);
+
+    assertEq(spokeConnector.provenAggregateRoots(aggregateRoot), true);
+    assertEq(spokeConnector.proposedAggregateRootHash(), spokeConnector.FINALIZED_HASH());
+  }
+}
+
+contract SpokeConnector_SetMinDisputeBlocks is Base {
+  event MinDisputeBlocksUpdated(uint256 _previous, uint256 _updated);
+
+  function setUp() public virtual override {
+    super.setUp();
+    vm.prank(owner);
+    spokeConnector.setMinDisputeBlocks(100);
+  }
+
+  function test_revertIfCallerIsNotOwner(address stranger) public {
+    vm.assume(stranger != owner);
+    uint256 _newMinDisputeBlocks = spokeConnector.minDisputeBlocks() + 10;
+    vm.prank(stranger);
+    vm.expectRevert(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector);
+    spokeConnector.setMinDisputeBlocks(_newMinDisputeBlocks);
+  }
+
+  function test_revertIfMinDisputeBlocksEqPrevMinDisputeBlocks() public {
+    uint256 _currentMinDisputeBlocks = spokeConnector.minDisputeBlocks();
+    vm.prank(owner);
+    vm.expectRevert(SpokeConnector.SpokeConnector_setMinDisputeBlocks__SameMinDisputeBlocksAsBefore.selector);
+    spokeConnector.setMinDisputeBlocks(_currentMinDisputeBlocks);
+  }
+
+  function test_changeMinDisputeBlocks(uint256 newMinDisputeBlocks) public {
+    uint256 _prevMinDisputeBlocks = spokeConnector.minDisputeBlocks();
+    vm.assume(newMinDisputeBlocks != _prevMinDisputeBlocks);
+    vm.prank(owner);
+    spokeConnector.setMinDisputeBlocks(newMinDisputeBlocks);
+    uint256 _currentMinDisputeBlocks = spokeConnector.minDisputeBlocks();
+    assertEq(_currentMinDisputeBlocks, newMinDisputeBlocks);
+  }
+
+  function test_emitIfMinDisputeBlocksChanged(uint256 newMinDisputeBlocks) public {
+    uint256 _prevMinDisputeBlocks = spokeConnector.minDisputeBlocks();
+    vm.assume(newMinDisputeBlocks != _prevMinDisputeBlocks);
+    vm.prank(owner);
+
+    vm.expectEmit(true, true, true, true);
+    emit MinDisputeBlocksUpdated(_prevMinDisputeBlocks, newMinDisputeBlocks);
+
+    spokeConnector.setMinDisputeBlocks(newMinDisputeBlocks);
+  }
+}
+
+contract SpokeConnector_SetDisputeBlocks is Base {
+  event DisputeBlocksUpdated(uint256 _previous, uint256 _updated);
+
+  function setUp() public virtual override {
+    super.setUp();
+    vm.startPrank(owner);
+    spokeConnector.setMinDisputeBlocks(100);
+    spokeConnector.setDisputeBlocks(120);
+    vm.stopPrank();
+  }
+
+  function test_revertIfCallerIsNotOwner(address stranger) public {
+    vm.assume(stranger != owner);
+    uint256 _newDisputeBlocks = spokeConnector.disputeBlocks() + 10;
+    vm.prank(stranger);
+    vm.expectRevert(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector);
+    spokeConnector.setDisputeBlocks(_newDisputeBlocks);
+  }
+
+  function test_revertIfDisputeBlocksAreLessThanMinAllowed(uint256 _smallDisputeBlocks) public {
+    uint256 _allowedMinDisputeBlocks = spokeConnector.minDisputeBlocks();
+    vm.assume(_smallDisputeBlocks < _allowedMinDisputeBlocks);
+    vm.prank(owner);
+    vm.expectRevert(SpokeConnector.SpokeConnector_setDisputeBlocks__DisputeBlocksLowerThanMin.selector);
+    spokeConnector.setDisputeBlocks(_smallDisputeBlocks);
+  }
+
+  function test_revertIfDisputeBlocksEqPrevDisputeBlocks() public {
+    uint256 _currentDisputeBlocks = spokeConnector.disputeBlocks();
+    vm.prank(owner);
+    vm.expectRevert(SpokeConnector.SpokeConnector_setDisputeBlocks__SameDisputeBlocksAsBefore.selector);
+    spokeConnector.setDisputeBlocks(_currentDisputeBlocks);
+  }
+
+  function test_changeDisputeBlocks(uint256 newDisputeBlocks) public {
+    uint256 _prevDisputeBlocks = spokeConnector.disputeBlocks();
+    vm.assume(newDisputeBlocks > _prevDisputeBlocks);
+    vm.prank(owner);
+    spokeConnector.setDisputeBlocks(newDisputeBlocks);
+    uint256 _currentDisputeBlocks = spokeConnector.disputeBlocks();
+    assertEq(_currentDisputeBlocks, newDisputeBlocks);
+  }
+
+  function test_emitIfDisputeBlocksChanged(uint256 newDisputeBlocks) public {
+    uint256 _prevDisputeBlocks = spokeConnector.disputeBlocks();
+    vm.assume(newDisputeBlocks > _prevDisputeBlocks);
+    vm.prank(owner);
+
+    vm.expectEmit(true, true, true, true);
+    emit DisputeBlocksUpdated(_prevDisputeBlocks, newDisputeBlocks);
+
+    spokeConnector.setDisputeBlocks(newDisputeBlocks);
+  }
+}
+
 contract SpokeConnector_GetSnapshotDuration is Base {
   function test_getSnapshotDuration() public {
     assertEq(SnapshotId.SNAPSHOT_DURATION, spokeConnector.getSnapshotDuration());
