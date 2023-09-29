@@ -1485,7 +1485,7 @@ contract RootManager_GetSnapshotDuration is Base {
 }
 
 contract RootManager_Dequeue is Base {
-  bytes32 INBOUND = 0x0000000000000000000000000000000000000000000000000000000000000001;
+  bytes32 RANDOM_INBOUND_ROOT = bytes32("random inbound root");
 
   bytes4 insertSelector = bytes4(keccak256("insert(bytes32[])"));
 
@@ -1500,13 +1500,13 @@ contract RootManager_Dequeue is Base {
   }
 
   function test_callMerkleManagerInsert() public {
-    _rootManager.forTest_addInboundRootToQueue(INBOUND);
+    _rootManager.forTest_addInboundRootToQueue(RANDOM_INBOUND_ROOT);
 
     // fastforward blocks to make the element in the queue ready.
     vm.roll(block.number + _rootManager.delayBlocks());
 
     bytes32[] memory _verifiedInboundRoots = new bytes32[](1);
-    _verifiedInboundRoots[0] = INBOUND;
+    _verifiedInboundRoots[0] = RANDOM_INBOUND_ROOT;
 
     vm.expectCall(_merkle, abi.encodeWithSelector(insertSelector, _verifiedInboundRoots));
 
@@ -1514,7 +1514,7 @@ contract RootManager_Dequeue is Base {
   }
 
   function test_saveNewAggregateRoot(bytes32 aggregateRoot) public {
-    _rootManager.forTest_addInboundRootToQueue(INBOUND);
+    _rootManager.forTest_addInboundRootToQueue(RANDOM_INBOUND_ROOT);
 
     // fastforward blocks to make the element in the queue ready.
     vm.roll(block.number + _rootManager.delayBlocks());
@@ -1532,7 +1532,7 @@ contract RootManager_Dequeue is Base {
   }
 
   function test_updateLastSavedRootTimestamp(bytes32 aggregateRoot) public {
-    _rootManager.forTest_addInboundRootToQueue(INBOUND);
+    _rootManager.forTest_addInboundRootToQueue(RANDOM_INBOUND_ROOT);
 
     // fastforward blocks to make the element in the queue ready.
     vm.roll(block.number + _rootManager.delayBlocks());
@@ -1550,7 +1550,7 @@ contract RootManager_Dequeue is Base {
   }
 
   function test_emitIfAggregateRootSaved(bytes32 aggregateRoot) public {
-    _rootManager.forTest_addInboundRootToQueue(INBOUND);
+    _rootManager.forTest_addInboundRootToQueue(RANDOM_INBOUND_ROOT);
 
     // fastforward blocks to make the element in the queue ready.
     vm.roll(block.number + _rootManager.delayBlocks());
@@ -1567,13 +1567,13 @@ contract RootManager_Dequeue is Base {
   }
 
   function test_emitIfRootsAggregated(bytes32 aggregateRoot) public {
-    _rootManager.forTest_addInboundRootToQueue(INBOUND);
+    _rootManager.forTest_addInboundRootToQueue(RANDOM_INBOUND_ROOT);
 
     // fastforward blocks to make the element in the queue ready.
     vm.roll(block.number + _rootManager.delayBlocks());
 
     bytes32[] memory _verifiedInboundRoots = new bytes32[](1);
-    _verifiedInboundRoots[0] = INBOUND;
+    _verifiedInboundRoots[0] = RANDOM_INBOUND_ROOT;
 
     // Mock the call over `insert`
     vm.mockCall(_merkle, abi.encodeWithSelector(insertSelector), abi.encode(aggregateRoot, mockedCount));
