@@ -517,7 +517,7 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    * @param _fees Array of fees in native token for an AMB if required
    * @param _encodedData Array of encodedData: extra params for each AMB if required
    */
-  function propagate(
+  function propagate2(
     address[] calldata _connectors,
     uint256[] calldata _fees,
     bytes[] memory _encodedData
@@ -533,7 +533,7 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
       : _slowPropagate(_connectors, _fees, _encodedData);
   }
 
-  function propagate2(
+  function propagate(
     address[] calldata _connectors,
     uint256[] calldata _fees,
     bytes[] memory _encodedData
