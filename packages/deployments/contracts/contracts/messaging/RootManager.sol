@@ -473,9 +473,14 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
     if (_userInputHash != _proposedAggregateRootHash) revert RootManager_finalize__InvalidInputHash();
     if (_endOfDispute > block.number) revert RootManager_finalize__ProposeInProgress();
 
-    finalizedOptimisticAggregateRoot = _proposedAggregateRoot;
+    // Save data
+    validAggregateRoots[block.timestamp] = _proposedAggregateRoot;
+    lastSavedAggregateRootTimestamp = block.timestamp;
+
+    // Clear the propose slot
     proposedAggregateRootHash = FINALIZED_HASH;
 
+    emit AggregateRootSaved(_proposedAggregateRoot, block.timestamp);
     emit ProposedRootFinalized(_proposedAggregateRoot);
   }
 
