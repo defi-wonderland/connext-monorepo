@@ -127,10 +127,26 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    */
   event OptimisticModeActivated();
 
+  /**
+   * @notice Emitted when a new aggregate root is proposed
+   * @param aggregateRoot The new aggregate root proposed
+   * @param endOfDispute  The block at which this root can't be disputed anymore and therefore it's deemed valid.
+   * @param rootTimestamp The timestamp at which the root was finalized in the root manager contract.
+   * @param domain        The domain where this root was proposed.
+   */
+  event AggregateRootProposed(
+    bytes32 indexed aggregateRoot,
+    uint256 indexed rootTimestamp,
+    uint256 indexed endOfDispute,
+    uint32 domain
+  );
+
   // ============ Errors ============
 
   error SpokeConnector_onlyOptimisticMode__SlowModeOn();
   error SpokeConnector_activateOptimisticMode__OptimisticModeOn();
+  error SpokeConnector_onlyProposer__NotAllowlistedProposer();
+  error SpokeConnector_proposeAggregateRoot__ProposeInProgress();
 
   // ============ Structs ============
 
@@ -258,7 +274,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * @notice Ensures the msg.sender is an allowlisted proposer
    */
   modifier onlyAllowlistedProposer() {
-    require(allowlistedProposers[msg.sender], "!allowlisted");
+    if (!allowlistedProposers[msg.sender]) revert SpokeConnector_onlyProposer__NotAllowlistedProposer();
     _;
   }
 
@@ -508,6 +524,25 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
     // NOTE: Current leaf index is count - 1 since new leaf has already been inserted.
     emit Dispatch(_messageHash, _count - 1, _root, _message);
     return (_messageHash, _message);
+  }
+
+  /**
+   * @notice Propose a new aggregate root
+   * @dev _rootTimestamp is required for off-chain agents to be able to know which root they should fetch from the root manager contract
+   *                     in order to compare it with the one being proposed. The off-chain agents should also ensure the proposed root is
+   *                     not an old one.
+   * @param _aggregateRoot The aggregate root to propose.
+   * @param _rootTimestamp Block.timestamp at which the root was finalized in the root manager contract.
+   */
+  function proposeAggregateRoot(
+    bytes32 _aggregateRoot,
+    uint256 _rootTimestamp
+  ) external onlyAllowlistedProposer onlyOptimisticMode {
+    if (proposedAggregateRootHash != FINALIZED_HASH) revert SpokeConnector_proposeAggregateRoot__ProposeInProgress();
+    uint256 _endOfDispute = block.number + disputeBlocks;
+    proposedAggregateRootHash = keccak256(abi.encode(_aggregateRoot, _rootTimestamp, _endOfDispute));
+
+    emit AggregateRootProposed(_aggregateRoot, _rootTimestamp, _endOfDispute, DOMAIN);
   }
 
   /**
