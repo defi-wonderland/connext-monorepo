@@ -460,6 +460,99 @@ contract SpokeConnector_activateOptimisticMode is Base {
   }
 }
 
+contract SpokeConnector_Finalize is Base {
+  event ProposedRootFinalized(bytes32 aggregateRoot);
+
+  function setUp() public virtual override {
+    super.setUp();
+    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(true);
+  }
+
+  function test_revertIfSlowModeOn(bytes32 randomRoot, uint256 randomRootTimestamp, uint256 randomEndOfDispute) public {
+    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(false);
+
+    vm.expectRevert(abi.encodeWithSelector(SpokeConnector.SpokeConnector_onlyOptimisticMode__SlowModeOn.selector));
+    spokeConnector.finalize(randomRoot, randomRootTimestamp, randomEndOfDispute);
+  }
+
+  function test_revertIfProposeInProgress(
+    bytes32 aggregateRoot,
+    uint256 randomRootTimestamp,
+    uint256 randomEndOfDispute
+  ) public {
+    vm.assume(aggregateRoot != spokeConnector.FINALIZED_HASH());
+    vm.assume(randomEndOfDispute > block.number);
+    MockSpokeConnector(payable(address(spokeConnector))).setProposedAggregateRootHash(aggregateRoot);
+
+    vm.expectRevert(abi.encodeWithSelector(SpokeConnector.SpokeConnector_finalize__ProposeInProgress.selector));
+    spokeConnector.finalize(aggregateRoot, randomRootTimestamp, randomEndOfDispute);
+  }
+
+  function test_revertIfAggregateRootDataIsInvalidNoPropose(
+    bytes32 randomRoot,
+    uint256 randomRootTimestamp,
+    uint256 randomEndOfDispute
+  ) public {
+    vm.assume(randomRoot != spokeConnector.FINALIZED_HASH());
+    vm.assume(randomEndOfDispute < block.number);
+    vm.roll(block.number + spokeConnector.disputeBlocks());
+
+    vm.expectRevert(SpokeConnector.SpokeConnector_finalize__InvalidAggregateRoot.selector);
+    spokeConnector.finalize(randomRoot, randomRootTimestamp, randomEndOfDispute);
+  }
+
+  function test_revertIfAggregateRootDataIsInvalid(
+    bytes32 randomRoot,
+    uint256 randomRootTimestamp,
+    uint256 randomEndOfDispute
+  ) public {
+    vm.assume(randomEndOfDispute < block.number);
+    vm.roll(block.number + spokeConnector.disputeBlocks());
+    MockSpokeConnector(payable(address(spokeConnector))).setProposedAggregateRootHash(spokeConnector.FINALIZED_HASH());
+
+    vm.expectRevert(abi.encodeWithSelector(SpokeConnector.SpokeConnector_finalize__InvalidAggregateRoot.selector));
+
+    spokeConnector.finalize(randomRoot, randomRootTimestamp, randomEndOfDispute);
+  }
+
+  function test_revertIfAggregateRootHashIsInvalid(
+    bytes32 aggregateRoot,
+    uint256 validRootTimestamp,
+    uint256 invalidRootTimestamp
+  ) public {
+    vm.assume(aggregateRoot != spokeConnector.FINALIZED_HASH());
+    vm.assume(validRootTimestamp != invalidRootTimestamp);
+
+    bytes32 _placeholderProposedRoot = bytes32("Placeholder Root");
+    uint256 _placeholderEndOfDispute = block.number - spokeConnector.disputeBlocks() - 1;
+    bytes32 _placeHolderProposedRootHash = keccak256(
+      abi.encode(_placeholderProposedRoot, validRootTimestamp, _placeholderEndOfDispute)
+    );
+    MockSpokeConnector(payable(address(spokeConnector))).setProposedAggregateRootHash(_placeHolderProposedRootHash);
+
+    vm.expectRevert(abi.encodeWithSelector(SpokeConnector.SpokeConnector_finalize__InvalidInputHash.selector));
+    spokeConnector.finalize(aggregateRoot, invalidRootTimestamp, _placeholderEndOfDispute);
+  }
+
+  function test_setFinalizedAggregateRoot(bytes32 aggregateRoot, uint256 rootTimestamp, uint256 endOfDispute) public {
+    vm.assume(aggregateRoot != spokeConnector.FINALIZED_HASH());
+    vm.assume(endOfDispute < block.number);
+
+    bytes32 _proposedRootHash = keccak256(abi.encode(aggregateRoot, rootTimestamp, endOfDispute));
+    MockSpokeConnector(payable(address(spokeConnector))).setProposedAggregateRootHash(_proposedRootHash);
+
+    vm.roll(block.number + spokeConnector.disputeBlocks());
+
+    vm.expectEmit(true, true, true, true);
+    emit ProposedRootFinalized(aggregateRoot);
+
+    spokeConnector.finalize(aggregateRoot, rootTimestamp, endOfDispute);
+
+    assertEq(spokeConnector.provenAggregateRoots(aggregateRoot), true);
+    assertEq(spokeConnector.proposedAggregateRootHash(), spokeConnector.FINALIZED_HASH());
+  }
+}
+
 contract SpokeConnector_GetSnapshotDuration is Base {
   function test_getSnapshotDuration() public {
     assertEq(SnapshotId.SNAPSHOT_DURATION, spokeConnector.getSnapshotDuration());
