@@ -321,11 +321,11 @@ contract SpokeConnector_Dispatch is Base {
 }
 
 contract SpokeConnector_AddProposer is Base {
-  function test_addProposerOnlyOwner(address _caller, address _proposer) public {
+  function test_revertIfCallerIsNotOwner(address _stranger, address _proposer) public {
     vm.assume(_proposer != address(0));
-    vm.assume(_caller != owner);
+    vm.assume(_stranger != owner);
 
-    vm.prank(_caller);
+    vm.prank(_stranger);
     vm.expectRevert(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector);
     spokeConnector.addProposer(_proposer);
   }
@@ -344,13 +344,13 @@ contract SpokeConnector_AddProposer is Base {
 }
 
 contract SpokeConnector_RemoveProposer is Base {
-  function test_removeProposerOnlyOwner(address _caller, address _proposer) public {
+  function test_revertIfCallerIsNotOwner(address _stranger, address _proposer) public {
     vm.assume(_proposer != address(0));
-    vm.assume(_caller != owner);
+    vm.assume(_stranger != owner);
 
-    vm.prank(_caller);
+    vm.prank(_stranger);
     vm.expectRevert(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector);
-    spokeConnector.removeProposer(_proposer);
+    spokeConnector.addProposer(_proposer);
   }
 
   function test_removeProposer(address _proposer) public {
@@ -423,8 +423,8 @@ contract SpokeConnector_activateOptimisticMode is Base {
     super.setUp();
   }
 
-  function test_revertIfCallerIsNotOwner() public {
-    vm.prank(makeAddr("stranger"));
+  function test_revertIfCallerIsNotOwner(address stranger) public {
+    vm.prank(stranger);
     vm.expectRevert(abi.encodeWithSelector(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector));
     spokeConnector.activateOptimisticMode();
   }
@@ -439,7 +439,7 @@ contract SpokeConnector_activateOptimisticMode is Base {
     spokeConnector.activateOptimisticMode();
   }
 
-  function test_optimisticModeIsTrue() public {
+  function test_switchToOptimisticMode() public {
     MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(false);
     bool beforeMode = spokeConnector.optimisticMode();
 
