@@ -350,7 +350,7 @@ contract SpokeConnector_RemoveProposer is Base {
 
     vm.prank(_stranger);
     vm.expectRevert(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector);
-    spokeConnector.addProposer(_proposer);
+    spokeConnector.removeProposer(_proposer);
   }
 
   function test_removeProposer(address _proposer) public {
@@ -424,6 +424,7 @@ contract SpokeConnector_activateOptimisticMode is Base {
   }
 
   function test_revertIfCallerIsNotOwner(address stranger) public {
+    vm.assume(stranger != owner);
     vm.prank(stranger);
     vm.expectRevert(abi.encodeWithSelector(ProposedOwnable.ProposedOwnable__onlyOwner_notOwner.selector));
     spokeConnector.activateOptimisticMode();
