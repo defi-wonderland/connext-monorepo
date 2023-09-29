@@ -476,16 +476,16 @@ contract SpokeConnector_Finalize is Base {
   }
 
   function test_revertIfProposeInProgress(
-    bytes32 aggregateRoot,
+    bytes32 randomProposedHash,
     uint256 randomRootTimestamp,
     uint256 randomEndOfDispute
   ) public {
-    vm.assume(aggregateRoot != spokeConnector.FINALIZED_HASH());
+    vm.assume(randomProposedHash != spokeConnector.FINALIZED_HASH());
     vm.assume(randomEndOfDispute > block.number);
-    MockSpokeConnector(payable(address(spokeConnector))).setProposedAggregateRootHash(aggregateRoot);
+    MockSpokeConnector(payable(address(spokeConnector))).setProposedAggregateRootHash(randomProposedHash);
 
     vm.expectRevert(abi.encodeWithSelector(SpokeConnector.SpokeConnector_finalize__ProposeInProgress.selector));
-    spokeConnector.finalize(aggregateRoot, randomRootTimestamp, randomEndOfDispute);
+    spokeConnector.finalize(randomProposedHash, randomRootTimestamp, randomEndOfDispute);
   }
 
   function test_revertIfProposedHashIsFinalizedHash(
