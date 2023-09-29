@@ -521,6 +521,25 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
       : _slowPropagate(_connectors, _fees, _encodedData);
   }
 
+  function propagate2(
+    address[] calldata _connectors,
+    uint256[] calldata _fees,
+    bytes[] memory _encodedData
+  ) public payable whenNotPaused {
+    validateConnectors(_connectors);
+
+    uint256 _numDomains = _connectors.length;
+    // Sanity check: fees and encodedData lengths matches connectors length.
+    require(_fees.length == _numDomains && _encodedData.length == _numDomains, "invalid lengths");
+
+    // If in slow mode, we still dequeue to ensure that we add the inboundRoots that are ready.
+    if (!optimisticMode) dequeue();
+
+    bytes32 _aggregateRoot = validAggregateRoots[lastSavedAggregateRootTimestamp];
+
+    _sendRootToHubs(_aggregateRoot, _connectors, _fees, _encodedData);
+  }
+
   /**
    * @notice Function used to propagate the aggregate root when the system is in optimistic mode.
    * @dev The root used is the already finalized optimistic root, this function does not use the MERKLE tree nor the

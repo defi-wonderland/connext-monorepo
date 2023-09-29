@@ -1110,6 +1110,30 @@ contract RootManager_Propagate is Base {
   }
 }
 
+contract RootManager_Propagate2 is Base {
+  function test_revertIfContractPaused() public {
+    _rootManager.forTest_pause();
+    vm.expectRevert(bytes("Pausable: paused"));
+    _rootManager.propagate(_connectors, _fees, _encodedData);
+  }
+
+  function test_revertIfInvalidLengthsIfDifferentFeesAmounts(uint256[] calldata randomFees) public {
+    vm.assume(randomFees.length != _connectors.length);
+    _rootManager.forTest_generateAndAddDomains(_domains, _connectors);
+
+    vm.expectRevert(bytes("invalid lengths"));
+    _rootManager.propagate(_connectors, randomFees, _encodedData);
+  }
+
+  function test_revertIfInvalidLengthsIfDifferentDatasAmounts(bytes[] calldata randomEncodedData) public {
+    vm.assume(randomEncodedData.length != _connectors.length);
+    _rootManager.forTest_generateAndAddDomains(_domains, _connectors);
+
+    vm.expectRevert(bytes("invalid lengths"));
+    _rootManager.propagate(_connectors, _fees, randomEncodedData);
+  }
+}
+
 contract RootManager_OptimisticPropagate is Base {
   event OptimisticRootPropagated(bytes32 indexed aggregateRoot, bytes32 domainsHash);
 
