@@ -38,6 +38,8 @@ contract Base is ForgeHelper {
   address _destinationMainnetAMB = address(456456);
   address _originMainnetAMB = address(123123);
   address _rootManager = address(121212);
+  address _proposer = makeAddr("proposer");
+
   WatcherManager _watcherManager;
   MerkleTreeManager _merkle;
 
@@ -457,6 +459,70 @@ contract SpokeConnector_activateOptimisticMode is Base {
 
     vm.prank(owner);
     spokeConnector.activateOptimisticMode();
+  }
+}
+
+contract SpokeConnector_ProposeAggregateRoot is Base {
+  event AggregateRootProposed(
+    bytes32 indexed aggregateRoot,
+    uint256 indexed rootTimestamp,
+    uint256 indexed endOfDispute,
+    uint32 domain
+  );
+
+  function setUp() public virtual override {
+    super.setUp();
+    MockSpokeConnector(payable(address(spokeConnector))).setAllowlistedProposer(_proposer, true);
+    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(true);
+  }
+
+  function test_revertIfCallerIsNotProposer(address stranger, bytes32 aggregateRoot, uint256 rootTimestamp) public {
+    vm.assume(stranger != _proposer);
+
+    vm.expectRevert(
+      abi.encodeWithSelector(SpokeConnector.SpokeConnector_onlyProposer__NotAllowlistedProposer.selector)
+    );
+    vm.prank(stranger);
+    spokeConnector.proposeAggregateRoot(aggregateRoot, rootTimestamp);
+  }
+
+  function test_revertIfSlowModeOn(bytes32 aggregateRoot, uint256 rootTimestamp) public {
+    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(false);
+
+    vm.expectRevert(abi.encodeWithSelector(SpokeConnector.SpokeConnector_onlyOptimisticMode__SlowModeOn.selector));
+    vm.prank(_proposer);
+    spokeConnector.proposeAggregateRoot(aggregateRoot, rootTimestamp);
+  }
+
+  function test_revertIfProposeInProgress(bytes32 aggregateRoot, uint256 rootTimestamp) public {
+    vm.assume(aggregateRoot != spokeConnector.FINALIZED_HASH());
+    MockSpokeConnector(payable(address(spokeConnector))).setProposedAggregateRootHash(bytes32("random hash"));
+
+    vm.expectRevert(
+      abi.encodeWithSelector(SpokeConnector.SpokeConnector_proposeAggregateRoot__ProposeInProgress.selector)
+    );
+    vm.prank(_proposer);
+    spokeConnector.proposeAggregateRoot(aggregateRoot, rootTimestamp);
+  }
+
+  function test_aggregateRootCorrectlyProposed(bytes32 aggregateRoot, uint256 rootTimestamp) public {
+    vm.assume(aggregateRoot != spokeConnector.FINALIZED_HASH());
+    uint256 _endOfDispute = block.number + spokeConnector.disputeBlocks();
+    bytes32 _expectedAggregateRootProposedHash = keccak256(
+      abi.encodePacked(aggregateRoot, rootTimestamp, _endOfDispute)
+    );
+    vm.prank(_proposer);
+    spokeConnector.proposeAggregateRoot(aggregateRoot, rootTimestamp);
+    assertEq(spokeConnector.proposedAggregateRootHash(), _expectedAggregateRootProposedHash);
+  }
+
+  function test_emitProposeAggregateRoot(bytes32 aggregateRoot, uint256 rootTimestamp) public {
+    uint256 _endOfDispute = block.number + spokeConnector.disputeBlocks();
+
+    vm.expectEmit(true, true, true, true);
+    emit AggregateRootProposed(aggregateRoot, rootTimestamp, _endOfDispute, spokeConnector.DOMAIN());
+    vm.prank(_proposer);
+    spokeConnector.proposeAggregateRoot(aggregateRoot, rootTimestamp);
   }
 }
 
