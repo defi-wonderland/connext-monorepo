@@ -127,10 +127,27 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    */
   event OptimisticModeActivated();
 
+  /**
+   * @notice Emitted when the number of dispute blocks is updated
+   * @param previous The previous number of blocks off-chain agents had to dispute a proposed root
+   * @param updated  The new number of blocks off-chain agents have to dispute a proposed root
+   */
+  event DisputeBlocksUpdated(uint256 previous, uint256 updated);
+
+  /**
+   * @notice Emitted whem the number of minimum dispute blocks is updated
+   * @param previous The previous minimum number of dispute blocks to set
+   * @param updated  The new minimum number of dispute blocks to set
+   */
+  event MinDisputeBlocksUpdated(uint256 previous, uint256 updated);
+
   // ============ Errors ============
 
   error SpokeConnector_onlyOptimisticMode__SlowModeOn();
   error SpokeConnector_activateOptimisticMode__OptimisticModeOn();
+  error SpokeConnector_setMinDisputeBlocks__SameMinDisputeBlocksAsBefore();
+  error SpokeConnector_setDisputeBlocks__DisputeBlocksLowerThanMin();
+  error SpokeConnector_setDisputeBlocks__SameDisputeBlocksAsBefore();
 
   // ============ Structs ============
 
@@ -226,6 +243,11 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
     @notice The number of blocks off-chain agents have to dispute a given proposal.
   */
   uint256 public disputeBlocks;
+
+  /**
+   * @notice The minimum number of blocks disputeBlocks can be set to.
+   */
+  uint256 public minDisputeBlocks;
 
   /**
    * @notice Hash used to keep the proposal slot warm once a given proposal has been finalized.
@@ -354,6 +376,28 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   function removeProposer(address _proposer) external onlyOwner {
     delete allowlistedProposers[_proposer];
     emit ProposerRemoved(_proposer);
+  }
+
+  /**
+   * @notice Set the `disputeBlocks`, the duration, in blocks, of the dispute process for
+   * a given proposed root
+   */
+  function setMinDisputeBlocks(uint256 _minDisputeBlocks) public onlyOwner {
+    if (_minDisputeBlocks == minDisputeBlocks)
+      revert SpokeConnector_setMinDisputeBlocks__SameMinDisputeBlocksAsBefore();
+    emit MinDisputeBlocksUpdated(minDisputeBlocks, _minDisputeBlocks);
+    minDisputeBlocks = _minDisputeBlocks;
+  }
+
+  /**
+   * @notice Set the `disputeBlocks`, the duration, in blocks, of the dispute process for
+   * a given proposed root
+   */
+  function setDisputeBlocks(uint256 _disputeBlocks) public onlyOwner {
+    if (_disputeBlocks < minDisputeBlocks) revert SpokeConnector_setDisputeBlocks__DisputeBlocksLowerThanMin();
+    if (_disputeBlocks == disputeBlocks) revert SpokeConnector_setDisputeBlocks__SameDisputeBlocksAsBefore();
+    emit DisputeBlocksUpdated(disputeBlocks, _disputeBlocks);
+    disputeBlocks = _disputeBlocks;
   }
 
   /**
