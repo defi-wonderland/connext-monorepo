@@ -79,8 +79,17 @@ contract RootManagerForTest is DomainIndexer, RootManager {
     proposedAggregateRootHash = FINALIZED_HASH;
   }
 
+  // TODO deprecated in v1.1. Should be removed
   function forTest_setFinalizedOptimisticRoot(bytes32 _aggregateRoot) public {
     finalizedOptimisticAggregateRoot = _aggregateRoot;
+  }
+
+  function forTest_setValidAggregateRoot(bytes32 _aggregateRoot, uint256 _timestamp) public {
+    validAggregateRoots[_timestamp] = _aggregateRoot;
+  }
+
+  function forTest_setLastSavedAggregateRootTimestamp(uint256 _timestamp) public {
+    lastSavedAggregateRootTimestamp = _timestamp;
   }
 
   function forTest_sendRootToHubs(
@@ -125,6 +134,8 @@ contract Base is ForgeHelper {
   event AggregateRootSaved(bytes32 aggregateRoot, uint256 rootTimestamp);
 
   event ProposedRootFinalized(bytes32 aggregateRoot);
+
+  event AggregateRootPropagated(bytes32 indexed aggregateRoot, bytes32 domainsHash);
 
   // ============ Storage ============
   RootManagerForTest _rootManager;
@@ -1098,8 +1109,22 @@ contract RootManager_Propagate is Base {
     _rootManager.propagate(_connectors, _fees, randomEncodedData);
   }
 
-  function test_emitIfAggregateRootPropagated() public {
-    // TODO
+  function test_emitIfAggregateRootPropagated(bytes32 aggregateRoot) public {
+    vm.assume(aggregateRoot > _finalizedHash);
+    _rootManager.forTest_setOptimisticMode(true);
+
+    uint256 _rootTimestamp = block.timestamp;
+    _rootManager.forTest_setLastSavedAggregateRootTimestamp(_rootTimestamp);
+    _rootManager.forTest_setValidAggregateRoot(aggregateRoot, _rootTimestamp);
+
+    utils_generateAndAddConnectors(_connectors.length, false, true);
+
+    bytes32 _domainsHash = _rootManager.domainsHash();
+
+    vm.expectEmit(true, true, true, true);
+    emit AggregateRootPropagated(aggregateRoot, _domainsHash);
+
+    _rootManager.propagate(_connectors, _fees, _encodedData);
   }
 }
 
