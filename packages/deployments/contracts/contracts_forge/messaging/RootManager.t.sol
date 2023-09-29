@@ -1510,7 +1510,14 @@ contract RootManager_Dequeue is Base {
 
     vm.expectCall(_merkle, abi.encodeWithSelector(insertSelector, _verifiedInboundRoots));
 
+    uint256 _expectedRootTimestamp = block.timestamp;
+    bytes32 _beforeRoot = _rootManager.validAggregateRoots(_expectedRootTimestamp);
+
     _rootManager.dequeue();
+
+    bytes32 _afterRoot = _rootManager.validAggregateRoots(_expectedRootTimestamp);
+
+    assertNotEq(_beforeRoot, _afterRoot);
   }
 
   function test_saveNewAggregateRoot(bytes32 aggregateRoot) public {
