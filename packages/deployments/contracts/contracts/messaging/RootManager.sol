@@ -100,6 +100,13 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    */
   event ProposedRootFinalized(bytes32 aggregateRoot);
 
+  /**
+   * @notice Emitted when an aggregate root is added to the validAggregateRoots map.
+   * @param aggregateRoot The aggregate root finalized
+   * @param rootTimestamp The timestamp at which the aggregate root was saved.
+   */
+  event AggregateRootSaved(bytes32 aggregateRoot, uint256 rootTimestamp);
+
   // ============ Errors ============
 
   error RootManager_proposeAggregateRoot__InvalidSnapshotId(uint256 snapshotId);
@@ -222,6 +229,22 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    * can propose new roots using `proposeAggregateRoot`.
    */
   mapping(address => bool) public allowlistedProposers;
+
+  /**
+   * @notice The list of valid aggregate roots for a given timestamp.
+   * @dev Each time a new aggregate root is generated or
+   * finalized, it will be added to this mapping using the block.timestamp as key.
+   * @dev This is only used as Data-Availability for off-chain agents. Especially for the Watchers that fetch the
+   * correct aggregate root from this contract in order to verify the data proposed on the Spoke Connectors.
+   * @dev rootTimestamp => aggregateRoot
+   */
+  mapping(uint256 => bytes32) public validAggregateRoots;
+
+  /**
+   * @notice Timestamp of the last aggregate root saved.
+   * @dev Used to ensure that the propagate function will send the latest aggregate root available.
+   */
+  uint256 public lastSavedAggregateRootTimestamp;
 
   // ============ Modifiers ============
 
@@ -450,9 +473,14 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
     if (_userInputHash != _proposedAggregateRootHash) revert RootManager_finalize__InvalidInputHash();
     if (_endOfDispute > block.number) revert RootManager_finalize__ProposeInProgress();
 
-    finalizedOptimisticAggregateRoot = _proposedAggregateRoot;
+    // Save data
+    validAggregateRoots[block.timestamp] = _proposedAggregateRoot;
+    lastSavedAggregateRootTimestamp = block.timestamp;
+
+    // Clear the propose slot
     proposedAggregateRootHash = FINALIZED_HASH;
 
+    emit AggregateRootSaved(_proposedAggregateRoot, block.timestamp);
     emit ProposedRootFinalized(_proposedAggregateRoot);
   }
 
@@ -661,6 +689,10 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
     // aggregate root and count).
     (bytes32 _aggregateRoot, uint256 _count) = MERKLE.insert(_verifiedInboundRoots);
 
+    validAggregateRoots[block.timestamp] = _aggregateRoot;
+    lastSavedAggregateRootTimestamp = block.timestamp;
+
+    emit AggregateRootSaved(_aggregateRoot, block.timestamp);
     emit RootsAggregated(_aggregateRoot, _count, _verifiedInboundRoots);
 
     return (_aggregateRoot, _count);
