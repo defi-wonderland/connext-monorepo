@@ -267,14 +267,18 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   bytes32 public proposedAggregateRootHash = 0x0000000000000000000000000000000000000000000000000000000000000001;
 
   /*
-    @notice The number of blocks off-chain agents have to dispute a given proposal.
+   * @notice The number of blocks off-chain agents have to dispute a given proposal.
+   * @dev Set to gigantic number until a decision is made on whether to add these as constructor params in a struct to avoid stack too deep
+         or leave them as they are so connext is forced to change them.
   */
-  uint256 public disputeBlocks;
+  uint256 public disputeBlocks = 120000000000;
 
   /**
    * @notice The minimum number of blocks disputeBlocks can be set to.
+   * @dev Set to gigantic number until a decision is made on whether to add these as constructor params in a struct to avoid stack too deep
+          or leave them as they are so connext is forced to change them.
    */
-  uint256 public minDisputeBlocks;
+  uint256 public minDisputeBlocks = 100000000000;
 
   /**
    * @notice Hash used to keep the proposal slot warm once a given proposal has been finalized.

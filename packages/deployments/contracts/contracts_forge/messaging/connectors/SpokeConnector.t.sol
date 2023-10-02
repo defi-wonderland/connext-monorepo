@@ -599,6 +599,8 @@ contract SpokeConnector_Finalize is Base {
     vm.assume(aggregateRoot != spokeConnector.FINALIZED_HASH());
     vm.assume(validRootTimestamp != invalidRootTimestamp);
 
+    // Rolling to huge block number to avoid underflow in endOfDispute
+    vm.roll(10000000000000000000000000);
     bytes32 _placeholderProposedRoot = bytes32("Placeholder Root");
     uint256 _placeholderEndOfDispute = block.number - spokeConnector.disputeBlocks() - 1;
     bytes32 _placeHolderProposedRootHash = keccak256(
