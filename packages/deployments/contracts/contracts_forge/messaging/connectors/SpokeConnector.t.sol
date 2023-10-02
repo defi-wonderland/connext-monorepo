@@ -198,6 +198,23 @@ contract SpokeConnector_General is Base {
   }
 }
 
+contract SpokeConnector_Constructor is Base {
+  function test_shouldInitializeValuesCorrectly() public {
+    assertEq(spokeConnector.DOMAIN(), _originDomain);
+    assertEq(spokeConnector.MIRROR_DOMAIN(), _mainnetDomain);
+    assertEq(spokeConnector.AMB(), _originAMB);
+    assertEq(spokeConnector.ROOT_MANAGER(), _rootManager);
+    assertEq(spokeConnector.mirrorConnector(), address(0));
+    assertEq(spokeConnector.PROCESS_GAS(), PROCESS_GAS);
+    assertEq(spokeConnector.RESERVE_GAS(), RESERVE_GAS);
+    assertEq(spokeConnector.delayBlocks(), 0);
+    assertEq(address(spokeConnector.MERKLE()), address(_merkle));
+    assertEq(address(spokeConnector.watcherManager()), address(_watcherManager));
+    assertEq(spokeConnector.minDisputeBlocks(), _minDisputeBlocks);
+    assertEq(spokeConnector.disputeBlocks(), _disputeBlocks);
+  }
+}
+
 contract SpokeConnector_Dispatch is Base {
   event SnapshotRootSaved(uint256 indexed snapshotId, bytes32 indexed root, uint256 indexed count);
   event Dispatch(bytes32 indexed leaf, uint256 indexed index, bytes32 indexed root, bytes message);
