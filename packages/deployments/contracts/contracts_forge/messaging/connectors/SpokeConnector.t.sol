@@ -734,9 +734,7 @@ contract SpokeConnector_ReceiveAggregateRoot is Base {
 
   function setUp() public virtual override {
     super.setUp();
-    vm.startPrank(owner);
     MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(false);
-    vm.stopPrank();
   }
 
   function test_revertIfNotInSlowMode(bytes32 newRoot) public {
