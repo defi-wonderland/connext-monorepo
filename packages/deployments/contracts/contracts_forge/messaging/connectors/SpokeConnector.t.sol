@@ -722,6 +722,57 @@ contract SpokeConnector_SetDisputeBlocks is Base {
   }
 }
 
+contract SpokeConnector_ReceiveAggregateRoot is Base {
+  event AggregateRootReceived(bytes32 indexed root);
+
+  function setUp() public virtual override {
+    super.setUp();
+    vm.startPrank(owner);
+    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(false);
+    vm.stopPrank();
+  }
+
+  function test_revertIfNotInSlowMode(bytes32 newRoot) public {
+    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(true);
+    vm.expectRevert(SpokeConnector.SpokeConnector_receiveAggregateRoot__OptimisticModeOn.selector);
+    MockSpokeConnector(payable(address(spokeConnector))).receiveAggregateRootForTest(newRoot);
+  }
+
+  function test_revertIfNewRootIsZero() public {
+    bytes32 newRoot = bytes32("");
+    vm.expectRevert("new root empty");
+    MockSpokeConnector(payable(address(spokeConnector))).receiveAggregateRootForTest(newRoot);
+  }
+
+  function test_revertIfRootIsAlreadyPending(bytes32 newRoot) public {
+    vm.assume(newRoot != bytes32(""));
+    MockSpokeConnector(payable(address(spokeConnector))).setPendingAggregateRoot(newRoot, block.number);
+    vm.expectRevert("root already pending");
+    MockSpokeConnector(payable(address(spokeConnector))).receiveAggregateRootForTest(newRoot);
+  }
+
+  function test_revertIfRootIsAlreadyProven(bytes32 newRoot) public {
+    vm.assume(newRoot != bytes32(""));
+    MockSpokeConnector(payable(address(spokeConnector))).setProvenAggregateRoot(newRoot, true);
+    vm.expectRevert("root already proven");
+    MockSpokeConnector(payable(address(spokeConnector))).receiveAggregateRootForTest(newRoot);
+  }
+
+  function test_receiveAggregateRootSuccesfully(bytes32 newRoot) public {
+    vm.assume(newRoot != bytes32(""));
+    MockSpokeConnector(payable(address(spokeConnector))).receiveAggregateRootForTest(newRoot);
+    assertEq(spokeConnector.pendingAggregateRoots(newRoot), block.number);
+  }
+
+  function test_emitIfAggregateRootIsReceived(bytes32 newRoot) public {
+    vm.assume(newRoot != bytes32(""));
+    vm.expectEmit(true, true, true, true);
+    emit AggregateRootReceived(newRoot);
+
+    MockSpokeConnector(payable(address(spokeConnector))).receiveAggregateRootForTest(newRoot);
+  }
+}
+
 contract SpokeConnector_GetSnapshotDuration is Base {
   function test_getSnapshotDuration() public {
     assertEq(SnapshotId.SNAPSHOT_DURATION, spokeConnector.getSnapshotDuration());

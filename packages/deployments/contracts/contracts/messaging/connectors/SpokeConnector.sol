@@ -173,6 +173,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   error SpokeConnector_setMinDisputeBlocks__SameMinDisputeBlocksAsBefore();
   error SpokeConnector_setDisputeBlocks__DisputeBlocksLowerThanMin();
   error SpokeConnector_setDisputeBlocks__SameDisputeBlocksAsBefore();
+  error SpokeConnector_receiveAggregateRoot__OptimisticModeOn();
 
   // ============ Structs ============
 
@@ -726,6 +727,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * @param _newRoot Received aggregate
    */
   function receiveAggregateRoot(bytes32 _newRoot) internal {
+    if (optimisticMode) revert SpokeConnector_receiveAggregateRoot__OptimisticModeOn();
     require(_newRoot != bytes32(""), "new root empty");
     require(pendingAggregateRoots[_newRoot] == 0, "root already pending");
     require(!provenAggregateRoots[_newRoot], "root already proven");
