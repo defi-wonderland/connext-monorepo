@@ -175,7 +175,7 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    * After switching back to slow mode, if the count didnt change from previous slow mode, we consider the root as an old one since
    * probably lot of optimistic roots have been propagated.
    * Example: Propagation in slow mode happens, switch to Op Mode, multiple propagations happen, switch back to Slow mode.
-   * If at this point someone calls propagate and the queue is empty or non of elemenets are ready, propagate will
+   * If at this point someone calls propagate and the queue is empty or non of the elements are ready, propagate will
    * call the dequeue function which will return the old root and count before Op mode was activated. And since multiple
    * propagations happened while in optimistic mode, the lastPropagatedRoot will be different than the old but current MERKLE.root
    * which will lead to propagating a deprecated root.
@@ -524,7 +524,7 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
     // Sanity check: fees and encodedData lengths matches connectors length.
     require(_fees.length == _numDomains && _encodedData.length == _numDomains, "invalid lengths");
 
-    // If in slow mode, we still dequeue to ensure that we add the inboundRoots that are ready.
+    // If in slow mode, we dequeue to ensure that we add the inboundRoots that are ready.
     if (!optimisticMode) dequeue();
 
     bytes32 _aggregateRoot = validAggregateRoots[lastSavedAggregateRootTimestamp];
