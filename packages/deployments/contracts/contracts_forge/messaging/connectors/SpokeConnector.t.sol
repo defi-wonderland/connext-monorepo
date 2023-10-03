@@ -581,12 +581,17 @@ contract SpokeConnector_Finalize is Base {
     spokeConnector.finalize(randomRoot, randomRootTimestamp, randomEndOfDispute);
   }
 
-  function test_revertIfSystemIsPaused(bytes32 aggregateRoot, uint256 rootTimestamp, address watcher) public {
+  function test_revertIfSystemIsPaused(
+    bytes32 aggregateRoot,
+    uint256 rootTimestamp,
+    uint256 endOfDispute,
+    address watcher
+  ) public {
     utils_mockIsWatcher_true(watcher);
     vm.prank(watcher);
     spokeConnector.pause();
     vm.expectRevert("Pausable: paused");
-    spokeConnector.proposeAggregateRoot(aggregateRoot, rootTimestamp);
+    spokeConnector.finalize(aggregateRoot, rootTimestamp, endOfDispute);
   }
 
   function test_revertIfProposeInProgress(
