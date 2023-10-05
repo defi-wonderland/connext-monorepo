@@ -630,6 +630,11 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
     return (_aggregateRoot, _count);
   }
 
+  function sentToLocalSpoke() external {
+    // this has no guard since the guard is on the local spoke connector. It can only be called if is in optimistic mode
+    localSpoke.saveAggregateRoot(aggRoot);
+  }
+
   /**
    * @notice Watcher can set the system in slow mode.
    * @dev Sets the proposed aggregate root hash to FINALIZED_HASH, invalidating it.

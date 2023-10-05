@@ -49,4 +49,27 @@ contract MainnetSpokeConnector is SpokeConnector, IHubConnector {
     // otherwise is relayer, update the outbound root on the root manager
     IRootManager(ROOT_MANAGER).aggregate(DOMAIN, bytes32(_data));
   }
+
+  function saveAggregateRoot(bytes32 _aggregateRoot) external {
+    if (!optimisticMode) revert("ONLY IN OPTMISTIC MODE");
+    if (msg.sender != ROOT_MANAGER) revert("NOT_ROOT_MANAGER");
+    if (provenAggregateRoots[_aggregateRoot]) revert("ROOT ALREADY PROVEN");
+    provenAggregateRoots[_aggregateRoot] = true;
+    emit ProposedRootFinalized(_aggregateRoot);
+  }
+
+  function proposeAggregateRoot(
+    bytes32 _aggregateRoot,
+    uint256 _rootTimestamp
+  ) external override whenNotPaused onlyAllowlistedProposer onlyOptimisticMode {
+    revert("IS LOCAL SPOKE");
+  }
+
+  function finalize(
+    bytes32 _proposedAggregateRoot,
+    uint256 _rootTimestamp,
+    uint256 _endOfDispute
+  ) external override whenNotPaused onlyOptimisticMode {
+    revert("IS LOCAL SPOKE");
+  }
 }
