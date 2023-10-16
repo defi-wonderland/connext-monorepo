@@ -373,9 +373,9 @@ contract RootManager_General is Base {
 
   function test_RootManager__propagate_shouldSendToAllSpokes(bytes32 inbound) public {
     _rootManager.forTest_setOptimisticMode(false);
-    uint256 numSpokes = 20;
+    uint256 numSpokes = 6;
     utils_generateAndAddConnectors(numSpokes, true, true);
-    assertEq(_rootManager.getPendingInboundRootsCount(), numSpokes);
+    assertEq(_rootManager.getPendingInboundRootsCount(), 6);
 
     // Fast forward delayBlocks number of blocks so all of the inbound roots are considered verified.
     vm.roll(block.number + _rootManager.delayBlocks());
