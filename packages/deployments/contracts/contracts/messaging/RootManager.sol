@@ -161,8 +161,6 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
 
   error RootManager__renounceOwnership_prohibited();
 
-  error RootManager_slowPropagate__OldAggregateRoot();
-
   error RootManager_propagate__AggregateRootIsZero();
 
   error RootManager_setHubDomain__InvalidDomain();
@@ -656,7 +654,6 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    * @notice Dequeue verified inbound roots and insert them into the aggregator tree.
    * @dev Will dequeue a fixed maximum amount of roots to prevent out of gas errors. As such, this
    * method is public and separate from `propagate` so we can curtail an overloaded queue as needed.
-   * @dev Reverts if no verified inbound roots are found.
    *
    * @return bytes32 The new aggregate root.
    * @return uint256 The updated count (number of leaves).
