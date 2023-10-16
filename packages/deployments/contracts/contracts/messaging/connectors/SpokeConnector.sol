@@ -142,8 +142,8 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   );
 
   /**
-   * @notice Emitted when a pending aggregate root is delete from the mapping
-   * @param aggregateRoot The aggregate root deleted
+   * @notice Emitted when a pending aggregate root is deleted from the pendingAggregateRoots mapping
+   * @param aggregateRoot The deleted aggregate root
    */
   event PendingAggregateRootDeleted(bytes32 indexed aggregateRoot);
 
