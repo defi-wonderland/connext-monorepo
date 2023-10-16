@@ -36,10 +36,6 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
 
   event RootReceived(uint32 domain, bytes32 receivedRoot, uint256 queueIndex);
 
-  event RootsAggregated(bytes32 aggregateRoot, uint256 count, bytes32[] aggregatedMessageRoots);
-
-  event RootPropagated(bytes32 aggregateRoot, uint256 count, bytes32 domainsHash);
-
   event RootDiscarded(bytes32 fraudulentRoot);
 
   /**
@@ -98,17 +94,25 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
   );
 
   /**
-   * @notice Emitted when the current proposed root is finalized
-   * @param aggregateRoot The aggregate root finalized
-   */
-  event ProposedRootFinalized(bytes32 aggregateRoot);
-
-  /**
-   * @notice Emitted when an aggregate root is added to the validAggregateRoots map.
-   * @param aggregateRoot The aggregate root finalized
+   * @notice Emitted when an aggregate root is added to the validAggregateRoots map during optimistic mode.
+   * @param aggregateRoot The saved aggregate root
    * @param rootTimestamp The timestamp at which the aggregate root was saved.
    */
-  event AggregateRootSaved(bytes32 aggregateRoot, uint256 rootTimestamp);
+  event AggregateRootSavedOptimistic(bytes32 aggregateRoot, uint256 rootTimestamp);
+
+  /**
+   * @notice Emitted when an aggregate root is added to the validAggregateRoots map during slow mode.
+   * @param aggregateRoot   The saved aggregate root
+   * @param leafCount       The new number of leaves in the tree.
+   * @param aggregatedRoots The verified inbound roots inserted in the tree.
+   * @param rootTimestamp   The timestamp at which the aggregate root was saved.
+   */
+  event AggregateRootSavedSlow(
+    bytes32 aggregateRoot,
+    uint256 leafCount,
+    bytes32[] aggregatedRoots,
+    uint256 rootTimestamp
+  );
 
   /**
    * @notice Emitted when a domain is set as the hub domain.
@@ -154,8 +158,6 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
   error RootManager_constructor__DisputeBlocksLowerThanMin();
 
   error RootManager__renounceOwnership_prohibited();
-
-  error RootManager_slowPropagate__OldAggregateRoot();
 
   error RootManager_propagate__AggregateRootIsZero();
 
@@ -499,8 +501,7 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
     // Clear the propose slot
     proposedAggregateRootHash = FINALIZED_HASH;
 
-    emit AggregateRootSaved(_proposedAggregateRoot, block.timestamp);
-    emit ProposedRootFinalized(_proposedAggregateRoot);
+    emit AggregateRootSavedOptimistic(_proposedAggregateRoot, block.timestamp);
   }
 
   /**
@@ -651,7 +652,6 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    * @notice Dequeue verified inbound roots and insert them into the aggregator tree.
    * @dev Will dequeue a fixed maximum amount of roots to prevent out of gas errors. As such, this
    * method is public and separate from `propagate` so we can curtail an overloaded queue as needed.
-   * @dev Reverts if no verified inbound roots are found.
    *
    * @return bytes32 The new aggregate root.
    * @return uint256 The updated count (number of leaves).
@@ -672,8 +672,7 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
     validAggregateRoots[block.timestamp] = _aggregateRoot;
     lastSavedAggregateRootTimestamp = block.timestamp;
 
-    emit AggregateRootSaved(_aggregateRoot, block.timestamp);
-    emit RootsAggregated(_aggregateRoot, _count, _verifiedInboundRoots);
+    emit AggregateRootSavedSlow(_aggregateRoot, _count, _verifiedInboundRoots, block.timestamp);
 
     return (_aggregateRoot, _count);
   }
