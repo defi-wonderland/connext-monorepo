@@ -36,8 +36,6 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
 
   event RootReceived(uint32 domain, bytes32 receivedRoot, uint256 queueIndex);
 
-  event RootPropagated(bytes32 aggregateRoot, uint256 count, bytes32 domainsHash);
-
   event RootDiscarded(bytes32 fraudulentRoot);
 
   /**
