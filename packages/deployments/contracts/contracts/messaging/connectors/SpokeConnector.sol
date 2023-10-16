@@ -384,7 +384,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * @dev Only allowlisted routers (senders) can call `dispatch`.
    * @param _sender Sender to whitelist
    */
-  function addSender(address _sender) public onlyOwner {
+  function addSender(address _sender) external onlyOwner {
     require(!allowlistedSenders[_sender], "allowed");
     allowlistedSenders[_sender] = true;
     emit SenderAdded(_sender);
@@ -395,7 +395,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * @dev Only allowlisted routers (senders) can call `dispatch`.
    * @param _sender Sender to remove from whitelist
    */
-  function removeSender(address _sender) public onlyOwner {
+  function removeSender(address _sender) external onlyOwner {
     require(allowlistedSenders[_sender], "!allowed");
     delete allowlistedSenders[_sender];
     emit SenderRemoved(_sender);
@@ -422,7 +422,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   /**
    * @notice Set the `minDisputeBlocks` variable to the provided parameter.
    */
-  function setMinDisputeBlocks(uint256 _minDisputeBlocks) public onlyOwner {
+  function setMinDisputeBlocks(uint256 _minDisputeBlocks) external onlyOwner {
     if (_minDisputeBlocks == minDisputeBlocks)
       revert SpokeConnector_setMinDisputeBlocks__SameMinDisputeBlocksAsBefore();
     emit MinDisputeBlocksUpdated(minDisputeBlocks, _minDisputeBlocks);
@@ -433,7 +433,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * @notice Set the `disputeBlocks`, the duration, in blocks, of the dispute process for
    * a given proposed root
    */
-  function setDisputeBlocks(uint256 _disputeBlocks) public onlyOwner {
+  function setDisputeBlocks(uint256 _disputeBlocks) external onlyOwner {
     if (_disputeBlocks < minDisputeBlocks) revert SpokeConnector_setDisputeBlocks__DisputeBlocksLowerThanMin();
     if (_disputeBlocks == disputeBlocks) revert SpokeConnector_setDisputeBlocks__SameDisputeBlocksAsBefore();
     emit DisputeBlocksUpdated(disputeBlocks, _disputeBlocks);
@@ -445,7 +445,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * is verified.
    * @param _delayBlocks Updated delay block value
    */
-  function setDelayBlocks(uint256 _delayBlocks) public onlyOwner {
+  function setDelayBlocks(uint256 _delayBlocks) external onlyOwner {
     require(_delayBlocks != delayBlocks, "!delayBlocks");
     emit DelayBlocksUpdated(_delayBlocks, msg.sender);
     delayBlocks = _delayBlocks;
@@ -458,7 +458,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * @param _rateLimit The number of blocks require between sending messages. If set to
    * 0, rate limiting for this spoke connector will be disabled.
    */
-  function setRateLimitBlocks(uint256 _rateLimit) public onlyOwner {
+  function setRateLimitBlocks(uint256 _rateLimit) external onlyOwner {
     _setRateLimitBlocks(_rateLimit);
   }
 
@@ -471,7 +471,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * @param _fraudulentRoot Target fraudulent root that should be erased from the
    * `pendingAggregateRoots` mapping.
    */
-  function removePendingAggregateRoot(bytes32 _fraudulentRoot) public onlyOwner whenPaused {
+  function removePendingAggregateRoot(bytes32 _fraudulentRoot) external onlyOwner whenPaused {
     // Sanity check: pending aggregate root exists.
     require(pendingAggregateRoots[_fraudulentRoot] != 0, "aggregateRoot !exists");
     delete pendingAggregateRoots[_fraudulentRoot];
