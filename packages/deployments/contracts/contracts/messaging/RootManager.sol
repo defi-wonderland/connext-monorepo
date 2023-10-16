@@ -95,14 +95,14 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
 
   /**
    * @notice Emitted when an aggregate root is added to the validAggregateRoots map during optimistic mode.
-   * @param aggregateRoot The aggregate root finalized
+   * @param aggregateRoot The saved aggregate root
    * @param rootTimestamp The timestamp at which the aggregate root was saved.
    */
   event AggregateRootSavedOptimistic(bytes32 aggregateRoot, uint256 rootTimestamp);
 
   /**
    * @notice Emitted when an aggregate root is added to the validAggregateRoots map during slow mode.
-   * @param aggregateRoot   The aggregate root finalized
+   * @param aggregateRoot   The saved aggregate root
    * @param leafCount       The new number of leaves in the tree.
    * @param aggregatedRoots The verified inbound roots inserted in the tree.
    * @param rootTimestamp   The timestamp at which the aggregate root was saved.
