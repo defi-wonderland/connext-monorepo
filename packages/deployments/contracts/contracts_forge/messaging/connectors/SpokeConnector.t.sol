@@ -151,13 +151,6 @@ contract SpokeConnector_General is Base {
     spokeConnector.send(abi.encode(""));
   }
 
-  function test_SpokeConnector__send_failsIfOptimisticModeOn() public {
-    MockSpokeConnector(payable(address(spokeConnector))).setOptimisticMode(true);
-
-    vm.expectRevert(SpokeConnector.SpokeConnector_send__OptimisticModeOn.selector);
-    spokeConnector.send(abi.encode(""));
-  }
-
   function test_SpokeConnector__send_failsIfRootAlreadySent() public {
     bytes32 root = bytes32(bytes("test123"));
     vm.mockCall(address(_merkle), abi.encodeWithSelector(MerkleTreeManager.root.selector), abi.encode(root));
@@ -212,6 +205,27 @@ contract SpokeConnector_Constructor is Base {
     assertEq(address(spokeConnector.watcherManager()), address(_watcherManager));
     assertEq(spokeConnector.minDisputeBlocks(), _minDisputeBlocks);
     assertEq(spokeConnector.disputeBlocks(), _disputeBlocks);
+  }
+
+  function test_shouldRevertIfDisputeBlocksLessThanMinDisputeBlocks() public {
+    uint256 _failingDisputeBlocks = _minDisputeBlocks - 1;
+    SpokeConnector.ConstructorParams memory _constructorParams = SpokeConnector.ConstructorParams({
+      domain: _originDomain,
+      mirrorDomain: _mainnetDomain,
+      amb: _originAMB,
+      rootManager: _rootManager,
+      mirrorConnector: address(0),
+      processGas: PROCESS_GAS,
+      reserveGas: RESERVE_GAS,
+      delayBlocks: 0,
+      merkle: address(_merkle),
+      watcherManager: address(_watcherManager),
+      minDisputeBlocks: _minDisputeBlocks,
+      disputeBlocks: _failingDisputeBlocks
+    });
+
+    vm.expectRevert(SpokeConnector.SpokeConnector_constructor__DisputeBlocksLowerThanMin.selector);
+    new MockSpokeConnector(_constructorParams);
   }
 }
 
@@ -497,6 +511,8 @@ contract SpokeConnector_ProposeAggregateRoot is Base {
     uint32 domain
   );
 
+  event PendingAggregateRootDeleted(bytes32 indexed aggregateRoot);
+
   function setUp() public virtual override {
     super.setUp();
     MockSpokeConnector(payable(address(spokeConnector))).setAllowlistedProposer(_proposer, true);
@@ -537,6 +553,23 @@ contract SpokeConnector_ProposeAggregateRoot is Base {
     vm.expectRevert(
       abi.encodeWithSelector(SpokeConnector.SpokeConnector_proposeAggregateRoot__ProposeInProgress.selector)
     );
+    vm.prank(_proposer);
+    spokeConnector.proposeAggregateRoot(aggregateRoot, rootTimestamp);
+  }
+
+  function test_deletePendingAggregateRoot(bytes32 aggregateRoot, uint256 rootTimestamp) public {
+    vm.assume(aggregateRoot != spokeConnector.FINALIZED_HASH());
+    MockSpokeConnector(payable(address(spokeConnector))).setPendingAggregateRoot(aggregateRoot, block.number);
+    vm.prank(_proposer);
+    spokeConnector.proposeAggregateRoot(aggregateRoot, rootTimestamp);
+    assertEq(spokeConnector.pendingAggregateRoots(aggregateRoot), 0);
+  }
+
+  function test_emitPendingAggregateRootDeleted(bytes32 aggregateRoot, uint256 rootTimestamp) public {
+    vm.assume(aggregateRoot != spokeConnector.FINALIZED_HASH());
+    MockSpokeConnector(payable(address(spokeConnector))).setPendingAggregateRoot(aggregateRoot, block.number);
+    vm.expectEmit(true, true, true, true);
+    emit PendingAggregateRootDeleted(aggregateRoot);
     vm.prank(_proposer);
     spokeConnector.proposeAggregateRoot(aggregateRoot, rootTimestamp);
   }

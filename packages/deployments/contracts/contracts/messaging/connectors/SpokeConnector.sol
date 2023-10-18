@@ -142,6 +142,12 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   );
 
   /**
+   * @notice Emitted when a pending aggregate root is deleted from the pendingAggregateRoots mapping
+   * @param aggregateRoot The deleted aggregate root
+   */
+  event PendingAggregateRootDeleted(bytes32 indexed aggregateRoot);
+
+  /**
    * @notice Emitted when the current proposed root is finalized
    * @param aggregateRoot The aggregate root finalized
    */
@@ -174,7 +180,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   error SpokeConnector_setDisputeBlocks__DisputeBlocksLowerThanMin();
   error SpokeConnector_setDisputeBlocks__SameDisputeBlocksAsBefore();
   error SpokeConnector_receiveAggregateRoot__OptimisticModeOn();
-  error SpokeConnector_send__OptimisticModeOn();
+  error SpokeConnector_constructor__DisputeBlocksLowerThanMin();
 
   // ============ Structs ============
 
@@ -363,6 +369,9 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
     Connector(_params.domain, _params.mirrorDomain, _params.amb, _params.rootManager, _params.mirrorConnector)
     WatcherClient(_params.watcherManager)
   {
+    uint256 _disputeBlocks = _params.disputeBlocks;
+    uint256 _minDisputeBlocks = _params.minDisputeBlocks;
+    if (_disputeBlocks < _minDisputeBlocks) revert SpokeConnector_constructor__DisputeBlocksLowerThanMin();
     // Sanity check: constants are reasonable.
     require(_params.processGas > 850_000 - 1, "!process gas");
     require(_params.reserveGas > 15_000 - 1, "!reserve gas");
@@ -373,8 +382,8 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
     MERKLE = MerkleTreeManager(_params.merkle);
 
     delayBlocks = _params.delayBlocks;
-    minDisputeBlocks = _params.minDisputeBlocks;
-    disputeBlocks = _params.disputeBlocks;
+    minDisputeBlocks = _minDisputeBlocks;
+    disputeBlocks = _disputeBlocks;
   }
 
   // ============ Admin Functions ============
@@ -384,7 +393,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * @dev Only allowlisted routers (senders) can call `dispatch`.
    * @param _sender Sender to whitelist
    */
-  function addSender(address _sender) public onlyOwner {
+  function addSender(address _sender) external onlyOwner {
     require(!allowlistedSenders[_sender], "allowed");
     allowlistedSenders[_sender] = true;
     emit SenderAdded(_sender);
@@ -395,7 +404,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * @dev Only allowlisted routers (senders) can call `dispatch`.
    * @param _sender Sender to remove from whitelist
    */
-  function removeSender(address _sender) public onlyOwner {
+  function removeSender(address _sender) external onlyOwner {
     require(allowlistedSenders[_sender], "!allowed");
     delete allowlistedSenders[_sender];
     emit SenderRemoved(_sender);
@@ -420,10 +429,9 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   }
 
   /**
-   * @notice Set the `disputeBlocks`, the duration, in blocks, of the dispute process for
-   * a given proposed root
+   * @notice Set the `minDisputeBlocks` variable to the provided parameter.
    */
-  function setMinDisputeBlocks(uint256 _minDisputeBlocks) public onlyOwner {
+  function setMinDisputeBlocks(uint256 _minDisputeBlocks) external onlyOwner {
     if (_minDisputeBlocks == minDisputeBlocks)
       revert SpokeConnector_setMinDisputeBlocks__SameMinDisputeBlocksAsBefore();
     emit MinDisputeBlocksUpdated(minDisputeBlocks, _minDisputeBlocks);
@@ -434,7 +442,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * @notice Set the `disputeBlocks`, the duration, in blocks, of the dispute process for
    * a given proposed root
    */
-  function setDisputeBlocks(uint256 _disputeBlocks) public onlyOwner {
+  function setDisputeBlocks(uint256 _disputeBlocks) external onlyOwner {
     if (_disputeBlocks < minDisputeBlocks) revert SpokeConnector_setDisputeBlocks__DisputeBlocksLowerThanMin();
     if (_disputeBlocks == disputeBlocks) revert SpokeConnector_setDisputeBlocks__SameDisputeBlocksAsBefore();
     emit DisputeBlocksUpdated(disputeBlocks, _disputeBlocks);
@@ -446,7 +454,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * is verified.
    * @param _delayBlocks Updated delay block value
    */
-  function setDelayBlocks(uint256 _delayBlocks) public onlyOwner {
+  function setDelayBlocks(uint256 _delayBlocks) external onlyOwner {
     require(_delayBlocks != delayBlocks, "!delayBlocks");
     emit DelayBlocksUpdated(_delayBlocks, msg.sender);
     delayBlocks = _delayBlocks;
@@ -459,7 +467,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * @param _rateLimit The number of blocks require between sending messages. If set to
    * 0, rate limiting for this spoke connector will be disabled.
    */
-  function setRateLimitBlocks(uint256 _rateLimit) public onlyOwner {
+  function setRateLimitBlocks(uint256 _rateLimit) external onlyOwner {
     _setRateLimitBlocks(_rateLimit);
   }
 
@@ -472,7 +480,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * @param _fraudulentRoot Target fraudulent root that should be erased from the
    * `pendingAggregateRoots` mapping.
    */
-  function removePendingAggregateRoot(bytes32 _fraudulentRoot) public onlyOwner whenPaused {
+  function removePendingAggregateRoot(bytes32 _fraudulentRoot) external onlyOwner whenPaused {
     // Sanity check: pending aggregate root exists.
     require(pendingAggregateRoots[_fraudulentRoot] != 0, "aggregateRoot !exists");
     delete pendingAggregateRoots[_fraudulentRoot];
@@ -531,7 +539,6 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
    * @param _encodedData Data needed to send crosschain message by associated amb
    */
   function send(bytes memory _encodedData) external payable whenNotPaused rateLimited {
-    if (optimisticMode) revert SpokeConnector_send__OptimisticModeOn();
     bytes32 root = MERKLE.root();
     require(sentMessageRoots[root] == false, "root already sent");
     // mark as sent
@@ -607,8 +614,13 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
   function proposeAggregateRoot(
     bytes32 _aggregateRoot,
     uint256 _rootTimestamp
-  ) external whenNotPaused onlyAllowlistedProposer onlyOptimisticMode {
+  ) external virtual whenNotPaused onlyAllowlistedProposer onlyOptimisticMode {
     if (proposedAggregateRootHash != FINALIZED_HASH) revert SpokeConnector_proposeAggregateRoot__ProposeInProgress();
+    if (pendingAggregateRoots[_aggregateRoot] != 0) {
+      delete pendingAggregateRoots[_aggregateRoot];
+      emit PendingAggregateRootDeleted(_aggregateRoot);
+    }
+
     uint256 _endOfDispute = block.number + disputeBlocks;
     proposedAggregateRootHash = keccak256(abi.encode(_aggregateRoot, _rootTimestamp, _endOfDispute));
 
@@ -626,7 +638,7 @@ abstract contract SpokeConnector is Connector, ConnectorManager, WatcherClient, 
     bytes32 _proposedAggregateRoot,
     uint256 _rootTimestamp,
     uint256 _endOfDispute
-  ) external whenNotPaused onlyOptimisticMode {
+  ) external virtual whenNotPaused onlyOptimisticMode {
     if (_endOfDispute > block.number) revert SpokeConnector_finalize__ProposeInProgress();
 
     bytes32 _proposedAggregateRootHash = proposedAggregateRootHash;

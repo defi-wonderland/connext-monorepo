@@ -14,6 +14,8 @@ import {SnapshotId} from "./libraries/SnapshotId.sol";
 import {MerkleTreeManager} from "./MerkleTreeManager.sol";
 import {WatcherClient} from "./WatcherClient.sol";
 
+import {IHubSpokeConnector} from "./interfaces/IHubSpokeConnector.sol";
+
 /**
  * @notice This contract exists at cluster hubs, and aggregates all transfer roots from messaging
  * spokes into a single merkle tree. Regularly broadcasts the root of the aggregator tree back out
@@ -33,10 +35,6 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
   event MinDisputeBlocksUpdated(uint256 previous, uint256 updated);
 
   event RootReceived(uint32 domain, bytes32 receivedRoot, uint256 queueIndex);
-
-  event RootsAggregated(bytes32 aggregateRoot, uint256 count, bytes32[] aggregatedMessageRoots);
-
-  event RootPropagated(bytes32 aggregateRoot, uint256 count, bytes32 domainsHash);
 
   event RootDiscarded(bytes32 fraudulentRoot);
 
@@ -70,7 +68,8 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
   event OptimisticModeActivated();
 
   /**
-   * @notice Emitted when an optimistic root is propagated
+   * @notice Emitted when a root is propagated
+   * @dev It doesnt matter if the root was generated optimistically or on-chain.
    * @param aggregateRoot The aggregate root propagated
    * @param domainsHash The current domain hash
    */
@@ -95,17 +94,36 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
   );
 
   /**
-   * @notice Emitted when the current proposed root is finalized
-   * @param aggregateRoot The aggregate root finalized
-   */
-  event ProposedRootFinalized(bytes32 aggregateRoot);
-
-  /**
-   * @notice Emitted when an aggregate root is added to the validAggregateRoots map.
-   * @param aggregateRoot The aggregate root finalized
+   * @notice Emitted when an aggregate root is added to the validAggregateRoots map during optimistic mode.
+   * @param aggregateRoot The saved aggregate root
    * @param rootTimestamp The timestamp at which the aggregate root was saved.
    */
-  event AggregateRootSaved(bytes32 aggregateRoot, uint256 rootTimestamp);
+  event AggregateRootSavedOptimistic(bytes32 aggregateRoot, uint256 rootTimestamp);
+
+  /**
+   * @notice Emitted when an aggregate root is added to the validAggregateRoots map during slow mode.
+   * @param aggregateRoot   The saved aggregate root
+   * @param leafCount       The new number of leaves in the tree.
+   * @param aggregatedRoots The verified inbound roots inserted in the tree.
+   * @param rootTimestamp   The timestamp at which the aggregate root was saved.
+   */
+  event AggregateRootSavedSlow(
+    bytes32 aggregateRoot,
+    uint256 leafCount,
+    bytes32[] aggregatedRoots,
+    uint256 rootTimestamp
+  );
+
+  /**
+   * @notice Emitted when a domain is set as the hub domain.
+   * @param domain The domain set as hub domain.
+   */
+  event HubDomainSet(uint32 domain);
+
+  /**
+   * @notice Emitted when the previously set hub domain is cleared.
+   */
+  event HubDomainCleared();
 
   // ============ Errors ============
 
@@ -141,9 +159,9 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
 
   error RootManager__renounceOwnership_prohibited();
 
-  error RootManager_slowPropagate__OldAggregateRoot();
-
   error RootManager_propagate__AggregateRootIsZero();
+
+  error RootManager_setHubDomain__InvalidDomain();
 
   // ============ Properties ============
 
@@ -172,19 +190,6 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    * @notice The minimum number of blocks disputeBlocks can be set to.
    */
   uint256 public minDisputeBlocks;
-
-  /**
-   * @notice The amount of inserted leaves prior to switching to optimistic mode
-   * @dev Used to prevent the propagation of an old aggregate root right after switching to Slow mode.
-   * After switching back to slow mode, if the count didnt change from previous slow mode, we consider the root as an old one since
-   * probably lot of optimistic roots have been propagated.
-   * Example: Propagation in slow mode happens, switch to Op Mode, multiple propagations happen, switch back to Slow mode.
-   * If at this point someone calls propagate and the queue is empty or non of the elements are ready, propagate will
-   * call the dequeue function which will return the old root and count before Op mode was activated. And since multiple
-   * propagations happened while in optimistic mode, the lastPropagatedRoot will be different than the old but current MERKLE.root
-   * which will lead to propagating a deprecated root.
-   */
-  uint256 public lastCountBeforeOpMode;
 
   /**
    * @notice True if the system is working in optimistic mode. Otherwise is working in slow mode
@@ -239,6 +244,11 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    * @dev Used to ensure that the propagate function will send the latest aggregate root available.
    */
   uint256 public lastSavedAggregateRootTimestamp;
+
+  /**
+   * @notice Domain id of the current network
+   */
+  uint32 public hubDomain;
 
   // ============ Modifiers ============
 
@@ -336,10 +346,9 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
   }
 
   /**
-   * @notice Set the `disputeBlocks`, the duration, in blocks, of the dispute process for
-   * a given proposed root
+   * @notice Set the `minDisputeBlocks` variable to the provided parameter.
    */
-  function setMinDisputeBlocks(uint256 _minDisputeBlocks) public onlyOwner {
+  function setMinDisputeBlocks(uint256 _minDisputeBlocks) external onlyOwner {
     if (_minDisputeBlocks == minDisputeBlocks) revert RootManager_setMinDisputeBlocks__SameMinDisputeBlocksAsBefore();
     emit MinDisputeBlocksUpdated(minDisputeBlocks, _minDisputeBlocks);
     minDisputeBlocks = _minDisputeBlocks;
@@ -349,7 +358,7 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    * @notice Set the `disputeBlocks`, the duration, in blocks, of the dispute process for
    * a given proposed root
    */
-  function setDisputeBlocks(uint256 _disputeBlocks) public onlyOwner {
+  function setDisputeBlocks(uint256 _disputeBlocks) external onlyOwner {
     if (_disputeBlocks < minDisputeBlocks) revert RootManager_setDisputeBlocks__DisputeBlocksLowerThanMin();
     if (_disputeBlocks == disputeBlocks) revert RootManager_setDisputeBlocks__SameDisputeBlocksAsBefore();
     emit DisputeBlocksUpdated(disputeBlocks, _disputeBlocks);
@@ -360,7 +369,7 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    * @notice Set the `delayBlocks`, the period in blocks over which an incoming message
    * is verified.
    */
-  function setDelayBlocks(uint256 _delayBlocks) public onlyOwner {
+  function setDelayBlocks(uint256 _delayBlocks) external onlyOwner {
     require(_delayBlocks != delayBlocks, "!delayBlocks");
     emit DelayBlocksUpdated(delayBlocks, _delayBlocks);
     delayBlocks = _delayBlocks;
@@ -389,7 +398,7 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    *
    * @param _domain The spoke domain of the target connector we want to remove.
    */
-  function removeConnector(uint32 _domain) public onlyWatcher {
+  function removeConnector(uint32 _domain) external onlyWatcher {
     address _connector = removeDomain(_domain);
     proposedAggregateRootHash = FINALIZED_HASH;
     emit ConnectorRemoved(_domain, _connector, domains, connectors, msg.sender);
@@ -404,7 +413,7 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    *
    * @param _root The root to be discarded.
    */
-  function discardRoot(bytes32 _root) public onlyOwner whenPaused {
+  function discardRoot(bytes32 _root) external onlyOwner whenPaused {
     pendingInboundRoots.remove(_root);
     emit RootDiscarded(_root);
   }
@@ -416,6 +425,25 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    */
   function renounceOwnership() public virtual override(ProposedOwnable, WatcherClient) onlyOwner {
     revert RootManager__renounceOwnership_prohibited();
+  }
+
+  /**
+   * @notice Sets domain corresponding to the hub domain.
+   *
+   * @param _domain The domain to be set as hub domain.
+   */
+  function setHubDomain(uint32 _domain) external onlyOwner {
+    if (!isDomainSupported(_domain)) revert RootManager_setHubDomain__InvalidDomain();
+    hubDomain = _domain;
+    emit HubDomainSet(_domain);
+  }
+
+  /**
+   * @notice Removes the domain associated with the hub domain.
+   */
+  function clearHubDomain() external onlyOwner {
+    delete hubDomain;
+    emit HubDomainCleared();
   }
 
   // ============ Public Functions ============
@@ -473,8 +501,7 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
     // Clear the propose slot
     proposedAggregateRootHash = FINALIZED_HASH;
 
-    emit AggregateRootSaved(_proposedAggregateRoot, block.timestamp);
-    emit ProposedRootFinalized(_proposedAggregateRoot);
+    emit AggregateRootSavedOptimistic(_proposedAggregateRoot, block.timestamp);
   }
 
   /**
@@ -522,10 +549,7 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
     require(_fees.length == _numDomains && _encodedData.length == _numDomains, "invalid lengths");
 
     // If in slow mode, we dequeue to ensure that we add the inboundRoots that are ready.
-    if (!optimisticMode) {
-      (, uint256 _currentCount) = dequeue();
-      if (_currentCount <= lastCountBeforeOpMode) revert RootManager_slowPropagate__OldAggregateRoot();
-    }
+    if (!optimisticMode) dequeue();
 
     bytes32 _aggregateRoot = validAggregateRoots[lastSavedAggregateRootTimestamp];
 
@@ -599,6 +623,16 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
   }
 
   /**
+   * @notice Sends the latest valid aggregate root to the hub domain's spoke connector.
+   * @dev This has no guards as the guards should be in the spoke connector. For example, the spoke connector should
+   *      guard against receiving the root through this function if the spoke connector is not in optimistic mode.
+   */
+  function sendRootToHubSpoke() external whenNotPaused {
+    bytes32 _aggregateRoot = validAggregateRoots[lastSavedAggregateRootTimestamp];
+    IHubSpokeConnector(getConnectorForDomain(hubDomain)).saveAggregateRoot(_aggregateRoot);
+  }
+
+  /**
    * @notice Accept an inbound root coming from a given domain's hub connector, enqueuing this incoming
    * root into the current queue as it awaits the verification period.
    * @dev The aggregate tree's root, which will include this inbound root, will be propagated to all spoke
@@ -618,7 +652,6 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
    * @notice Dequeue verified inbound roots and insert them into the aggregator tree.
    * @dev Will dequeue a fixed maximum amount of roots to prevent out of gas errors. As such, this
    * method is public and separate from `propagate` so we can curtail an overloaded queue as needed.
-   * @dev Reverts if no verified inbound roots are found.
    *
    * @return bytes32 The new aggregate root.
    * @return uint256 The updated count (number of leaves).
@@ -639,8 +672,7 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
     validAggregateRoots[block.timestamp] = _aggregateRoot;
     lastSavedAggregateRootTimestamp = block.timestamp;
 
-    emit AggregateRootSaved(_aggregateRoot, block.timestamp);
-    emit RootsAggregated(_aggregateRoot, _count, _verifiedInboundRoots);
+    emit AggregateRootSavedSlow(_aggregateRoot, _count, _verifiedInboundRoots, block.timestamp);
 
     return (_aggregateRoot, _count);
   }
@@ -667,7 +699,6 @@ contract RootManager is ProposedOwnable, IRootManager, WatcherClient, DomainInde
     if (optimisticMode) revert RootManager_activateOptimisticMode__OptimisticModeOn();
 
     pendingInboundRoots.last = pendingInboundRoots.first - 1;
-    lastCountBeforeOpMode = MERKLE.count();
 
     optimisticMode = true;
     emit OptimisticModeActivated();
