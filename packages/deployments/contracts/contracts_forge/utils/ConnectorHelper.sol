@@ -36,4 +36,27 @@ contract ConnectorHelper is ForgeHelper {
   address payable _l1Connector;
   address payable _l2Connector;
   address _merkle;
+
+  /**
+   * @notice Combines mockCall and expectCall into one function
+   *
+   * @param _receiver   The receiver of the calls
+   * @param _calldata   The encoded selector and the parameters of the call
+   * @param _returned   The encoded data that the call should return
+   */
+  function _mockAndExpect(address _receiver, bytes memory _calldata, bytes memory _returned) internal {
+    vm.mockCall(_receiver, _calldata, _returned);
+    vm.expectCall(_receiver, _calldata);
+  }
+
+  function _convertbytes32ToBytes(bytes32 _data) internal pure returns (bytes memory _byteArray) {
+    // Initialize a new bytes array with the same length as the bytes32
+    _byteArray = new bytes(32);
+
+    // Loop through each byte in the bytes32
+    for (uint256 i = 0; i < 32; i++) {
+      // Assign each byte of the bytes32 to the bytes array
+      _byteArray[i] = _data[i];
+    }
+  }
 }

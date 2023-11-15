@@ -6,11 +6,10 @@ import {Connector} from "../Connector.sol";
 import {SpokeConnector} from "../SpokeConnector.sol";
 import {ProposedOwnable} from "../../../../contracts/shared/ProposedOwnable.sol";
 import {WatcherClient} from "../../WatcherClient.sol";
-import {IL2ScrollMessenger} from "../../../../contracts/messaging/interfaces/ambs/scroll/IL2ScrollMessenger.sol";
 
 contract ScrollSpokeConnector is SpokeConnector, BaseScroll {
   error ScrollSpokeConnector_LengthIsNot32();
-  error ScrollSpokeConnector_OriginSenderIsNotMirrorConnector();
+  error ScrollSpokeConnector_OriginSenderIsNotMirror();
 
   constructor(
     uint32 _domain,
@@ -52,7 +51,7 @@ contract ScrollSpokeConnector is SpokeConnector, BaseScroll {
   }
 
   function _processMessage(bytes memory _data) internal override onlyAMB checkMessageLength(_data) {
-    if (!_verifySender(mirrorConnector)) revert ScrollSpokeConnector_OriginSenderIsNotMirrorConnector();
+    if (!_verifySender(mirrorConnector)) revert ScrollSpokeConnector_OriginSenderIsNotMirror();
     receiveAggregateRoot(bytes32(_data));
   }
 

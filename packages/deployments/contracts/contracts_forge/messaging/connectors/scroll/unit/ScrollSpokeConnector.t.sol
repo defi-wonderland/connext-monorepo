@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity 0.8.17;
 
-import {BaseScroll} from "../../../../contracts/messaging/connectors/scroll/BaseScroll.sol";
-import {Connector} from "../../../../contracts/messaging/connectors/Connector.sol";
-import {ConnectorHelper} from "../../../utils/ConnectorHelper.sol";
-import {ScrollSpokeConnector} from "../../../../contracts/messaging/connectors/scroll/scrollSpokeConnector.sol";
-import {MerkleTreeManager} from "../../../../contracts/messaging/MerkleTreeManager.sol";
-import {ProposedOwnable} from "../../../../contracts/shared/ProposedOwnable.sol";
-import {IScrollMessenger} from "../../../../contracts/messaging/interfaces/ambs/scroll/IScrollMessenger.sol";
-import {IL2ScrollMessenger} from "../../../../contracts/messaging/interfaces/ambs/scroll/IL2ScrollMessenger.sol";
-import {IRootManager} from "../../../../contracts/messaging/interfaces/IRootManager.sol";
+import {BaseScroll} from "../../../../../contracts/messaging/connectors/scroll/BaseScroll.sol";
+import {Connector} from "../../../../../contracts/messaging/connectors/Connector.sol";
+import {ConnectorHelper} from "../../../../utils/ConnectorHelper.sol";
+import {ScrollSpokeConnector} from "../../../../../contracts/messaging/connectors/scroll/scrollSpokeConnector.sol";
+import {MerkleTreeManager} from "../../../../../contracts/messaging/MerkleTreeManager.sol";
+import {ProposedOwnable} from "../../../../../contracts/shared/ProposedOwnable.sol";
+import {IScrollMessenger} from "../../../../../contracts/messaging/interfaces/ambs/scroll/IScrollMessenger.sol";
+import {IRootManager} from "../../../../../contracts/messaging/interfaces/IRootManager.sol";
 
 contract ScrollSpokeConnectorForTest is ScrollSpokeConnector {
   constructor(
@@ -83,29 +82,6 @@ contract Base is ConnectorHelper {
       watcherManager,
       _gasCap
     );
-  }
-
-  /**
-   * @notice Combines mockCall and expectCall into one function
-   *
-   * @param _receiver   The receiver of the calls
-   * @param _calldata   The encoded selector and the parameters of the call
-   * @param _returned   The encoded data that the call should return
-   */
-  function _mockAndExpect(address _receiver, bytes memory _calldata, bytes memory _returned) internal {
-    vm.mockCall(_receiver, _calldata, _returned);
-    vm.expectCall(_receiver, _calldata);
-  }
-
-  function _convertbytes32ToBytes(bytes32 _data) internal pure returns (bytes memory _byteArray) {
-    // Initialize a new bytes array with the same length as the bytes32
-    _byteArray = new bytes(32);
-
-    // Loop through each byte in the bytes32
-    for (uint256 i = 0; i < 32; i++) {
-      // Assign each byte of the bytes32 to the bytes array
-      _byteArray[i] = _data[i];
-    }
   }
 }
 
@@ -191,17 +167,17 @@ contract ScrollSpokeConnector_ProcessMessage is Base {
     scrollSpokeConnector.processMessage(_data);
   }
 
-  function test_revertIfFromIsNotMirrorConnector() public {
+  function test_revertIfOriginSenderNotMirror() public {
     bytes memory _data = _convertbytes32ToBytes(rootSnapshot);
     // Mock the x domain message sender to be a stranger and not the mirror connector
     vm.mockCall(_amb, abi.encodeWithSelector(IScrollMessenger.xDomainMessageSender.selector), abi.encode(stranger));
 
     vm.prank(_amb);
-    vm.expectRevert(ScrollSpokeConnector.ScrollSpokeConnector_OriginSenderIsNotMirrorConnector.selector);
+    vm.expectRevert(ScrollSpokeConnector.ScrollSpokeConnector_OriginSenderIsNotMirror.selector);
     scrollSpokeConnector.processMessage(_data);
   }
 
-  function test_callReceiveAggregateRoot() public {
+  function test_receiveAggregateRoot() public {
     // Mock the root to a real one
     bytes memory _data = _convertbytes32ToBytes(aggregateRoot);
 

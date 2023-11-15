@@ -4,12 +4,11 @@ pragma solidity 0.8.17;
 import {BaseScroll} from "./BaseScroll.sol";
 import {Connector} from "../Connector.sol";
 import {HubConnector} from "../HubConnector.sol";
-import {IL1ScrollMessenger} from "../../../../contracts/messaging/interfaces/ambs/scroll/IL1ScrollMessenger.sol";
 import {IRootManager} from "../../interfaces/IRootManager.sol";
 
 contract ScrollHubConnector is HubConnector, BaseScroll {
   error ScrollHubConnector_LengthIsNot32();
-  error ScrollHubConnector_OriginSenderIsNotMirrorConnector();
+  error ScrollHubConnector_OriginSenderIsNotMirror();
 
   constructor(
     uint32 _domain,
@@ -30,7 +29,7 @@ contract ScrollHubConnector is HubConnector, BaseScroll {
   }
 
   function _processMessage(bytes memory _data) internal override onlyAMB checkMessageLength(_data) {
-    if (!_verifySender(mirrorConnector)) revert ScrollHubConnector_OriginSenderIsNotMirrorConnector();
+    if (!_verifySender(mirrorConnector)) revert ScrollHubConnector_OriginSenderIsNotMirror();
     IRootManager(ROOT_MANAGER).aggregate(MIRROR_DOMAIN, bytes32(_data));
   }
 
