@@ -1,16 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import {BaseScroll} from "../../../../../../../contracts/messaging/connectors/scroll/BaseScroll.sol";
-import {Connector} from "../../../../../../../contracts/messaging/connectors/Connector.sol";
-import {ConnectorHelper} from "../../../../../../utils/ConnectorHelper.sol";
-import {ScrollHubConnector} from "../../../../../../../contracts/messaging/connectors/scroll/scrollHubConnector.sol";
-import {MerkleTreeManager} from "../../../../../../../contracts/messaging/MerkleTreeManager.sol";
-import {ProposedOwnable} from "../../../../../../../contracts/shared/ProposedOwnable.sol";
-import {IL1ScrollMessenger} from "../../../../../../../contracts/messaging/interfaces/ambs/scroll/IL1ScrollMessenger.sol";
-import {IRootManager} from "../../../../../../../contracts/messaging/interfaces/IRootManager.sol";
 import {Common} from "./Common.sol";
-import {L1ScrollMessengerForTest} from "./L1ScrollMessengerForTest.sol";
+import {Connector} from "../../../../../../../contracts/messaging/connectors/Connector.sol";
 
 contract IntegrationScrollHubConnector_ReceiveMessage is Common {
   event RootReceived(uint32 domain, bytes32 receivedRoot, uint256 queueIndex);
@@ -25,6 +17,7 @@ contract IntegrationScrollHubConnector_ReceiveMessage is Common {
     uint128 _lastIndex = 1;
     emit RootReceived(MIRROR_DOMAIN, _root, _lastIndex);
 
+    // Relay message
     vm.prank(relayer);
     l1ScrollMessenger.relayMessage(
       mirrorConnector,

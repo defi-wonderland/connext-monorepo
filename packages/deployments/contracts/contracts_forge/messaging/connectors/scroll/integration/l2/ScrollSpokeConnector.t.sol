@@ -1,14 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import {BaseScroll} from "../../../../../../contracts/messaging/connectors/scroll/BaseScroll.sol";
-import {Connector} from "../../../../../../contracts/messaging/connectors/Connector.sol";
-import {ConnectorHelper} from "../../../../../utils/ConnectorHelper.sol";
-import {ScrollSpokeConnector} from "../../../../../../contracts/messaging/connectors/scroll/scrollSpokeConnector.sol";
-import {MerkleTreeManager} from "../../../../../../contracts/messaging/MerkleTreeManager.sol";
-import {ProposedOwnable} from "../../../../../../contracts/shared/ProposedOwnable.sol";
-import {IRootManager} from "../../../../../../contracts/messaging/interfaces/IRootManager.sol";
 import {Common} from "./Common.sol";
+import {Connector} from "../../../../../../contracts/messaging/connectors/Connector.sol";
 
 contract IntegrationScrollSpokeConnector is Common {
   event AggregateRootReceived(bytes32 root);
@@ -30,7 +24,7 @@ contract IntegrationScrollSpokeConnector is Common {
 
     // Expect the `SentMessage` event to be emitted by the scroll messenger AMB
     vm.expectEmit(true, true, true, true, address(L2_SCROLL_MESSENGER));
-    uint256 _nonce = 11766;
+    uint256 _nonce = 11766; // Nonce grabbed from the L2 scroll messenger
     emit SentMessage(
       address(scrollSpokeConnector),
       mirrorConnector,
@@ -55,12 +49,14 @@ contract IntegrationScrollSpokeConnector is Common {
     emit AggregateRootReceived(_root);
 
     // Relay the message on the AMB and expect the `processMessage` function to be called on scroll spoke connector
+    uint256 _value = 0;
+    uint256 _nonce = 0; // No need to set the nonce here
     vm.prank(SCROLL_RELAYER);
     L2_SCROLL_MESSENGER.relayMessage(
       mirrorConnector,
       address(scrollSpokeConnector),
-      0,
-      0,
+      _value,
+      _nonce,
       abi.encodeWithSelector(Connector.processMessage.selector, _data)
     );
   }

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity 0.8.17;
 
-import {BaseScroll} from "../../../../../contracts/messaging/connectors/scroll/BaseScroll.sol";
 import {Connector} from "../../../../../contracts/messaging/connectors/Connector.sol";
 import {ConnectorHelper} from "../../../../utils/ConnectorHelper.sol";
 import {ScrollHubConnector} from "../../../../../contracts/messaging/connectors/scroll/scrollHubConnector.sol";
@@ -72,11 +71,15 @@ contract ScrollHubConnector_SendMessage is Base {
   }
 
   function test_callAMBSendMessage() public {
-    bytes memory _data = new bytes(32);
+    // Parse the aggregate root
+    bytes memory _data = abi.encodePacked(aggregateRoot);
+    // Declare and parse the refund address
     address _refundAddress = makeAddr("refundAddress");
     bytes memory _encodedData = abi.encode(_refundAddress);
+    // Get the calldata of the `processMessage` function call to be executed on the mirror connector
     bytes memory _functionCall = abi.encodeWithSelector(Connector.processMessage.selector, _data);
 
+    // Mock the `sendMessage` function and expect it to to be called
     _mockAndExpect(
       _amb,
       abi.encodeWithSelector(
@@ -100,7 +103,7 @@ contract ScrollHubConnector_forTest_ProcessMessage is Base {
 
   function test_revertIfSenderIsNotAMB(address _sender) public {
     vm.assume(_sender != _amb);
-    bytes memory _data = _convertbytes32ToBytes(rootSnapshot);
+    bytes memory _data = abi.encodePacked(rootSnapshot);
 
     vm.prank(_sender);
     vm.expectRevert();
@@ -115,7 +118,7 @@ contract ScrollHubConnector_forTest_ProcessMessage is Base {
   }
 
   function test_revertIfOriginSenderNotMirror() public {
-    bytes memory _data = _convertbytes32ToBytes(rootSnapshot);
+    bytes memory _data = abi.encodePacked(rootSnapshot);
     // Mock the x domain message sender to be a stranger and not the mirror connector
     vm.mockCall(_amb, abi.encodeWithSelector(IL1ScrollMessenger.xDomainMessageSender.selector), abi.encode(stranger));
 
@@ -126,7 +129,7 @@ contract ScrollHubConnector_forTest_ProcessMessage is Base {
 
   function test_callAggregate() public {
     // Mock the root to a real one
-    bytes memory _data = _convertbytes32ToBytes(aggregateRoot);
+    bytes memory _data = abi.encodePacked(aggregateRoot);
 
     // Mock the x domain message sender as if it is the mirror connector
     address _mirrorConnector = scrollHubConnector.mirrorConnector();
@@ -136,10 +139,10 @@ contract ScrollHubConnector_forTest_ProcessMessage is Base {
       abi.encode(_mirrorConnector)
     );
 
-    uint32 _mirrorDomain = _l2Domain;
+    // Mock the `receiveAggregateRoot` function and expect it to be called
     _mockAndExpect(
       _rootManager,
-      abi.encodeWithSelector(IRootManager.aggregate.selector, _mirrorDomain, bytes32(_data)),
+      abi.encodeWithSelector(IRootManager.aggregate.selector, _l2Domain, bytes32(_data)),
       ""
     );
 

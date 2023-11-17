@@ -1,14 +1,12 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity 0.8.17;
 
-import {BaseScroll} from "../../../../../contracts/messaging/connectors/scroll/BaseScroll.sol";
 import {Connector} from "../../../../../contracts/messaging/connectors/Connector.sol";
 import {ConnectorHelper} from "../../../../utils/ConnectorHelper.sol";
 import {ScrollSpokeConnector} from "../../../../../contracts/messaging/connectors/scroll/scrollSpokeConnector.sol";
 import {MerkleTreeManager} from "../../../../../contracts/messaging/MerkleTreeManager.sol";
 import {ProposedOwnable} from "../../../../../contracts/shared/ProposedOwnable.sol";
 import {IL2ScrollMessenger} from "../../../../../contracts/messaging/interfaces/ambs/scroll/IL2ScrollMessenger.sol";
-import {IRootManager} from "../../../../../contracts/messaging/interfaces/IRootManager.sol";
 
 contract ScrollSpokeConnectorForTest is ScrollSpokeConnector {
   constructor(
@@ -39,7 +37,7 @@ contract ScrollSpokeConnectorForTest is ScrollSpokeConnector {
     )
   {}
 
-  function forTest_gasCap() public view returns (uint256 _gasCap) {
+  function forTest_getGasCap() public view returns (uint256 _gasCap) {
     _gasCap = gasCap;
   }
 
@@ -97,7 +95,7 @@ contract ScrollSpokeConnector_Constructor is Base {
     assertEq(scrollSpokeConnector.delayBlocks(), DELAY_BLOCKS);
     assertEq(address(scrollSpokeConnector.MERKLE()), _merkle);
     assertEq(address(scrollSpokeConnector.watcherManager()), watcherManager);
-    assertEq(scrollSpokeConnector.forTest_gasCap(), _gasCap);
+    assertEq(scrollSpokeConnector.forTest_getGasCap(), _gasCap);
   }
 }
 
@@ -127,10 +125,13 @@ contract ScrollSpokeConnector_SendMessage is Base {
   }
 
   function test_callAMBSendMessage() public {
-    bytes memory _data = new bytes(32);
+    // Parse the aggregate root
+    bytes memory _data = abi.encodePacked(rootSnapshot);
     bytes memory _encodedData = "";
+    // Get the calldata of the `processMessage` function call to be executed on the mirror connector
     bytes memory _functionCall = abi.encodeWithSelector(Connector.processMessage.selector, _data);
 
+    // Mock the `sendMessage` function and expect it to to be called
     _mockAndExpect(
       _amb,
       abi.encodeWithSelector(
@@ -153,7 +154,7 @@ contract ScrollSpokeConnector_ProcessMessage is Base {
 
   function test_revertIfSenderIsNotAMB(address _sender) public {
     vm.assume(_sender != _amb);
-    bytes memory _data = _convertbytes32ToBytes(rootSnapshot);
+    bytes memory _data = abi.encodePacked(rootSnapshot);
 
     vm.prank(_sender);
     vm.expectRevert();
@@ -168,7 +169,7 @@ contract ScrollSpokeConnector_ProcessMessage is Base {
   }
 
   function test_revertIfOriginSenderNotMirror() public {
-    bytes memory _data = _convertbytes32ToBytes(rootSnapshot);
+    bytes memory _data = abi.encodePacked(rootSnapshot);
     // Mock the x domain message sender to be a stranger and not the mirror connector
     vm.mockCall(_amb, abi.encodeWithSelector(IL2ScrollMessenger.xDomainMessageSender.selector), abi.encode(stranger));
 
@@ -179,7 +180,7 @@ contract ScrollSpokeConnector_ProcessMessage is Base {
 
   function test_receiveAggregateRoot() public {
     // Mock the root to a real one
-    bytes memory _data = _convertbytes32ToBytes(aggregateRoot);
+    bytes memory _data = abi.encodePacked(aggregateRoot);
 
     // Mock the x domain message sender as if it is the mirror connector
     address _mirrorConnector = scrollSpokeConnector.mirrorConnector();

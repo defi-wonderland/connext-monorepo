@@ -3,6 +3,12 @@ pragma solidity 0.8.17;
 
 import {IL1ScrollMessenger} from "../../../../../../../contracts/messaging/interfaces/ambs/scroll/IL1ScrollMessenger.sol";
 
+/**
+ * @dev This contract is used for testing purpose only. It is used to simulate the `relayMessageWithProof` of the real L1ScrollMessenger contract,
+ * but without the part of verifying the proof. It exists to avoid the complexity of generating, processing and validating the proof, which is not the
+ * goal of this test. Instead, we focus on testing the `processMessage` function of the ScrollHubConnector contract, keeping all of the logic
+ * of the `relayMessageWithProof` function except the proof verification.
+ */
 contract L1ScrollMessengerForTest {
   /// @notice Emitted when a cross domain message is relayed successfully.
   /// @param messageHash The hash of the message.

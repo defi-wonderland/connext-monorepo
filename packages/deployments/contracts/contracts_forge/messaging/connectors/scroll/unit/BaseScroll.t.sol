@@ -15,14 +15,6 @@ contract BaseScrollForTest is BaseScroll {
   function forTest_checkMessageLength(bytes memory _data) external pure returns (bool _isValid) {
     _isValid = _checkMessageLength(_data);
   }
-
-  // function forTest_sendMessageToAMB(bytes memory _data, address _mirrorConnector) external {
-  //   _sendMessageToAMB(_data, _mirrorConnector);
-  // }
-
-  // function forTest_verifyOriginSender(address _expected) external view returns (bool _isValid) {
-  //   _isValid = _verifyOriginSender(_expected);
-  // }
 }
 
 contract Base is ConnectorHelper {

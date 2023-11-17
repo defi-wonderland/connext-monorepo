@@ -48,15 +48,4 @@ contract ConnectorHelper is ForgeHelper {
     vm.mockCall(_receiver, _calldata, _returned);
     vm.expectCall(_receiver, _calldata);
   }
-
-  function _convertbytes32ToBytes(bytes32 _data) internal pure returns (bytes memory _byteArray) {
-    // Initialize a new bytes array with the same length as the bytes32
-    _byteArray = new bytes(32);
-
-    // Loop through each byte in the bytes32
-    for (uint256 i = 0; i < 32; i++) {
-      // Assign each byte of the bytes32 to the bytes array
-      _byteArray[i] = _data[i];
-    }
-  }
 }
