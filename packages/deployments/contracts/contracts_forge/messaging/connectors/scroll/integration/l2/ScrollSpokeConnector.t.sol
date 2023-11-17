@@ -7,7 +7,6 @@ import {ConnectorHelper} from "../../../../../utils/ConnectorHelper.sol";
 import {ScrollSpokeConnector} from "../../../../../../contracts/messaging/connectors/scroll/scrollSpokeConnector.sol";
 import {MerkleTreeManager} from "../../../../../../contracts/messaging/MerkleTreeManager.sol";
 import {ProposedOwnable} from "../../../../../../contracts/shared/ProposedOwnable.sol";
-import {IScrollMessenger} from "../../../../../../contracts/messaging/interfaces/ambs/scroll/IScrollMessenger.sol";
 import {IRootManager} from "../../../../../../contracts/messaging/interfaces/IRootManager.sol";
 import {Common} from "./Common.sol";
 
@@ -31,12 +30,13 @@ contract IntegrationScrollSpokeConnector is Common {
 
     // Expect the `SentMessage` event to be emitted by the scroll messenger AMB
     vm.expectEmit(true, true, true, true, address(L2_SCROLL_MESSENGER));
+    uint256 _nonce = 11766;
     emit SentMessage(
       address(scrollSpokeConnector),
       mirrorConnector,
       scrollSpokeConnector.ZERO_MSG_VALUE(),
-      11766, // nonce
-      gasCap,
+      _nonce,
+      _gasCap,
       _functionCall
     );
 
@@ -55,7 +55,7 @@ contract IntegrationScrollSpokeConnector is Common {
     emit AggregateRootReceived(_root);
 
     // Relay the message on the AMB and expect the `processMessage` function to be called on scroll spoke connector
-    vm.prank(L1_SCROLL_MESSENGER);
+    vm.prank(SCROLL_RELAYER);
     L2_SCROLL_MESSENGER.relayMessage(
       mirrorConnector,
       address(scrollSpokeConnector),

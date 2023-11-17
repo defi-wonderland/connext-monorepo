@@ -7,7 +7,7 @@ import {ConnectorHelper} from "../../../../utils/ConnectorHelper.sol";
 import {ScrollSpokeConnector} from "../../../../../contracts/messaging/connectors/scroll/scrollSpokeConnector.sol";
 import {MerkleTreeManager} from "../../../../../contracts/messaging/MerkleTreeManager.sol";
 import {ProposedOwnable} from "../../../../../contracts/shared/ProposedOwnable.sol";
-import {IScrollMessenger} from "../../../../../contracts/messaging/interfaces/ambs/scroll/IScrollMessenger.sol";
+import {IL2ScrollMessenger} from "../../../../../contracts/messaging/interfaces/ambs/scroll/IL2ScrollMessenger.sol";
 import {IRootManager} from "../../../../../contracts/messaging/interfaces/IRootManager.sol";
 
 contract ScrollSpokeConnectorForTest is ScrollSpokeConnector {
@@ -134,7 +134,7 @@ contract ScrollSpokeConnector_SendMessage is Base {
     _mockAndExpect(
       _amb,
       abi.encodeWithSelector(
-        IScrollMessenger.sendMessage.selector,
+        IL2ScrollMessenger.sendMessage.selector,
         _l2Connector,
         scrollSpokeConnector.ZERO_MSG_VALUE(),
         _functionCall,
@@ -170,7 +170,7 @@ contract ScrollSpokeConnector_ProcessMessage is Base {
   function test_revertIfOriginSenderNotMirror() public {
     bytes memory _data = _convertbytes32ToBytes(rootSnapshot);
     // Mock the x domain message sender to be a stranger and not the mirror connector
-    vm.mockCall(_amb, abi.encodeWithSelector(IScrollMessenger.xDomainMessageSender.selector), abi.encode(stranger));
+    vm.mockCall(_amb, abi.encodeWithSelector(IL2ScrollMessenger.xDomainMessageSender.selector), abi.encode(stranger));
 
     vm.prank(_amb);
     vm.expectRevert(ScrollSpokeConnector.ScrollSpokeConnector_OriginSenderIsNotMirror.selector);
@@ -185,7 +185,7 @@ contract ScrollSpokeConnector_ProcessMessage is Base {
     address _mirrorConnector = scrollSpokeConnector.mirrorConnector();
     vm.mockCall(
       _amb,
-      abi.encodeWithSelector(IScrollMessenger.xDomainMessageSender.selector),
+      abi.encodeWithSelector(IL2ScrollMessenger.xDomainMessageSender.selector),
       abi.encode(_mirrorConnector)
     );
 
@@ -203,7 +203,7 @@ contract ScrollSpokeConnector_VerifySender is Base {
     vm.assume(_originSender != _mirrorConnector);
     vm.mockCall(
       _amb,
-      abi.encodeWithSelector(IScrollMessenger.xDomainMessageSender.selector),
+      abi.encodeWithSelector(IL2ScrollMessenger.xDomainMessageSender.selector),
       abi.encode(_originSender)
     );
     assertEq(scrollSpokeConnector.forTest_verifySender(_mirrorConnector), false);
@@ -212,7 +212,7 @@ contract ScrollSpokeConnector_VerifySender is Base {
   function test_returnTrueIfOriginSenderIsMirror(address _mirrorConnector) public {
     vm.mockCall(
       _amb,
-      abi.encodeWithSelector(IScrollMessenger.xDomainMessageSender.selector),
+      abi.encodeWithSelector(IL2ScrollMessenger.xDomainMessageSender.selector),
       abi.encode(_mirrorConnector)
     );
     vm.prank(_mirrorConnector);

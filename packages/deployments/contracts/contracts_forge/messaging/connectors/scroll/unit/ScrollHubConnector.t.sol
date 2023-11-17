@@ -5,7 +5,7 @@ import {BaseScroll} from "../../../../../contracts/messaging/connectors/scroll/B
 import {Connector} from "../../../../../contracts/messaging/connectors/Connector.sol";
 import {ConnectorHelper} from "../../../../utils/ConnectorHelper.sol";
 import {ScrollHubConnector} from "../../../../../contracts/messaging/connectors/scroll/scrollHubConnector.sol";
-import {IScrollMessenger} from "../../../../../contracts/messaging/interfaces/ambs/scroll/IScrollMessenger.sol";
+import {IL1ScrollMessenger} from "../../../../../contracts/messaging/interfaces/ambs/scroll/IL1ScrollMessenger.sol";
 import {IRootManager} from "../../../../../contracts/messaging/interfaces/IRootManager.sol";
 
 contract ScrollHubConnectorForTest is ScrollHubConnector {
@@ -73,17 +73,19 @@ contract ScrollHubConnector_SendMessage is Base {
 
   function test_callAMBSendMessage() public {
     bytes memory _data = new bytes(32);
-    bytes memory _encodedData = "";
+    address _refundAddress = makeAddr("refundAddress");
+    bytes memory _encodedData = abi.encode(_refundAddress);
     bytes memory _functionCall = abi.encodeWithSelector(Connector.processMessage.selector, _data);
 
     _mockAndExpect(
       _amb,
       abi.encodeWithSelector(
-        IScrollMessenger.sendMessage.selector,
+        IL1ScrollMessenger.sendMessage.selector,
         _l2Connector,
         scrollHubConnector.ZERO_MSG_VALUE(),
         _functionCall,
-        _gasCap
+        _gasCap,
+        _refundAddress
       ),
       ""
     );
@@ -93,7 +95,7 @@ contract ScrollHubConnector_SendMessage is Base {
   }
 }
 
-contract ScrollHubConnector_ProcessMessage is Base {
+contract ScrollHubConnector_forTest_ProcessMessage is Base {
   event AggregateRootReceived(bytes32 _root);
 
   function test_revertIfSenderIsNotAMB(address _sender) public {
@@ -102,24 +104,24 @@ contract ScrollHubConnector_ProcessMessage is Base {
 
     vm.prank(_sender);
     vm.expectRevert();
-    scrollHubConnector.processMessage(_data);
+    scrollHubConnector.forTest_processMessage(_data);
   }
 
   function test_revertIfDataIsNot32Length(bytes memory _data) public {
     vm.assume(_data.length != 32);
     vm.prank(_amb);
     vm.expectRevert(ScrollHubConnector.ScrollHubConnector_LengthIsNot32.selector);
-    scrollHubConnector.processMessage(_data);
+    scrollHubConnector.forTest_processMessage(_data);
   }
 
   function test_revertIfOriginSenderNotMirror() public {
     bytes memory _data = _convertbytes32ToBytes(rootSnapshot);
     // Mock the x domain message sender to be a stranger and not the mirror connector
-    vm.mockCall(_amb, abi.encodeWithSelector(IScrollMessenger.xDomainMessageSender.selector), abi.encode(stranger));
+    vm.mockCall(_amb, abi.encodeWithSelector(IL1ScrollMessenger.xDomainMessageSender.selector), abi.encode(stranger));
 
     vm.prank(_amb);
     vm.expectRevert(ScrollHubConnector.ScrollHubConnector_OriginSenderIsNotMirror.selector);
-    scrollHubConnector.processMessage(_data);
+    scrollHubConnector.forTest_processMessage(_data);
   }
 
   function test_callAggregate() public {
@@ -130,7 +132,7 @@ contract ScrollHubConnector_ProcessMessage is Base {
     address _mirrorConnector = scrollHubConnector.mirrorConnector();
     vm.mockCall(
       _amb,
-      abi.encodeWithSelector(IScrollMessenger.xDomainMessageSender.selector),
+      abi.encodeWithSelector(IL1ScrollMessenger.xDomainMessageSender.selector),
       abi.encode(_mirrorConnector)
     );
 
@@ -142,7 +144,7 @@ contract ScrollHubConnector_ProcessMessage is Base {
     );
 
     vm.prank(_amb);
-    scrollHubConnector.processMessage(_data);
+    scrollHubConnector.forTest_processMessage(_data);
   }
 }
 
@@ -151,7 +153,7 @@ contract ScrollHubConnector_VerifySender is Base {
     vm.assume(_originSender != _mirrorConnector);
     vm.mockCall(
       _amb,
-      abi.encodeWithSelector(IScrollMessenger.xDomainMessageSender.selector),
+      abi.encodeWithSelector(IL1ScrollMessenger.xDomainMessageSender.selector),
       abi.encode(_originSender)
     );
     assertEq(scrollHubConnector.forTest_verifySender(_mirrorConnector), false);
@@ -160,7 +162,7 @@ contract ScrollHubConnector_VerifySender is Base {
   function test_returnTrueIfOriginSenderIsMirror(address _mirrorConnector) public {
     vm.mockCall(
       _amb,
-      abi.encodeWithSelector(IScrollMessenger.xDomainMessageSender.selector),
+      abi.encodeWithSelector(IL1ScrollMessenger.xDomainMessageSender.selector),
       abi.encode(_mirrorConnector)
     );
     vm.prank(_mirrorConnector);

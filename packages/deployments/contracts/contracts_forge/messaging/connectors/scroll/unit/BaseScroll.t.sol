@@ -4,10 +4,9 @@ pragma solidity 0.8.17;
 import {BaseScroll} from "../../../../../contracts/messaging/connectors/scroll/BaseScroll.sol";
 import {Connector} from "../../../../../contracts/messaging/connectors/Connector.sol";
 import {ConnectorHelper} from "../../../../utils/ConnectorHelper.sol";
-import {IScrollMessenger} from "../../../../../contracts/messaging/interfaces/ambs/scroll/IScrollMessenger.sol";
 
 contract BaseScrollForTest is BaseScroll {
-  constructor(address _amb, uint256 _gasCap) BaseScroll(_amb, _gasCap) {}
+  constructor(address _amb, uint256 _gasCap) BaseScroll(_gasCap) {}
 
   function forTest_gasCap() public view returns (uint256 _gasCap) {
     _gasCap = gasCap;
@@ -17,13 +16,13 @@ contract BaseScrollForTest is BaseScroll {
     _isValid = _checkMessageLength(_data);
   }
 
-  function forTest_sendMessageToAMB(bytes memory _data, address _mirrorConnector) external {
-    _sendMessageToAMB(_data, _mirrorConnector);
-  }
+  // function forTest_sendMessageToAMB(bytes memory _data, address _mirrorConnector) external {
+  //   _sendMessageToAMB(_data, _mirrorConnector);
+  // }
 
-  function forTest_verifyOriginSender(address _expected) external view returns (bool _isValid) {
-    _isValid = _verifyOriginSender(_expected);
-  }
+  // function forTest_verifyOriginSender(address _expected) external view returns (bool _isValid) {
+  //   _isValid = _verifyOriginSender(_expected);
+  // }
 }
 
 contract Base is ConnectorHelper {
@@ -36,61 +35,24 @@ contract Base is ConnectorHelper {
 }
 
 contract BaseScroll_Constructor is Base {
-  function test_deploymentArgs() public {
-    assertEq(address(baseScroll.SCROLL_MESSENGER()), _amb);
-    assertEq(baseScroll.forTest_gasCap(), _gasCap);
+  function test_constants() public {
+    uint256 _expectedZeroMsgValue = 0;
+    uint256 _expectedMessageLength = 32;
+    assertEq(baseScroll.ZERO_MSG_VALUE(), _expectedZeroMsgValue);
+    assertEq(baseScroll.MESSAGE_LENGTH(), _expectedMessageLength);
   }
 }
 
 contract BaseScroll_CheckMessageLength is Base {
   function test_returnFalseOnInvalidLength(bytes memory _data) public {
-    vm.assume(_data.length != 32);
+    uint256 _validMessageLength = 32;
+    vm.assume(_data.length != _validMessageLength);
     assertEq(baseScroll.forTest_checkMessageLength(_data), false);
   }
 
   function test_checkMessageLength() public {
-    bytes memory _data = new bytes(32);
+    uint256 _validMessageLength = 32;
+    bytes memory _data = new bytes(_validMessageLength);
     assertEq(baseScroll.forTest_checkMessageLength(_data), true);
-  }
-}
-
-contract BaseScroll_SendMessageToAMB is Base {
-  function test_callAMB(bytes memory _data, address _mirrorConnector) public {
-    bytes memory _functionCall = abi.encodeWithSelector(Connector.processMessage.selector, _data);
-    _mockAndExpect(
-      _amb,
-      abi.encodeWithSelector(
-        IScrollMessenger.sendMessage.selector,
-        _mirrorConnector,
-        baseScroll.ZERO_MSG_VALUE(),
-        _functionCall,
-        _gasCap
-      ),
-      ""
-    );
-
-    vm.prank(user);
-    baseScroll.forTest_sendMessageToAMB(_data, _mirrorConnector);
-  }
-}
-
-contract BaseScroll_VerifyOriginSender is Base {
-  function test_returnFalseIfSenderIsNotMirror(address _originSender, address _mirrorConnector) public {
-    vm.assume(_originSender != _mirrorConnector);
-    vm.mockCall(
-      _amb,
-      abi.encodeWithSelector(IScrollMessenger.xDomainMessageSender.selector),
-      abi.encode(_mirrorConnector)
-    );
-    assertEq(baseScroll.forTest_verifyOriginSender(_originSender), false);
-  }
-
-  function test_returnTrueIfSenderIsMirror(address _mirrorConnector) public {
-    vm.mockCall(
-      _amb,
-      abi.encodeWithSelector(IScrollMessenger.xDomainMessageSender.selector),
-      abi.encode(_mirrorConnector)
-    );
-    assertEq(baseScroll.forTest_verifyOriginSender(_mirrorConnector), true);
   }
 }

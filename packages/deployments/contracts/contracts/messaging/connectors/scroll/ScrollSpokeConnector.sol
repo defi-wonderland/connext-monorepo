@@ -6,10 +6,13 @@ import {Connector} from "../Connector.sol";
 import {SpokeConnector} from "../SpokeConnector.sol";
 import {ProposedOwnable} from "../../../../contracts/shared/ProposedOwnable.sol";
 import {WatcherClient} from "../../WatcherClient.sol";
+import {IL2ScrollMessenger} from "../../interfaces/ambs/scroll/IL2ScrollMessenger.sol";
 
 contract ScrollSpokeConnector is SpokeConnector, BaseScroll {
   error ScrollSpokeConnector_LengthIsNot32();
   error ScrollSpokeConnector_OriginSenderIsNotMirror();
+
+  IL2ScrollMessenger public immutable L2_SCROLL_MESSENGER;
 
   constructor(
     uint32 _domain,
@@ -36,8 +39,10 @@ contract ScrollSpokeConnector is SpokeConnector, BaseScroll {
       _merkle,
       _watcherManager
     )
-    BaseScroll(_amb, _gasCap)
-  {}
+    BaseScroll(_gasCap)
+  {
+    L2_SCROLL_MESSENGER = IL2ScrollMessenger(_amb);
+  }
 
   modifier checkMessageLength(bytes memory _data) {
     if (!_checkMessageLength(_data)) revert ScrollSpokeConnector_LengthIsNot32();
@@ -47,7 +52,8 @@ contract ScrollSpokeConnector is SpokeConnector, BaseScroll {
   function renounceOwnership() public virtual override(ProposedOwnable, SpokeConnector) onlyOwner {}
 
   function _sendMessage(bytes memory _data, bytes memory) internal override checkMessageLength(_data) {
-    _sendMessageToAMB(_data, mirrorConnector);
+    bytes memory _calldata = abi.encodeWithSelector(Connector.processMessage.selector, _data);
+    L2_SCROLL_MESSENGER.sendMessage(mirrorConnector, ZERO_MSG_VALUE, _calldata, gasCap);
   }
 
   function _processMessage(bytes memory _data) internal override onlyAMB checkMessageLength(_data) {
@@ -56,6 +62,6 @@ contract ScrollSpokeConnector is SpokeConnector, BaseScroll {
   }
 
   function _verifySender(address _mirrorConnector) internal view override returns (bool _isValid) {
-    _isValid = _verifyOriginSender(_mirrorConnector);
+    _isValid = L2_SCROLL_MESSENGER.xDomainMessageSender() == _mirrorConnector;
   }
 }

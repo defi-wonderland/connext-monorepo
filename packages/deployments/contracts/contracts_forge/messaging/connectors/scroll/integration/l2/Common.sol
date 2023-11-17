@@ -7,35 +7,34 @@ import {ConnectorHelper} from "../../../../../utils/ConnectorHelper.sol";
 import {ScrollSpokeConnector} from "../../../../../../contracts/messaging/connectors/scroll/scrollSpokeConnector.sol";
 import {MerkleTreeManager} from "../../../../../../contracts/messaging/MerkleTreeManager.sol";
 import {ProposedOwnable} from "../../../../../../contracts/shared/ProposedOwnable.sol";
-import {IScrollMessenger} from "../../../../../../contracts/messaging/interfaces/ambs/scroll/IScrollMessenger.sol";
+import {IL2ScrollMessenger} from "../../../../../../contracts/messaging/interfaces/ambs/scroll/IL2ScrollMessenger.sol";
 import {RootManager} from "../../../../../../contracts/messaging/RootManager.sol";
 import {WatcherManager} from "../../../../../../contracts/messaging/WatcherManager.sol";
 
 contract Common is ConnectorHelper {
   uint256 internal constant _FORK_BLOCK = 815_854;
-  IScrollMessenger public constant L2_SCROLL_MESSENGER = IScrollMessenger(0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC); // Scroll Messenger L2 Proxy address
-  address public constant L1_SCROLL_MESSENGER = 0x7885BcBd5CeCEf1336b5300fb5186A12DDD8c478;
+  IL2ScrollMessenger public constant L2_SCROLL_MESSENGER =
+    IL2ScrollMessenger(0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC); // Scroll Messenger L2 Proxy address
+  address public constant SCROLL_RELAYER = 0x7885BcBd5CeCEf1336b5300fb5186A12DDD8c478;
+  uint32 public constant DOMAIN = 100; // Scroll
+  uint32 public constant MIRROR_DOMAIN = 1; // Etherem
+  uint256 public constant DELAY_BLOCKS = 0;
 
   address public owner = makeAddr("owner");
   address public user = makeAddr("user");
   address public whitelistedWatcher = makeAddr("whitelistedWatcher");
 
   ScrollSpokeConnector public scrollSpokeConnector;
-  uint32 public constant MIRROR_DOMAIN = 1; // Etherem
-  uint32 public constant DOMAIN = 2; // Scroll
   RootManager public rootManager;
   address public mirrorConnector = makeAddr("mirrorConnector");
-  uint256 public constant DELAY_BLOCKS = 0;
   MerkleTreeManager public merkleTreeManager;
   WatcherManager public watcherManager;
-  uint256 public gasCap;
 
   function setUp() public {
-    // TODO: move to an env (find where to place in the monorepo)
-    vm.createSelectFork(vm.rpcUrl("https://1rpc.io/scroll"), _FORK_BLOCK);
+    vm.createSelectFork(vm.rpcUrl(vm.envString("SCROLL_RPC")), _FORK_BLOCK);
 
     vm.startPrank(owner);
-    // Deploy mekrle tree manager (needed in root manager)
+    // Deploy merkle tree manager (needed in root manager)
     merkleTreeManager = new MerkleTreeManager();
 
     // Deploy watcher manager (needed in root manager)
@@ -54,6 +53,7 @@ contract Common is ConnectorHelper {
       _disputeBlocks
     );
 
+    // Deploy scroll spoke connector
     scrollSpokeConnector = new ScrollSpokeConnector(
       DOMAIN,
       MIRROR_DOMAIN,
@@ -65,7 +65,7 @@ contract Common is ConnectorHelper {
       DELAY_BLOCKS,
       address(merkleTreeManager),
       address(watcherManager),
-      gasCap
+      _gasCap
     );
 
     vm.stopPrank();
