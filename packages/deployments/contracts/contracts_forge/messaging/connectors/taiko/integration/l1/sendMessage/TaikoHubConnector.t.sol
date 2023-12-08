@@ -4,6 +4,9 @@ pragma solidity 0.8.17;
 import {Common} from "./Common.sol";
 
 contract Integration_Connector_TaikoHubConnector_SendMessage is Common {
+  /**
+   * @notice Tests that the tx for sending the message succeeds
+   */
   function test_sendMessage() public {
     // Send message from the root manager
     vm.prank(address(rootManager));

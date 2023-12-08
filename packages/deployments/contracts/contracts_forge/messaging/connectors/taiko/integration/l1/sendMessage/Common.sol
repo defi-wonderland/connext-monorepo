@@ -10,6 +10,12 @@ import {WatcherManager} from "../../../../../../../contracts/messaging/WatcherMa
 import {ISignalService} from "../../../../../../../contracts/messaging/interfaces/ambs/taiko/ISignalService.sol";
 import {console} from "forge-std/Test.sol";
 
+/**
+ * @dev 2 different common contracts are needed for receive and send messages flows on the
+ * integration tests because on the receive flow, we are using a real signal sent, which was sent
+ * by the Bridge contract on Taiko network and not by the Taiko Spoke Connector. So we need to deploy
+ * a new Taiko Hub Connector contract setting the Bridge contract as mirror connector for the test to succeed.
+ */
 contract Common is ConnectorHelper {
   uint256 internal constant _FORK_BLOCK = 4_775_438;
 

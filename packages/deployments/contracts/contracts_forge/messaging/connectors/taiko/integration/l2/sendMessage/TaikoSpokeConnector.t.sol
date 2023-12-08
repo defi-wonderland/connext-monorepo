@@ -5,6 +5,9 @@ import {Common} from "./Common.sol";
 import {ISignalService} from "../../../../../../../contracts/messaging/interfaces/ambs/taiko/ISignalService.sol";
 
 contract Integration_Connector_TaikoSpokeonnector_SendMessage is Common {
+  /**
+   * @notice Tests that the tx for sending the message succeeds
+   */
   function test_sendMessage() public {
     // Send message
     vm.prank(offChainAgent);
