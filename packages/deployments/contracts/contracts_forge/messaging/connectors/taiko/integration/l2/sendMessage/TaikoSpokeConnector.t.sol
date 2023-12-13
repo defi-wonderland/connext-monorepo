@@ -1,7 +1,7 @@
 // SPPX-LicenseIdentifier: MIT
 pragma solidity =0.8.17;
 
-import {Common} from "./Common.sol";
+import {Common} from "../common/Common.sol";
 import {ISignalService} from "../../../../../../../contracts/messaging/interfaces/ambs/taiko/ISignalService.sol";
 
 contract Integration_Connector_TaikoSpokeonnector_SendMessage is Common {

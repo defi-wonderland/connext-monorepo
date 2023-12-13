@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import {Common} from "./Common.sol";
+import {Common} from "../../common/Common.sol";
 
 contract Integration_Connector_TaikoHubConnector_SendMessage is Common {
   /**

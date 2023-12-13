@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import {Common} from "./Common.sol";
+import {Common} from "../../common/Common.sol";
 
 contract Integration_Connector_TaikoHubConnector_ReceiveMessage is Common {
   /**
    * @notice Tests that the message is received and processed correctly
+   * @dev This test is using a real signal sent by the Bridge contract on Taiko network
    */
   function test_receiveMessage() public {
     vm.prank(offChainAgent);

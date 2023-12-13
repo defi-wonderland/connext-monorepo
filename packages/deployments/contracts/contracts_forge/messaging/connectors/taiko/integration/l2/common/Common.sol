@@ -12,7 +12,7 @@ import {ISignalService} from "../../../../../../../contracts/messaging/interface
 import {console} from "forge-std/Test.sol";
 
 /**
- * @dev 2 different common contracts are needed for receive and send messages flows on the
+ * @dev Common contract is needed for receive and send messages flows on the
  * integration tests because on the receive flow, we are using a real signal sent, which was sent
  * by a user on Sepolia network and not by the Taiko Hub Connector. So we need to deploy
  * a new Taiko Spoke Connector contract setting the user (`TX_FROM_ADDRESS`) as mirror connector for the test to succeed.
@@ -20,10 +20,13 @@ import {console} from "forge-std/Test.sol";
 contract Common is ConnectorHelper {
   uint256 internal constant _FORK_BLOCK = 1_359_432;
 
+  // Sepolia chain id
   uint256 public constant SEPOLIA_CHAIN_ID = 11155111;
-  ISignalService public constant SIGNAL_SERVICE = ISignalService(0x1000777700000000000000000000000000000007);
-  uint32 public constant DOMAIN = 1; // Ethereum
-  uint32 public constant MIRROR_DOMAIN = 101; // Taiko
+
+  // Ethereum domain
+  uint32 public constant DOMAIN = 1;
+  // Taiko domain
+  uint32 public constant MIRROR_DOMAIN = 101;
 
   // Signal sent on the Bridge contract grabbed from Sepolia network
   bytes32 public constant SIGNAL = bytes32(0x8998cbbd932bc4795c12e4c1cef6bd27aab800309fb8c977b4150f9ecbb9f097);
@@ -37,12 +40,17 @@ contract Common is ConnectorHelper {
    */
   address public constant TX_FROM_ADDRESS = 0xEA17E4094E04339f250a910e10809Ab6A90746d2;
 
+  // EOAs and external addresses
   address public owner = makeAddr("owner");
   address public relayer = makeAddr("relayer");
   address public whitelistedWatcher = makeAddr("whitelistedWatcher");
   // Connext's off chain agent in charge of sending messages to the Taiko Hub Connector
   address public offChainAgent = makeAddr("offChainAgent");
 
+  // Signal service contract
+  ISignalService public constant SIGNAL_SERVICE = ISignalService(0x1000777700000000000000000000000000000007);
+
+  // Contracts
   TaikoSpokeConnector public taikoSpokeConnector;
   RootManager public rootManager;
   MerkleTreeManager public merkleTreeManager;
