@@ -174,7 +174,7 @@ contract Unit_Connector_TaikoSpokeConnector_ProcessMessage is Base {
    * @param _data Message data
    */
   function test_revertIfSenderNotAgent(address _sender, bytes memory _data) public {
-    vm.assume(_sender != address(_amb));
+    vm.assume(_sender != _amb);
     vm.prank(_sender);
     vm.expectRevert(TaikoSpokeConnector.TaikoSpokeConnector_SenderNotAllowedAgent.selector);
     taikoSpokeConnector.forTest_processMessage(_data);

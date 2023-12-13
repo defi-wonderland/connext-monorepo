@@ -160,7 +160,7 @@ contract Unit_Connector_TaikoHubConnector_ProcessMessage is Base {
    * @param _data The message data
    */
   function test_revertIfSenderNotAgent(address _sender, bytes memory _data) public {
-    vm.assume(_sender != address(_amb));
+    vm.assume(_sender != _amb);
     vm.stopPrank();
     vm.prank(_sender);
     vm.expectRevert(TaikoHubConnector.TaikoHubConnector_SenderNotAllowedAgent.selector);
