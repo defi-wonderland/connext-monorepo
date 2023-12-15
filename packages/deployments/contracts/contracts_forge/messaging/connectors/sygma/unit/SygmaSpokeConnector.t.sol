@@ -128,7 +128,7 @@ contract Unit_Connector_SygmaSpokeConnector_ReceiveMessage is Base {
     sygmaSpokeConnector.receiveMessage(_originSender, _root);
   }
 
-  function test_emitMessageProcessed(bytes32 _root) public {
+  function test_emitMessageProcessed(bytes32 _root) public happyPath(_root) {
     vm.expectEmit(true, true, true, true, address(sygmaSpokeConnector));
     emit MessageProcessed(abi.encodePacked(_root), permissionlessHandler);
 
