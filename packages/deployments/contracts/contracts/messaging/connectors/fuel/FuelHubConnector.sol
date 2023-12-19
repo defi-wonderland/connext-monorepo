@@ -2,6 +2,7 @@
 pragma solidity 0.8.17;
 
 import {Connector} from "../Connector.sol";
+import {ROOT_LENGTH} from "../Constants.sol";
 import {HubConnector} from "../HubConnector.sol";
 import {IFuelMessagePortal} from "../../interfaces/ambs/fuel/IFuelMessagePortal.sol";
 import {IRootManager} from "../../interfaces/IRootManager.sol";
@@ -20,11 +21,6 @@ contract FuelHubConnector is HubConnector {
    * @notice Thrown when the origin sender of the cross domain message is not the mirror connector
    */
   error FuelHubConnector_OriginSenderIsNotMirror();
-
-  /**
-   * @notice Constant used to represent the required length of a message
-   */
-  uint256 public constant MESSAGE_LENGTH = 32;
 
   /**
    * @notice L1 Fuel Messenge portal
@@ -54,7 +50,7 @@ contract FuelHubConnector is HubConnector {
    * @param _data Message data
    */
   modifier checkMessageLength(bytes memory _data) {
-    if (!(_data.length == MESSAGE_LENGTH)) revert FuelHubConnector_DataLengthIsNot32();
+    if (!(_data.length == ROOT_LENGTH)) revert FuelHubConnector_DataLengthIsNot32();
     _;
   }
 

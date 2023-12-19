@@ -2,6 +2,7 @@
 pragma solidity 0.8.17;
 
 import {GasCap} from "../GasCap.sol";
+import {ROOT_LENGTH} from "../Constants.sol";
 
 /**
  * @title BaseScroll
@@ -12,10 +13,6 @@ abstract contract BaseScroll is GasCap {
    * @notice Constant used to represent the zero value of a message
    */
   uint256 public constant ZERO_MSG_VALUE = 0;
-  /**
-   * @notice Constant used to represent the required length of a message
-   */
-  uint256 public constant MESSAGE_LENGTH = 32;
 
   /**
    * @param _gasCap Gas limit for cross domain message
@@ -28,6 +25,6 @@ abstract contract BaseScroll is GasCap {
    * @return _validLength True if the message length is 32 bytes, false otherwise
    */
   function _checkMessageLength(bytes memory _data) internal pure returns (bool _validLength) {
-    _validLength = _data.length == MESSAGE_LENGTH;
+    _validLength = _data.length == ROOT_LENGTH;
   }
 }

@@ -2,17 +2,13 @@
 pragma solidity =0.8.17;
 
 import {ISignalService} from "../../interfaces/ambs/taiko/ISignalService.sol";
+import {ROOT_LENGTH} from "../Constants.sol";
 
 /**
  * @title BaseTaiko
  * @notice Base contract for Taiko Hub and Spoke Connectors
  */
 abstract contract BaseTaiko {
-  /**
-   * @notice The root length in bytes for a message
-   */
-  uint256 public constant ROOT_LENGTH = 32;
-
   /**
    * @notice Taiko Signal Service address
    */
