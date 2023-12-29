@@ -35,6 +35,9 @@ jobs:
       - name: Update git submodule
         run: git submodule update --init
 
+      - name: Install solhint
+        run: npm install -g solhint
+
       - name: Forge install
         run: yarn workspace @connext/smart-contracts forge:install
 
