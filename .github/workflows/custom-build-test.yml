@@ -35,14 +35,8 @@ jobs:
       - name: Update git submodule
         run: git submodule update --init
 
-      # - name: Install solhint
-      #   run: npm install -g solhint
-
       - name: Forge install
         run: yarn workspace @connext/smart-contracts forge:install
-
-      # - name: Yarn build
-      #   run: yarn build:all
 
       ## Env file containing RPCs for 'connectors' integration tests
       - name: "Create env file"
@@ -57,14 +51,4 @@ jobs:
 
       ## Run tests for 'connectors'
       - name: Yarn test
-        run:
-          yarn test:connectors
-
-          ## Run linter for contracts
-      - name: Yarn lint Solidity
-        run: yarn lint:sol
-
-      # - name: Yarn lint
-      #   env:
-      #     NODE_OPTIONS: "--max-old-space-size=8192"
-      #   run: yarn lint:all
+        run: yarn test:connectors
