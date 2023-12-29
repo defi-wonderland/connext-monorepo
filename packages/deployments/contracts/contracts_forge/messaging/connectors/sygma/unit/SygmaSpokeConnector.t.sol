@@ -192,7 +192,7 @@ contract Unit_Connector_SygmaSpokeConnector_SendMessage is Base {
   ) public {
     // Parse the root and then get the deposit data
     bytes memory _data = abi.encodePacked(_root);
-    bytes memory _depositData = sygmaSpokeConnector.parseDepositData(_root, _l1Connector);
+    bytes memory _depositData = sygmaSpokeConnector.encodeDepositData(_root, _l1Connector);
     // Expect sygma bridge `deposit` method to be called correctly
     _mockAndExpect(
       _amb,

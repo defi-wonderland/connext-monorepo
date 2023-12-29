@@ -79,7 +79,7 @@ contract SygmaHubConnector is HubConnector, BaseSygma {
   function _sendMessage(bytes memory _root, bytes memory _encodedData) internal override {
     if (!ConnectorsLib.checkMessageLength(_root)) revert SygmaHubConnector_DataLengthIsNot32();
     (uint8 sygmaDomainId, bytes memory _feeData) = abi.decode(_encodedData, (uint8, bytes));
-    bytes memory _depositData = parseDepositData(bytes32(_root), mirrorConnector);
+    bytes memory _depositData = encodeDepositData(bytes32(_root), mirrorConnector);
     SYGMA_BRIDGE.deposit{value: msg.value}(sygmaDomainId, PERMISSIONLESS_HANDLER_ID, _depositData, _feeData);
   }
 

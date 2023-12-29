@@ -33,7 +33,7 @@ contract Integration_Connector_SygmaSpokeConnector_SendMessage is Common {
     // Get the aggregate root from the Merkle Tree Manager
     bytes32 _aggregateRoot = merkleTreeManager.root();
     // Get and parse the deposit data
-    bytes memory _depositData = sygmaSpokeConnector.parseDepositData(_aggregateRoot, mirrorConnector);
+    bytes memory _depositData = sygmaSpokeConnector.encodeDepositData(_aggregateRoot, mirrorConnector);
     bytes memory _feeData = "";
 
     // Deposit nonce grabbed from the Sygma Bridge

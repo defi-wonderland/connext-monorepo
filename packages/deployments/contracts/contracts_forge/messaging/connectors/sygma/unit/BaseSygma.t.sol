@@ -65,25 +65,13 @@ contract Unit_Connector_BaseSygma_Constructor is Base {
   }
 }
 
-contract Unit_Connector_BaseSygma_ParseDepositData is Base {
-  /**
-   * @notice Helper function to slice a bytes array
-   * @param input The bytes array to slice
-   * @param position The position to start slicing from
-   * @return _slicedData The sliced bytes array
-   */
-  function sliceHelper(bytes calldata input, uint256 position) public pure returns (bytes memory _slicedData) {
-    _slicedData = input[position:];
-  }
-
+contract Unit_Connector_BaseSygma_EncodeDepositData is Base {
   /**
    * @notice Tests it reverts when the root length is incorrect
    * @param _root The message's root
    * @param _mirrorConnector The address of the mirror connector
    */
-  function test_parseDepositData(bytes32 _root, address _mirrorConnector) public {
-    bytes memory _message = abi.encode(_ZERO_ADDRESS, _root);
-    _message = this.sliceHelper(_message, _ROOT_LENGTH);
+  function test_encodeDepositData(bytes32 _root, address _mirrorConnector) public {
     bytes memory _expectedDepositData = abi.encodePacked(
       _gasCap,
       _FUNCTION_SIG_LEN,
@@ -92,24 +80,10 @@ contract Unit_Connector_BaseSygma_ParseDepositData is Base {
       _mirrorConnector,
       _ADDRESS_LEN,
       address(baseSygma),
-      _message
+      _root
     );
 
-    bytes memory _depositData = baseSygma.parseDepositData(_root, _mirrorConnector);
+    bytes memory _depositData = baseSygma.encodeDepositData(_root, _mirrorConnector);
     assertEq(_depositData, _expectedDepositData);
-  }
-}
-
-contract Unit_Connector_BaseSygma_Slice is Base {
-  /**
-   * @notice Tests it slices the input correctly
-   * @param _input The input to slice
-   * @param _position The position to start slicing from
-   */
-  function test_sliceInput(bytes calldata _input, uint256 _position) public {
-    vm.assume(_input.length >= _position);
-    bytes memory _expectedSlicedData = _input[_position:];
-    bytes memory _slicedData = baseSygma.slice(_input, _position);
-    assertEq(_slicedData, _expectedSlicedData);
   }
 }

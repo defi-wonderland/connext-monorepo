@@ -79,7 +79,7 @@ contract SygmaSpokeConnector is SpokeConnector, BaseSygma {
    */
   function _sendMessage(bytes memory _data, bytes memory _feeData) internal override {
     if (!ConnectorsLib.checkMessageLength(_data)) revert SygmaSpokeConnector_DataLengthIsNot32();
-    bytes memory _depositData = parseDepositData(bytes32(_data), mirrorConnector);
+    bytes memory _depositData = encodeDepositData(bytes32(_data), mirrorConnector);
     SYGMA_BRIDGE.deposit{value: msg.value}(HUB_DOMAIN_ID, PERMISSIONLESS_HANDLER_ID, _depositData, _feeData);
   }
 

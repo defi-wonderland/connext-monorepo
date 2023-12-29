@@ -20,11 +20,7 @@ contract Integration_Connector_SygmaHubConnector_ReceiveMessage is Common {
    * @param _depositNonce The deposit nonce of the message
    * @param _signature The signature of the message
    */
-  function test_receiveMessage(bytes memory _root, uint64 _depositNonce, bytes memory _signature) external {
-    /* Prepare the data */
-    bytes memory _prepareData = abi.encode(address(0), bytes32(_root));
-    bytes memory _data = sygmaHubConnector.slice(_prepareData, 32);
-
+  function test_receiveMessage(bytes32 _root, uint64 _depositNonce, bytes memory _signature) external {
     // Get the proposal data
     bytes memory _proposalData = abi.encodePacked(
       // uint256 maxFee
@@ -42,7 +38,7 @@ contract Integration_Connector_SygmaHubConnector_ReceiveMessage is Common {
       // bytes executionDataDepositor
       mirrorConnector,
       // bytes executionDataDepositor
-      _data
+      _root
     );
 
     /* Create a new proposal */
@@ -57,7 +53,7 @@ contract Integration_Connector_SygmaHubConnector_ReceiveMessage is Common {
     /* assert an event was emitted on SygmaHubConnector */
     uint256 _queueIndex = 1;
     vm.expectEmit(true, true, true, true, address(rootManager));
-    emit RootReceived(MIRROR_DOMAIN, bytes32(_root), _queueIndex);
+    emit RootReceived(MIRROR_DOMAIN, _root, _queueIndex);
 
     /* Propose the signed proposal */
     vm.startPrank(_amb);

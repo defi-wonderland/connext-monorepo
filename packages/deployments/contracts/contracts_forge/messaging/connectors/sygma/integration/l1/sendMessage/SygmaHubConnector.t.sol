@@ -36,7 +36,7 @@ contract Integration_Connector_SygmaHubConnector_SendMessage is Common {
     bytes memory _encodedData = abi.encode(_cronosDomainId, _feeData);
     // Get and parse the deposit data
     bytes32 _aggregateRoot = bytes32("aggregateRoot");
-    bytes memory _depositData = sygmaHubConnector.parseDepositData(_aggregateRoot, mirrorConnector);
+    bytes memory _depositData = sygmaHubConnector.encodeDepositData(_aggregateRoot, mirrorConnector);
 
     // Deposit nonce grabbed from the Sygma Bridge
     uint64 _depositNonce = 4;

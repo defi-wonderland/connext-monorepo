@@ -4,7 +4,7 @@ pragma solidity 0.8.17;
 /**
  * @title ISygmaConnector
  * @notice Interface for Sygma spoke and hub connectors that contains the receiveMessage function.
- * @dev Needed to obtain the function signature on `BaseSygma.parseDepositData()`.
+ * @dev Needed to obtain the function signature on `BaseSygma.encodeDepositData()`.
  */
 interface ISygmaConnector {
   /**

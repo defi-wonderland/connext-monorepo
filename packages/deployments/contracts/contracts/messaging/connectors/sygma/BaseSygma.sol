@@ -59,15 +59,13 @@ abstract contract BaseSygma is GasCap {
   }
 
   /**
-   * @notice Parses the deposit data into the required format by Sygma
+   * @notice Encodes the deposit data to match the required format by Sygma
    * @param _root The aggregate root
    * @param _mirrorConnector The address of the mirror connector
    * @return _depositData The deposit data
    */
-  function parseDepositData(bytes32 _root, address _mirrorConnector) public view returns (bytes memory _depositData) {
+  function encodeDepositData(bytes32 _root, address _mirrorConnector) public view returns (bytes memory _depositData) {
     // Parse the message on the required format by Sygma
-    bytes memory _message = abi.encode(ZERO_ADDRESS, _root);
-    _message = this.slice(_message, ROOT_LENGTH);
     // Define the deposit data in the same way
     _depositData = abi.encodePacked(
       // uint256 maxFee
@@ -85,17 +83,7 @@ abstract contract BaseSygma is GasCap {
       // bytes executionDataDepositor
       address(this),
       // bytes executionDataDepositor
-      _message
+      _root
     );
-  }
-
-  /**
-   * @notice Slices a bytes input from a given position
-   * @param input The input to slice
-   * @param position The position to slice from
-   * @return _slicedData The sliced data
-   */
-  function slice(bytes calldata input, uint256 position) public pure returns (bytes memory _slicedData) {
-    _slicedData = input[position:];
   }
 }

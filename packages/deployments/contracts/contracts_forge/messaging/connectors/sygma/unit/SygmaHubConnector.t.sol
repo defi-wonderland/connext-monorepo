@@ -144,7 +144,7 @@ contract Unit_Connector_SygmaHubConnector_SendMessage is Base {
     bytes memory _handlerResponse
   ) public {
     // Parse the deposit data
-    bytes memory _depositData = sygmaHubConnector.parseDepositData(_root, _l2Connector);
+    bytes memory _depositData = sygmaHubConnector.encodeDepositData(_root, _l2Connector);
     // Encode the sigma domain id (destination) and the fee data
     bytes memory _encodedData = abi.encode(_sygmaDomainId, _feeData);
     // Expect `deposit` to be called on the sygmabridge
