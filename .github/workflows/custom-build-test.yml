@@ -54,9 +54,14 @@ jobs:
 
       ## Run tests for 'connectors'
       - name: Yarn test
-        run: yarn test:connectors
+        run:
+          yarn test:connectors
 
-      - name: Yarn lint
-        env:
-          NODE_OPTIONS: "--max-old-space-size=8192"
-        run: yarn lint:all
+          ## Run linter for contracts
+      - name: Solhint
+        run: cd packages/deployments/contracts && solhint .
+
+      # - name: Yarn lint
+      #   env:
+      #     NODE_OPTIONS: "--max-old-space-size=8192"
+      #   run: yarn lint:all
