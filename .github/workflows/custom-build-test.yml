@@ -35,8 +35,8 @@ jobs:
       - name: Update git submodule
         run: git submodule update --init
 
-      - name: Install solhint
-        run: npm install -g solhint
+      # - name: Install solhint
+      #   run: npm install -g solhint
 
       - name: Forge install
         run: yarn workspace @connext/smart-contracts forge:install
@@ -61,8 +61,8 @@ jobs:
           yarn test:connectors
 
           ## Run linter for contracts
-      - name: Solhint
-        run: cd packages/deployments/contracts && solhint .
+      - name: Yarn lint Solidity
+        run: yarn lint:sol
 
       # - name: Yarn lint
       #   env:
