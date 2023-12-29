@@ -42,7 +42,7 @@ jobs:
       - name: Yarn build
         run: yarn build:all
 
-      ## Env file containing RPCs for '<PROJECT_NAME>' integration tests
+      ## Env file containing RPCs for 'connectors' integration tests
       - name: "Create env file"
         run: |
           touch ./packages/deployments/contracts/.env
@@ -50,9 +50,9 @@ jobs:
           echo SCROLL_RPC="${{ secrets.SCROLL_RPC }}" >> ./packages/deployments/contracts/.env
           cat ./packages/deployments/contracts/.env
 
-      ## Run tests for '<PROJECT_NAME>'
+      ## Run tests for 'connectors'
       - name: Yarn test
-        run: yarn test:<PROJECT_NAME>
+        run: yarn test:connectors
 
       - name: Yarn lint
         env:
