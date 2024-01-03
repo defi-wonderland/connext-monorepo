@@ -51,4 +51,4 @@ jobs:
 
       ## Run tests for 'connectors'
       - name: Yarn test
-        run: yarn test:connectors
+        run: yarn workspace @connext/smart-contracts run forge test --mc Connector
