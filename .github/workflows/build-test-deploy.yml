@@ -1,19 +1,19 @@
 name: E2E Workflow for Connext
 
 on:
-push:
-  branches:
-    - main
-    - staging
-    - testnet-prod
-    - prod
-pull_request:
-create:
-  tag:
-    - "sdk-v*"
-    - "contracts-v*"
-    - "router-v*"
-    - "watcher-v*"
+  push:
+    branches:
+      - main
+      - staging
+      - testnet-prod
+      - prod
+  pull_request:
+  create:
+    tag:
+      - "sdk-v*"
+      - "contracts-v*"
+      - "router-v*"
+      - "watcher-v*"
 
 jobs:
   build-and-test:
