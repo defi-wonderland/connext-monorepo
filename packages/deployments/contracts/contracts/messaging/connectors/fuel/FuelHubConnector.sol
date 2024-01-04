@@ -73,7 +73,7 @@ contract FuelHubConnector is HubConnector {
    * @dev The message length must be 32 bytes
    * @dev The origin sender of the cross domain message must be the mirror connector
    */
-  function _processMessage(bytes memory _data) internal override onlyAMB checkMessageLength(_data) {
+  function _processMessage(bytes memory _data) internal override checkMessageLength(_data) {
     if (!_verifySender(mirrorConnector)) revert FuelHubConnector_OriginSenderIsNotMirror();
     IRootManager(ROOT_MANAGER).aggregate(MIRROR_DOMAIN, bytes32(_data));
   }
