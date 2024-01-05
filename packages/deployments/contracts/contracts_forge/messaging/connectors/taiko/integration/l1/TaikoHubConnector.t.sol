@@ -2,30 +2,46 @@
 pragma solidity 0.8.17;
 
 import {Common} from "./Common.sol";
+import {Connector} from "../../../../../../contracts/messaging/connectors/Connector.sol";
+import {IBridge} from "../../../../../../contracts/messaging/interfaces/ambs/taiko/IBridge.sol";
 
 contract Integration_Connector_TaikoHubConnector is Common {
+  /**
+   * @notice Emitted on Taiko's Bridge contract when a message is sent through it
+   * @param msgHash The message hash
+   * @param message The message
+   */
+  event MessageSent(bytes32 indexed msgHash, IBridge.Message message);
+
   /**
    * @notice Tests that the tx for sending the message through the taik signal service the message
    */
   function test_sendMessage() public {
+    bytes memory _data = abi.encode(bytes32("aggregateRoot"));
+    bytes memory _calldata = abi.encodeWithSelector(Connector.processMessage.selector, _data);
+    // Next id grabbed from the Taiko's Bridge state on the current block number
+
+    uint256 _id = 728233;
+    IBridge.Message memory _message = IBridge.Message({
+      id: _id,
+      from: address(taikoHubConnector),
+      srcChainId: block.chainid,
+      destChainId: taikoHubConnector.SPOKE_CHAIN_ID(),
+      user: mirrorConnector,
+      to: mirrorConnector,
+      refundTo: mirrorConnector,
+      value: 0,
+      fee: 0,
+      gasLimit: _gasCap,
+      data: _calldata,
+      memo: ""
+    });
+    vm.expectEmit(true, true, true, true, address(BRIDGE));
+    emit MessageSent(keccak256(abi.encode(_message)), _message);
+
     // Send message from the root manager
     vm.prank(address(rootManager));
-    bytes32 _message = bytes32("aggregateRoot");
     bytes memory _encodedData = "";
-    taikoHubConnector.sendMessage(abi.encode(_message), _encodedData);
-
-    // Check is signal sent to be true
-    // bool _isSignalSent = SIGNAL_SERVICE.isSignalSent(address(taikoHubConnector), _message);
-    // assertEq(_isSignalSent, true, "signal not sent");
+    taikoHubConnector.sendMessage(_data, _encodedData);
   }
-
-  /**
-   * @notice Tests that the message is received from the off chain agent and processed correctly
-   * @dev This test is using a real signal sent by the Bridge contract on Taiko network
-   */
-  // function test_receiveMessage() public {
-  //   vm.prank(offChainAgent);
-  //   bytes memory _data = abi.encode(SIGNAL, PROOF);
-  //   taikoHubConnector.processMessage(_data);
-  // }
 }

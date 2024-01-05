@@ -2,41 +2,47 @@
 pragma solidity =0.8.17;
 
 import {Common} from "./Common.sol";
+import {Connector} from "../../../../../../contracts/messaging/connectors/Connector.sol";
 import {IBridge} from "../../../../../../contracts/messaging/interfaces/ambs/taiko/IBridge.sol";
 
 contract Integration_Connector_TaikoSpokeConnector is Common {
   /**
+   * @notice Emitted on Taiko's Bridge contract when a message is sent through it
+   * @param msgHash The message hash
+   * @param message The message
+   */
+  event MessageSent(bytes32 indexed msgHash, IBridge.Message message);
+
+  /**
    * @notice Tests that the tx for sending the message through the taiko signal service succeeds
    */
   function test_sendMessage() public {
-    // Send message
-    vm.prank(offChainAgent);
-    bytes memory _encodedData = "";
-    taikoSpokeConnector.send(_encodedData);
-
     // Get the merkle root (the signal that was sent)
     bytes32 _root = merkleTreeManager.root();
+    bytes memory _calldata = abi.encodeWithSelector(Connector.processMessage.selector, abi.encode(_root));
 
-    // // Check is signal sent to be true
-    // bool _isSignalSent = SIGNAL_SERVICE.isSignalSent(address(taikoSpokeConnector), _root);
-    // assertEq(_isSignalSent, true, "signal not sent");
+    // Next id grabbed from the Taiko's Bridge state on the current block number
+    uint256 _id = 159241;
+    IBridge.Message memory _message = IBridge.Message({
+      id: _id,
+      from: address(taikoSpokeConnector),
+      srcChainId: block.chainid,
+      destChainId: taikoSpokeConnector.HUB_CHAIN_ID(),
+      user: mirrorConnector,
+      to: mirrorConnector,
+      refundTo: mirrorConnector,
+      value: 0,
+      fee: 0,
+      gasLimit: _gasCap,
+      data: _calldata,
+      memo: ""
+    });
+    vm.expectEmit(true, true, true, true, address(BRIDGE));
+    emit MessageSent(keccak256(abi.encode(_message)), _message);
+
+    // Send message
+    vm.prank(user);
+    bytes memory _encodedData = "";
+    taikoSpokeConnector.send(_encodedData);
   }
-
-  /**
-   * @notice Test that the message is received - we're waiting until we have a reliable RPC or explorer data on Taiko network
-   * Tx we use to grab the signal and proof: https://explorer.jolnir.taiko.xyz/tx/0x9603e1800686ee762aba9c78d5e27e072487e4ba76f8ba18b8be91b9b425c7e4
-   */
-  //   function test_receiveMessage() public {
-  //  bytes memory _data = abi.encode(SIGNAL, PROOF);
-  //     vm.prank(offChainAgent);
-  //     taikoSpokeConnector.processMessage(_data);
-  //   }
-  //
-  /**
-   * @notice Test that the signal is received (to assert our contract is not failing) - we're waiting until we have a reliable RPC or explorer data on Taiko network
-   */
-  // function test_signalReceived() public {
-  //   bool _received = SIGNAL_SERVICE.isSignalReceived(11155111, TX_FROM_ADDRESS, SIGNAL, PROOF);
-  //   assertTrue(_received);
-  // }
 }
