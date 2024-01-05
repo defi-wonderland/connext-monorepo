@@ -8,7 +8,7 @@ import {RootManager} from "../../../../../../contracts/messaging/RootManager.sol
 import {SpokeConnector} from "../../../../../../contracts/messaging/connectors/SpokeConnector.sol";
 import {TaikoSpokeConnector} from "../../../../../../contracts/messaging/connectors/taiko/TaikoSpokeConnector.sol";
 import {WatcherManager} from "../../../../../../contracts/messaging/WatcherManager.sol";
-import {ISignalService} from "../../../../../../contracts/messaging/interfaces/ambs/taiko/ISignalService.sol";
+import {IBridge} from "../../../../../../contracts/messaging/interfaces/ambs/taiko/IBridge.sol";
 import {console} from "forge-std/Test.sol";
 
 contract Common is ConnectorHelper {
@@ -21,7 +21,7 @@ contract Common is ConnectorHelper {
   uint32 public constant MIRROR_DOMAIN = 20;
 
   // Signal service contract on Taiko
-  ISignalService public constant SIGNAL_SERVICE = ISignalService(0x1000777700000000000000000000000000000007);
+  IBridge public constant BRIDGE = IBridge(0x1000777700000000000000000000000000000004);
   // Signal sent on the Bridge contract grabbed from Sepolia network
   bytes32 public constant SIGNAL = bytes32(0x8998cbbd932bc4795c12e4c1cef6bd27aab800309fb8c977b4150f9ecbb9f097);
   // The proof of the signal sent
@@ -92,7 +92,7 @@ contract Common is ConnectorHelper {
       _minDisputeBlocks,
       _disputeBlocks
     );
-    taikoSpokeConnector = new TaikoSpokeConnector(_constructorParams, address(SIGNAL_SERVICE), SEPOLIA_CHAIN_ID);
+    taikoSpokeConnector = new TaikoSpokeConnector(_constructorParams, address(BRIDGE), SEPOLIA_CHAIN_ID, _gasCap);
 
     // Add connector as a new supported domain
     rootManager.addConnector(MIRROR_DOMAIN, address(taikoSpokeConnector));

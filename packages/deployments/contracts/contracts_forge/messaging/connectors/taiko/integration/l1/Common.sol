@@ -7,11 +7,11 @@ import {MerkleTreeManager} from "../../../../../../contracts/messaging/MerkleTre
 import {RootManager} from "../../../../../../contracts/messaging/RootManager.sol";
 import {TaikoHubConnector} from "../../../../../../contracts/messaging/connectors/taiko/TaikoHubConnector.sol";
 import {WatcherManager} from "../../../../../../contracts/messaging/WatcherManager.sol";
-import {ISignalService} from "../../../../../../contracts/messaging/interfaces/ambs/taiko/ISignalService.sol";
+import {IBridge} from "../../../../../../contracts/messaging/interfaces/ambs/taiko/IBridge.sol";
 import {console} from "forge-std/Test.sol";
 
 contract Common is ConnectorHelper {
-  uint256 internal constant _FORK_BLOCK = 4_775_438;
+  uint256 internal constant _FORK_BLOCK = 5_023_835;
 
   uint256 public constant TAIKO_CHAIN_ID = 167007;
   // Sepolia domain id for Connext
@@ -20,7 +20,7 @@ contract Common is ConnectorHelper {
   uint32 public constant MIRROR_DOMAIN = 101;
 
   // Signal service contract on Sepolia
-  ISignalService public constant SIGNAL_SERVICE = ISignalService(0xcD5e2bebd3DfE46e4BF96aE2ac7B89B22cc6a982);
+  IBridge public constant BRIDGE = IBridge(0x5293Bb897db0B64FFd11E0194984E8c5F1f06178);
   // Signal on the Bridge contract grabbed from on Taiko network
   bytes32 public constant SIGNAL = 0xf8c15826bf02f723864208066ac5f5795296c062b06a544ab7788d19f23f9926;
   // The proof of the signal sent
@@ -33,7 +33,8 @@ contract Common is ConnectorHelper {
    * Since we are using a real signal sent, we are using the origin sender from that signal as the mirror connector address.
    * In this case, the mirror connector address, is the `Bridge` contract address on Taiko L2 network.
    */
-  address public constant MIRROR_CONNECTOR = 0x1000777700000000000000000000000000000004;
+  // address public constant MIRROR_CONNECTOR = 0x1000777700000000000000000000000000000004;
+  address public constant MIRROR_CONNECTOR = 0x1000777700000000000000000000000000000011;
 
   // EOAs and external addresses
   address public owner = makeAddr("owner");
@@ -84,8 +85,9 @@ contract Common is ConnectorHelper {
       offChainAgent,
       address(rootManager),
       MIRROR_CONNECTOR,
-      address(SIGNAL_SERVICE),
-      TAIKO_CHAIN_ID
+      address(BRIDGE),
+      TAIKO_CHAIN_ID,
+      _gasCap
     );
 
     // Add connector as a new supported domain
