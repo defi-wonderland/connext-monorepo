@@ -8,7 +8,6 @@ import {RootManager} from "../../../../../../contracts/messaging/RootManager.sol
 import {TaikoHubConnector} from "../../../../../../contracts/messaging/connectors/taiko/TaikoHubConnector.sol";
 import {WatcherManager} from "../../../../../../contracts/messaging/WatcherManager.sol";
 import {IBridge} from "../../../../../../contracts/messaging/interfaces/ambs/taiko/IBridge.sol";
-import {ISignalService} from "../../../../../../contracts/messaging/interfaces/ambs/taiko/ISignalService.sol";
 import {console} from "forge-std/Test.sol";
 
 contract Common is ConnectorHelper {
@@ -22,8 +21,6 @@ contract Common is ConnectorHelper {
 
   // Bride contract on Sepolia
   IBridge public constant BRIDGE = IBridge(0x5293Bb897db0B64FFd11E0194984E8c5F1f06178);
-  // Signal service contract on Sepolia
-  ISignalService public constant SIGNAL_SERVICE = ISignalService(0xcD5e2bebd3DfE46e4BF96aE2ac7B89B22cc6a982);
 
   // EOAs and external addresses
   address public owner = makeAddr("owner");
@@ -70,7 +67,7 @@ contract Common is ConnectorHelper {
     taikoHubConnector = new TaikoHubConnector(
       DOMAIN,
       MIRROR_DOMAIN,
-      _amb,
+      address(BRIDGE),
       address(rootManager),
       mirrorConnector,
       address(BRIDGE),

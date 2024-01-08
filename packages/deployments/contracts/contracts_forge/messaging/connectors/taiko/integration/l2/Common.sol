@@ -9,7 +9,6 @@ import {SpokeConnector} from "../../../../../../contracts/messaging/connectors/S
 import {TaikoSpokeConnector} from "../../../../../../contracts/messaging/connectors/taiko/TaikoSpokeConnector.sol";
 import {WatcherManager} from "../../../../../../contracts/messaging/WatcherManager.sol";
 import {IBridge} from "../../../../../../contracts/messaging/interfaces/ambs/taiko/IBridge.sol";
-import {ISignalService} from "../../../../../../contracts/messaging/interfaces/ambs/taiko/ISignalService.sol";
 import {console} from "forge-std/Test.sol";
 
 contract Common is ConnectorHelper {
@@ -23,8 +22,6 @@ contract Common is ConnectorHelper {
 
   // Bridge contract on Taiko
   IBridge public constant BRIDGE = IBridge(0x1000777700000000000000000000000000000004);
-  // Signal service contract on Taiko
-  ISignalService public constant SIGNAL_SERVICE = ISignalService(0x1000777700000000000000000000000000000007);
 
   // EOAs and external addresses
   address public owner = makeAddr("owner");
@@ -72,7 +69,7 @@ contract Common is ConnectorHelper {
     SpokeConnector.ConstructorParams memory _constructorParams = SpokeConnector.ConstructorParams(
       DOMAIN,
       MIRROR_DOMAIN,
-      _amb,
+      address(BRIDGE),
       address(rootManager),
       mirrorConnector,
       _processGas,
@@ -83,7 +80,7 @@ contract Common is ConnectorHelper {
       _minDisputeBlocks,
       _disputeBlocks
     );
-    taikoSpokeConnector = new TaikoSpokeConnector(_constructorParams, address(BRIDGE), SEPOLIA_CHAIN_ID, _gasCap);
+    taikoSpokeConnector = new TaikoSpokeConnector(_constructorParams, SEPOLIA_CHAIN_ID, _gasCap);
 
     // Add connector as a new supported domain
     rootManager.addConnector(MIRROR_DOMAIN, address(taikoSpokeConnector));

@@ -14,10 +14,9 @@ import {IRootManager} from "../../../../../contracts/messaging/interfaces/IRootM
 contract TaikoSpokeConnectorForTest is TaikoSpokeConnector {
   constructor(
     SpokeConnector.ConstructorParams memory _constructorParams,
-    address _taikoBridge,
     uint256 _hubChainId,
     uint256 _gasCap
-  ) TaikoSpokeConnector(_constructorParams, _taikoBridge, _hubChainId, _gasCap) {}
+  ) TaikoSpokeConnector(_constructorParams, _hubChainId, _gasCap) {}
 
   function forTest_sendMessage(bytes memory _data, bytes memory _extraData) external {
     _sendMessage(_data, _extraData);
@@ -38,7 +37,6 @@ contract Base is ConnectorHelper {
 
   address public owner = makeAddr("owner");
   address public user = makeAddr("user");
-  address public offChainAgent = makeAddr("offChainAgent");
   address public taikoBridge = makeAddr("taikoBridge");
   address public merkleTreeManager = makeAddr("MerkleTreeManager");
   address public watcherManager = makeAddr("WatcherManager");
@@ -53,7 +51,7 @@ contract Base is ConnectorHelper {
     SpokeConnector.ConstructorParams memory _params = SpokeConnector.ConstructorParams({
       domain: _l1Domain,
       mirrorDomain: _l2Domain,
-      amb: offChainAgent,
+      amb: taikoBridge,
       rootManager: _rootManager,
       mirrorConnector: _l1Connector,
       processGas: _processGas,
@@ -64,7 +62,7 @@ contract Base is ConnectorHelper {
       minDisputeBlocks: _minDisputeBlocks,
       disputeBlocks: _disputeBlocks
     });
-    taikoSpokeConnector = new TaikoSpokeConnectorForTest(_params, taikoBridge, HUB_CHAIN_ID, _gasCap);
+    taikoSpokeConnector = new TaikoSpokeConnectorForTest(_params, HUB_CHAIN_ID, _gasCap);
   }
 }
 
@@ -75,7 +73,7 @@ contract Unit_Connector_TaikoSpokeConnector_Constructor is Base {
   function test_checkConstructorArgs() public {
     assertEq(taikoSpokeConnector.DOMAIN(), _l1Domain);
     assertEq(taikoSpokeConnector.MIRROR_DOMAIN(), _l2Domain);
-    assertEq(taikoSpokeConnector.AMB(), offChainAgent);
+    assertEq(taikoSpokeConnector.AMB(), taikoBridge);
     assertEq(taikoSpokeConnector.ROOT_MANAGER(), _rootManager);
     assertEq(taikoSpokeConnector.mirrorConnector(), _l1Connector);
     assertEq(taikoSpokeConnector.PROCESS_GAS(), _processGas);

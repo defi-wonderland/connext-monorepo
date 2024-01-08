@@ -42,15 +42,13 @@ contract TaikoSpokeConnector is SpokeConnector, BaseTaiko {
   /**
    * @notice Creates a new TaikoSpokeConnector instance
    * @param _constructorParams Spoke Connector constructor params
-   * @param _taikoBridge Taiko Bridge address
    * @param _hubChainId The Taiko's hub chain id
    */
   constructor(
     SpokeConnector.ConstructorParams memory _constructorParams,
-    address _taikoBridge,
     uint256 _hubChainId,
     uint256 _gasCap
-  ) SpokeConnector(_constructorParams) BaseTaiko(_taikoBridge, _gasCap) {
+  ) SpokeConnector(_constructorParams) BaseTaiko(_constructorParams.amb, _gasCap) {
     HUB_CHAIN_ID = _hubChainId;
   }
 

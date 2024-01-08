@@ -40,7 +40,7 @@ contract TaikoHubConnector is HubConnector, BaseTaiko {
    * @param _offChainAgent The off-chain agent address allowed to call `processMessage`
    * @param _rootManager Root manager address
    * @param _mirrorConnector Mirror connector address
-   * @param _taikoBridge Taiko Bridge address
+   * @param _amb The Taiko Bridge address
    * @param _spokeChainId The Taiko's spoke chain id
    */
   constructor(
@@ -49,13 +49,10 @@ contract TaikoHubConnector is HubConnector, BaseTaiko {
     address _offChainAgent,
     address _rootManager,
     address _mirrorConnector,
-    address _taikoBridge,
+    address _amb,
     uint256 _spokeChainId,
     uint256 _gasCap
-  )
-    HubConnector(_domain, _mirrorDomain, _offChainAgent, _rootManager, _mirrorConnector)
-    BaseTaiko(_taikoBridge, _gasCap)
-  {
+  ) HubConnector(_domain, _mirrorDomain, _offChainAgent, _rootManager, _mirrorConnector) BaseTaiko(_amb, _gasCap) {
     SPOKE_CHAIN_ID = _spokeChainId;
   }
 
