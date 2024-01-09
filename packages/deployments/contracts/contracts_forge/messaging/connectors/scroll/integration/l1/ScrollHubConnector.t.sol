@@ -93,7 +93,6 @@ contract Integration_Connector_ScrollHubConnector is Common {
 
     // Data obtained from the Scroll API backend using the `_from` address above as a query parameter.
     // Http request (GET): https://sepolia-api-bridge.scroll.io/api/claimable?address=0x0006e19078a46c296eb6b44d37f05ce926403a82
-    address _to = 0xC82EdcE9eE173E12252E797fd860a87EC7DFB073;
     uint256 _value = 0;
     bytes
       memory _message = hex"4ff746f600000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000000000000000000000000000020616767726567617465526f6f7400000000000000000000000000000000000000";
@@ -113,6 +112,6 @@ contract Integration_Connector_ScrollHubConnector is Common {
 
     // Relay the message sent on L2 in L1
     IL1ScrollMessenger.L2MessageProof memory _l2MessageProof = IL1ScrollMessenger.L2MessageProof(_batchIndex, _proof);
-    L1_SCROLL_MESSENGER.relayMessageWithProof(_from, _to, _value, _nonce, _message, _l2MessageProof);
+    L1_SCROLL_MESSENGER.relayMessageWithProof(_from, RECIPIENT, _value, _nonce, _message, _l2MessageProof);
   }
 }

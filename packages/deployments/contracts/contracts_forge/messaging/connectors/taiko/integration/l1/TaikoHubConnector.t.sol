@@ -19,8 +19,8 @@ contract Integration_Connector_TaikoHubConnector is Common {
   function test_sendMessage() public {
     bytes memory _data = abi.encode(bytes32("aggregateRoot"));
     bytes memory _calldata = abi.encodeWithSelector(Connector.processMessage.selector, _data);
-    // Next id grabbed from the Taiko's Bridge state on the current block number
 
+    // Next id grabbed from the Taiko's Bridge state on the current block number
     uint256 _id = 728233;
     IBridge.Message memory _message = IBridge.Message({
       id: _id,
