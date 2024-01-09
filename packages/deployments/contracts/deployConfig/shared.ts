@@ -343,8 +343,12 @@ export const MESSAGING_PROTOCOL_CONFIGS: Record<string, MessagingProtocolConfig>
         networkName: "Sepolia",
         // The AMB argument must be the allowed off chain agent address.
         ambs: {
-          hub: "",
-          spoke: "",
+          // Sepolia Bridge
+          // https://sepolia.etherscan.io/address/0x5293Bb897db0B64FFd11E0194984E8c5F1f06178
+          hub: "0x5293Bb897db0B64FFd11E0194984E8c5F1f06178",
+          // Taiko Joinr Bridge
+          // https://explorer.jolnir.taiko.xyz/address/0x1000777700000000000000000000000000000004
+          spoke: "0x1000777700000000000000000000000000000004",
         },
 
         delayBlocks: DEFAULT_DELAY_BLOCKS,
@@ -353,15 +357,9 @@ export const MESSAGING_PROTOCOL_CONFIGS: Record<string, MessagingProtocolConfig>
         custom: {
           hub: {
             gasCap: BigNumber.from("200000"), // The test thrown 21_628 as gas needed. So 200_000 is almost 10x to be safe.
-            // Sepolia SignalService
-            // https://sepolia.etherscan.io/address/0xcD5e2bebd3DfE46e4BF96aE2ac7B89B22cc6a982
-            taikoSignalService: "0xcD5e2bebd3DfE46e4BF96aE2ac7B89B22cc6a982",
           },
           spoke: {
             gasCap: DEFAULT_PROCESS_GAS,
-            // Taiko Joinr SignalService
-            // https://explorer.jolnir.taiko.xyz/address/0x1000777700000000000000000000000000000007
-            taikoSignalService: "0x1000777700000000000000000000000000000007",
           },
         },
       },
