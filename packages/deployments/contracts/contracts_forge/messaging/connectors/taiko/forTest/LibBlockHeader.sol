@@ -2,7 +2,7 @@
 
 pragma solidity =0.8.17;
 
-import {LibRLPWriter} from "../thirdparty/LibRLPWriter.sol";
+import {LibRLPWriter} from "./LibRLPWriter.sol";
 
 /// @dev Defines the data structure for an Ethereum block header.
 struct BlockHeader {

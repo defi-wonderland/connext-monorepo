@@ -3,10 +3,10 @@
 pragma solidity =0.8.17;
 
 import {AddressResolver} from "./AddressResolver.sol";
-import {BlockHeader} from "../../libs/LibBlockHeader.sol";
+import {BlockHeader} from "./LibBlockHeader.sol";
 import {IBridge} from "./IBridge.sol";
-import {LibAddress} from "../../libs/LibAddress.sol";
-import {LibMath} from "../../libs/LibMath.sol";
+import {LibAddress} from "./LibAddress.sol";
+import {LibMath} from "./LibMath.sol";
 
 /// @title LibBridgeData
 /// @notice This library provides functions and data structures for storing and

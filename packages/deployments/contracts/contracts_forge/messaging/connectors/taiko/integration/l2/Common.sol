@@ -4,6 +4,7 @@ pragma solidity =0.8.17;
 import {Connector} from "../../../../../../contracts/messaging/connectors/Connector.sol";
 import {ConnectorHelper} from "../../../../../utils/ConnectorHelper.sol";
 import {MerkleTreeManager} from "../../../../../../contracts/messaging/MerkleTreeManager.sol";
+import {ProxiedBridge} from "../../forTest/Bridge.sol";
 import {RootManager} from "../../../../../../contracts/messaging/RootManager.sol";
 import {SpokeConnector} from "../../../../../../contracts/messaging/connectors/SpokeConnector.sol";
 import {TaikoSpokeConnector} from "../../../../../../contracts/messaging/connectors/taiko/TaikoSpokeConnector.sol";
@@ -19,16 +20,21 @@ contract Common is ConnectorHelper {
   uint32 public constant DOMAIN = 101;
   // Sepolia domain id for Connext
   uint32 public constant MIRROR_DOMAIN = 20;
-
-  // Bridge contract on Taiko
-  IBridge public constant BRIDGE = IBridge(0x1000777700000000000000000000000000000004);
+  // Bridge address on Taiko L2
+  address public BRIDGE = 0x1000777700000000000000000000000000000004;
+  // Address manager on Taiko L2
+  address public ADDRESS_MANAGER = 0x1000777700000000000000000000000000000006;
+  // `to` address on the messages sent on sepolia, used as mirror connector on the tests
+  address public MIRROR_CONNECTOR = 0xC7501687169b955FAFe10bb9Cd1a1a8FeF8Db1D1;
 
   // EOAs and external addresses
   address public owner = makeAddr("owner");
   address public user = makeAddr("user");
   address public relayer = makeAddr("relayer");
   address public whitelistedWatcher = makeAddr("whitelistedWatcher");
-  address public mirrorConnector = makeAddr("mirrorConnector");
+
+  // Taiko Bridge instance
+  ProxiedBridge public bridge;
 
   // Connext Contracts
   TaikoSpokeConnector public taikoSpokeConnector;
@@ -65,13 +71,25 @@ contract Common is ConnectorHelper {
       _disputeBlocks
     );
 
+    // Deploy the taiko bridge
+    bridge = new ProxiedBridge();
+    // Overwrite the taiko bridge address with the recently deployed Bridge contract
+    vm.etch(BRIDGE, address(bridge).code);
+    // Update the bridge instance with the new address
+    bridge = ProxiedBridge(payable(BRIDGE));
+    vm.stopPrank();
+    // Set the address manager to the Taiko's address manager
+    vm.prank(bridge.owner());
+    bridge.setAddressManager(ADDRESS_MANAGER);
+
     // Deploy scroll hub connector
+    vm.startPrank(owner);
     SpokeConnector.ConstructorParams memory _constructorParams = SpokeConnector.ConstructorParams(
       DOMAIN,
       MIRROR_DOMAIN,
-      address(BRIDGE),
+      address(bridge),
       address(rootManager),
-      mirrorConnector,
+      MIRROR_CONNECTOR,
       _processGas,
       _reserveGas,
       _delayBlocks,

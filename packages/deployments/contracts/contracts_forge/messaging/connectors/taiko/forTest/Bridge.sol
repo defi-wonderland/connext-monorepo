@@ -1,21 +1,29 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.17;
 
-import {AddressResolver} from "../common/AddressResolver.sol";
+import {AddressResolver} from "./AddressResolver.sol";
 import {BridgeErrors} from "./BridgeErrors.sol";
-import {EssentialContract} from "../common/EssentialContract.sol";
+import {EssentialContract} from "./EssentialContract.sol";
 import {IBridge} from "./IBridge.sol";
-import {LibBridgeData} from "./libs/LibBridgeData.sol";
-import {LibBridgeProcess} from "./libs/LibBridgeProcess.sol";
-import {LibBridgeSend} from "./libs/LibBridgeSend.sol";
+import {LibBridgeData} from "./LibBridgeData.sol";
+import {LibBridgeProcessForTest} from "./LibBridgeProcessForTest.sol";
+import {LibBridgeRecall} from "./LibBridgeRecall.sol";
+import {LibBridgeRetry} from "./LibBridgeRetry.sol";
+import {LibBridgeSend} from "./LibBridgeSend.sol";
+import {LibBridgeStatus} from "./LibBridgeStatus.sol";
+import {Proxied} from "./Proxied.sol";
 
 /// @title Bridge
 /// @notice See the documentation for {IBridge}.
 /// @dev The code hash for the same address on L1 and L2 may be different.
-contract BridgeForTest is EssentialContract, IBridge, BridgeErrors {
+/// @dev Uses modified `LibBridgeProcessForTest` library instead of `LibBridgeProcess` to avoid the proof validation
+/// because of test purposes.
+contract Bridge is EssentialContract, IBridge, BridgeErrors {
   using LibBridgeData for Message;
 
   LibBridgeData.State private _state; // 50 slots reserved
+
+  event MessageStatusChanged(bytes32 indexed msgHash, LibBridgeStatus.MessageStatus status, address transactor);
 
   event DestChainEnabled(uint256 indexed chainId, bool enabled);
 
@@ -38,7 +46,33 @@ contract BridgeForTest is EssentialContract, IBridge, BridgeErrors {
   /// @inheritdoc IBridge
   function processMessage(Message calldata message, bytes calldata proof) external nonReentrant {
     return
-      LibBridgeProcess.processMessage({
+      LibBridgeProcessForTest.processMessage({
+        state: _state,
+        resolver: AddressResolver(this),
+        message: message,
+        proof: proof,
+        checkProof: shouldCheckProof()
+      });
+  }
+
+  /// @notice Retries executing a message that previously failed on its
+  /// destination chain.
+  /// @inheritdoc IBridge
+  function retryMessage(Message calldata message, bool isLastAttempt) external nonReentrant {
+    return
+      LibBridgeRetry.retryMessage({
+        state: _state,
+        resolver: AddressResolver(this),
+        message: message,
+        isLastAttempt: isLastAttempt
+      });
+  }
+
+  /// @notice Recalls a failed message on its source chain
+  /// @inheritdoc IBridge
+  function recallMessage(IBridge.Message calldata message, bytes calldata proof) external nonReentrant {
+    return
+      LibBridgeRecall.recallMessage({
         state: _state,
         resolver: AddressResolver(this),
         message: message,
@@ -52,6 +86,54 @@ contract BridgeForTest is EssentialContract, IBridge, BridgeErrors {
   /// @inheritdoc IBridge
   function isMessageSent(bytes32 msgHash) public view virtual returns (bool) {
     return LibBridgeSend.isMessageSent(AddressResolver(this), msgHash);
+  }
+
+  /// @notice Checks if the message with the given hash has been received on
+  /// its destination chain.
+  /// @inheritdoc IBridge
+  function isMessageReceived(
+    bytes32 msgHash,
+    uint256 srcChainId,
+    bytes calldata proof
+  ) public view virtual override returns (bool) {
+    return
+      LibBridgeSend.isMessageReceived({
+        resolver: AddressResolver(this),
+        msgHash: msgHash,
+        srcChainId: srcChainId,
+        proof: proof
+      });
+  }
+
+  /// @notice Checks if a msgHash has failed on its destination chain.
+  /// @inheritdoc IBridge
+  function isMessageFailed(
+    bytes32 msgHash,
+    uint256 destChainId,
+    bytes calldata proof
+  ) public view virtual override returns (bool) {
+    return
+      LibBridgeStatus.isMessageFailed({
+        resolver: AddressResolver(this),
+        msgHash: msgHash,
+        destChainId: destChainId,
+        proof: proof
+      });
+  }
+
+  /// @notice Checks if a failed message has been recalled on its source
+  /// chain.
+  /// @inheritdoc IBridge
+  function isMessageRecalled(bytes32 msgHash) public view returns (bool) {
+    return _state.recalls[msgHash];
+  }
+
+  /// @notice Gets the execution status of the message with the given hash on
+  /// its destination chain.
+  /// @param msgHash The hash of the message.
+  /// @return Returns the status of the message.
+  function getMessageStatus(bytes32 msgHash) public view virtual returns (LibBridgeStatus.MessageStatus) {
+    return LibBridgeStatus.getMessageStatus(msgHash);
   }
 
   /// @notice Gets the current context.
@@ -74,9 +156,22 @@ contract BridgeForTest is EssentialContract, IBridge, BridgeErrors {
     return LibBridgeData.hashMessage(message);
   }
 
+  /// @notice Gets the slot associated with a given message hash status.
+  /// @param msgHash The hash of the message.
+  /// @return Returns the slot associated with the given message hash status.
+  function getMessageStatusSlot(bytes32 msgHash) public pure returns (bytes32) {
+    return LibBridgeStatus.getMessageStatusSlot(msgHash);
+  }
+
   /// @notice Tells if we need to check real proof or it is a test.
   /// @return Returns true if this contract, or can be false if mock/test.
   function shouldCheckProof() internal pure virtual returns (bool) {
     return true;
   }
+}
+
+/// @title ProxiedBridge
+/// @notice Proxied version of the parent contract.
+contract ProxiedBridge is Proxied, Bridge {
+
 }
