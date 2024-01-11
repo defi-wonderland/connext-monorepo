@@ -6,7 +6,15 @@ import {Connector} from "../../../../../../contracts/messaging/connectors/Connec
 import {IL1ScrollMessenger} from "../../../../../../contracts/messaging/interfaces/ambs/scroll/IL1ScrollMessenger.sol";
 
 contract Integration_Connector_ScrollHubConnector is Common {
-  // Events
+  /**
+   * @notice Emitted when a message is sent from the L2 Scroll Messenger to the L1 Scroll Messenger
+   * @param sender The sender of the message
+   * @param target The target of the message
+   * @param value The value of the message
+   * @param messageNonce The nonce of the message
+   * @param gasLimit The gas limit of the message
+   * @param message The message
+   */
   event SentMessage(
     address indexed sender,
     address indexed target,
@@ -16,6 +24,12 @@ contract Integration_Connector_ScrollHubConnector is Common {
     bytes message
   );
 
+  /**
+   * @notice Emitted when a root is received on the `RootManager`
+   * @param domain The domain of the root
+   * @param receivedRoot The root received
+   * @param queueIndex The queue index of the root
+   */
   event RootReceived(uint32 domain, bytes32 receivedRoot, uint256 queueIndex);
 
   /**
