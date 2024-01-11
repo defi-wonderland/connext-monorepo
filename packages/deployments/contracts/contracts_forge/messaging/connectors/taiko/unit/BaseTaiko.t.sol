@@ -63,7 +63,7 @@ contract Unit_Connector_BaseTaiko_sendMessage is Base {
       from: address(baseTaiko),
       srcChainId: block.chainid,
       destChainId: _destinationChainId,
-      user: mirrorConnector,
+      user: user,
       to: mirrorConnector,
       refundTo: mirrorConnector,
       value: 0,
@@ -81,6 +81,7 @@ contract Unit_Connector_BaseTaiko_sendMessage is Base {
     );
 
     // Call `sendMessage` function
+    vm.prank(user);
     bytes memory _data = abi.encode(_root);
     baseTaiko.forTest_sendMessage(_data, _destinationChainId, mirrorConnector);
   }

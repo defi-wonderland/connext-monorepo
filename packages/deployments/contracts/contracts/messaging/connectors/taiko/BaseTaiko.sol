@@ -29,7 +29,7 @@ abstract contract BaseTaiko is GasCap {
       from: address(this),
       srcChainId: block.chainid,
       destChainId: _destinationChainId,
-      user: _mirrorConnector,
+      user: msg.sender,
       to: _mirrorConnector,
       refundTo: _mirrorConnector,
       value: 0,

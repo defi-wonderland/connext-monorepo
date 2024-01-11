@@ -119,7 +119,7 @@ contract Unit_Connector_TaikoHubConnector_SendMessage is Base {
       from: address(taikoHubConnector),
       srcChainId: block.chainid,
       destChainId: SPOKE_CHAIN_ID,
-      user: _l2Connector,
+      user: user,
       to: _l2Connector,
       refundTo: _l2Connector,
       value: 0,
