@@ -1,20 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.17;
 
-import {Connector} from "../../../../../../contracts/messaging/connectors/Connector.sol";
-import {ConnectorHelper} from "../../../../../utils/ConnectorHelper.sol";
-import {MerkleTreeManager} from "../../../../../../contracts/messaging/MerkleTreeManager.sol";
-import {ProxiedBridge} from "../../forTest/Bridge.sol";
-import {RootManager} from "../../../../../../contracts/messaging/RootManager.sol";
-import {SpokeConnector} from "../../../../../../contracts/messaging/connectors/SpokeConnector.sol";
-import {TaikoSpokeConnector} from "../../../../../../contracts/messaging/connectors/taiko/TaikoSpokeConnector.sol";
-import {WatcherManager} from "../../../../../../contracts/messaging/WatcherManager.sol";
-import {IBridge} from "../../../../../../contracts/messaging/interfaces/ambs/taiko/IBridge.sol";
-import {console} from "forge-std/Test.sol";
+import {ConnectorHelper} from "../../../../../../utils/ConnectorHelper.sol";
+import {MerkleTreeManager} from "../../../../../../../contracts/messaging/MerkleTreeManager.sol";
+import {ProxiedBridge} from "./forTest/Bridge.sol";
+import {RootManager} from "../../../../../../../contracts/messaging/RootManager.sol";
+import {SpokeConnector} from "../../../../../../../contracts/messaging/connectors/SpokeConnector.sol";
+import {TaikoSpokeConnector} from "../../../../../../../contracts/messaging/connectors/taiko/TaikoSpokeConnector.sol";
+import {WatcherManager} from "../../../../../../../contracts/messaging/WatcherManager.sol";
 
 contract Common is ConnectorHelper {
-  uint256 internal constant _FORK_BLOCK = 1_359_432;
+  uint256 internal constant _FORK_BLOCK = 2_309_432;
 
+  // Chains id
+  uint256 public constant TAIKO_CHAIN_ID = 167007;
   uint256 public constant SEPOLIA_CHAIN_ID = 11155111;
   // Taiko domain id for Connext
   uint32 public constant DOMAIN = 101;
@@ -78,12 +77,14 @@ contract Common is ConnectorHelper {
     // Update the bridge instance with the new address
     bridge = ProxiedBridge(payable(BRIDGE));
     vm.stopPrank();
+
     // Set the address manager to the Taiko's address manager
     vm.prank(bridge.owner());
     bridge.setAddressManager(ADDRESS_MANAGER);
 
     // Deploy scroll hub connector
     vm.startPrank(owner);
+    _gasCap = 200_000;
     SpokeConnector.ConstructorParams memory _constructorParams = SpokeConnector.ConstructorParams(
       DOMAIN,
       MIRROR_DOMAIN,
