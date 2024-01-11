@@ -11,7 +11,8 @@ import {IBridge} from "../../../../../../contracts/messaging/interfaces/ambs/tai
 import {console} from "forge-std/Test.sol";
 
 contract Common is ConnectorHelper {
-  uint256 internal constant _FORK_BLOCK = 5_023_835;
+  uint256 public constant FORK_BLOCK = 5_024_712;
+  // uint256 public constant FORK_BLOCK = 5_024_855;
 
   uint256 public constant TAIKO_CHAIN_ID = 167007;
   // Sepolia domain id for Connext
@@ -21,12 +22,13 @@ contract Common is ConnectorHelper {
 
   // Bride contract on Sepolia
   IBridge public constant BRIDGE = IBridge(0x5293Bb897db0B64FFd11E0194984E8c5F1f06178);
+  address public constant RECIPIENT = 0xC7501687169b955FAFe10bb9Cd1a1a8FeF8Db1D1;
+  address public constant MIRROR_CONNECTOR = 0x0006e19078A46C296eb6b44d37f05ce926403A82;
 
   // EOAs and external addresses
   address public owner = makeAddr("owner");
   address public relayer = makeAddr("relayer");
   address public whitelistedWatcher = makeAddr("whitelistedWatcher");
-  address public mirrorConnector = makeAddr("mirrorConnector");
 
   // Connext Contracts
   TaikoHubConnector public taikoHubConnector;
@@ -40,7 +42,7 @@ contract Common is ConnectorHelper {
    * on the root manager so root messages can be received.
    */
   function setUp() public {
-    vm.createSelectFork(vm.rpcUrl(vm.envString("SEPOLIA_RPC")), _FORK_BLOCK);
+    vm.createSelectFork(vm.rpcUrl(vm.envString("SEPOLIA_RPC")), FORK_BLOCK);
 
     vm.startPrank(owner);
     // Deploy merkle tree manager (needed in root manager)
@@ -69,14 +71,26 @@ contract Common is ConnectorHelper {
       MIRROR_DOMAIN,
       address(BRIDGE),
       address(rootManager),
-      mirrorConnector,
+      MIRROR_CONNECTOR,
       address(BRIDGE),
       TAIKO_CHAIN_ID,
       _gasCap
     );
 
-    // Add connector as a new supported domain
-    rootManager.addConnector(MIRROR_DOMAIN, address(taikoHubConnector));
+    bytes memory _bytecode = address(taikoHubConnector).code;
+    // Set the bytecode on the recipient address
+    vm.etch(RECIPIENT, _bytecode);
+    // Set the fuel hub connector instance to the recipient address after deployment
+    taikoHubConnector = TaikoHubConnector(payable(RECIPIENT));
+
     vm.stopPrank();
+    vm.startPrank(taikoHubConnector.owner());
+    taikoHubConnector.setGasCap(_gasCap);
+    taikoHubConnector.setMirrorConnector(MIRROR_CONNECTOR);
+    vm.stopPrank();
+
+    // Add connector as a new supported domain
+    vm.prank(owner);
+    rootManager.addConnector(MIRROR_DOMAIN, address(taikoHubConnector));
   }
 }

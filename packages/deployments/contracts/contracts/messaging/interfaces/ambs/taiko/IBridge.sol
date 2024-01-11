@@ -34,6 +34,11 @@ interface IBridge {
     string memo;
   }
 
+  struct SignalProof {
+    uint64 height;
+    bytes proof; // A storage proof
+  }
+
   // Struct representing the context of a bridge operation.
   struct Context {
     bytes32 msgHash; // Message hash.
