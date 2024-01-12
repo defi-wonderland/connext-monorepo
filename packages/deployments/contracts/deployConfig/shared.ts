@@ -356,7 +356,7 @@ export const MESSAGING_PROTOCOL_CONFIGS: Record<string, MessagingProtocolConfig>
         reserveGas: DEFAULT_RESERVE_GAS,
         custom: {
           hub: {
-            gasCap: BigNumber.from("200000"), // The test thrown 21_628 as gas needed. So 200_000 is almost 10x to be safe.
+            gasCap: BigNumber.from("200000"),
           },
           spoke: {
             gasCap: DEFAULT_PROCESS_GAS,
