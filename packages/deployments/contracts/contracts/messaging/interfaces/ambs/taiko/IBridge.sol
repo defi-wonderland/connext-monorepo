@@ -6,6 +6,13 @@ pragma solidity =0.8.17;
 /// @dev Ether is held by Bridges on L1 and by the EtherVault on L2,
 /// not by token vaults.
 interface IBridge {
+  enum MessageStatus {
+    NEW,
+    RETRIABLE,
+    DONE,
+    FAILED
+  }
+
   // Struct representing a message sent across the bridge.
   struct Message {
     // Message ID.
@@ -94,4 +101,10 @@ interface IBridge {
   /// @param message The message to compute the hash for.
   /// @return Returns the hash of the message.
   function hashMessage(IBridge.Message calldata message) external pure returns (bytes32);
+
+  /// @notice Gets the execution status of the message with the given hash on
+  /// its destination chain.
+  /// @param msgHash The hash of the message.
+  /// @return Returns the status of the message.
+  function getMessageStatus(bytes32 msgHash) external view returns (MessageStatus);
 }
