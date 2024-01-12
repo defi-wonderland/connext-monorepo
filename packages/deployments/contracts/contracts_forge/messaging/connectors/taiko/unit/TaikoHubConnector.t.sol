@@ -88,7 +88,7 @@ contract Unit_Connector_TaikoHubConnector_Constructor is Base {
     assertEq(taikoHubConnector.ROOT_MANAGER(), _rootManager);
     assertEq(taikoHubConnector.mirrorConnector(), _l2Connector);
     assertEq(address(taikoHubConnector.BRIDGE()), taikoBridge);
-    assertEq(taikoHubConnector.SPOKE_CHAIN_ID(), SPOKE_CHAIN_ID);
+    assertEq(taikoHubConnector.MIRROR_CHAIN_ID(), SPOKE_CHAIN_ID);
     assertEq(taikoHubConnector.gasCap(), _gasCap);
   }
 }

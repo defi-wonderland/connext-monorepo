@@ -35,11 +35,6 @@ contract TaikoSpokeConnector is SpokeConnector, BaseTaiko {
   error TaikoSpokeConnector_NotImplementedMethod();
 
   /**
-   * @notice The Taiko's hub chain id
-   */
-  uint256 public immutable HUB_CHAIN_ID;
-
-  /**
    * @notice Creates a new TaikoSpokeConnector instance
    * @param _constructorParams Spoke Connector constructor params
    * @param _hubChainId The Taiko's hub chain id
@@ -48,9 +43,7 @@ contract TaikoSpokeConnector is SpokeConnector, BaseTaiko {
     SpokeConnector.ConstructorParams memory _constructorParams,
     uint256 _hubChainId,
     uint256 _gasCap
-  ) SpokeConnector(_constructorParams) BaseTaiko(_constructorParams.amb, _gasCap) {
-    HUB_CHAIN_ID = _hubChainId;
-  }
+  ) SpokeConnector(_constructorParams) BaseTaiko(_constructorParams.amb, _hubChainId, _gasCap) {}
 
   /**
    * @notice Checks that the message length is 32 bytes
@@ -75,7 +68,7 @@ contract TaikoSpokeConnector is SpokeConnector, BaseTaiko {
    * @dev The message length must be 32 bytes
    */
   function _sendMessage(bytes memory _data, bytes memory) internal override checkMessageLength(_data) {
-    _sendMessage(_data, HUB_CHAIN_ID, mirrorConnector);
+    _sendMessage(_data, mirrorConnector);
   }
 
   /**
@@ -86,7 +79,7 @@ contract TaikoSpokeConnector is SpokeConnector, BaseTaiko {
    */
   function _processMessage(bytes memory _data) internal override checkMessageLength(_data) {
     IBridge.Context memory _msgContext = BRIDGE.context();
-    if (!_verifySrcChain(_msgContext.srcChainId, HUB_CHAIN_ID)) revert TaikoSpokeConnector_SourceChainNotHub();
+    if (_msgContext.srcChainId != MIRROR_CHAIN_ID) revert TaikoSpokeConnector_SourceChainNotHub();
     if (!_verifySender(_msgContext.from)) revert TaikoSpokeConnector_OriginSenderNotMirror();
     receiveAggregateRoot(bytes32(_data));
   }

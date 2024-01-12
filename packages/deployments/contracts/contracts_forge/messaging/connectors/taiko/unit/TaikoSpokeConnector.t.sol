@@ -84,7 +84,7 @@ contract Unit_Connector_TaikoSpokeConnector_Constructor is Base {
     assertEq(taikoSpokeConnector.minDisputeBlocks(), _minDisputeBlocks);
     assertEq(taikoSpokeConnector.disputeBlocks(), _disputeBlocks);
     assertEq(address(taikoSpokeConnector.BRIDGE()), taikoBridge);
-    assertEq(taikoSpokeConnector.HUB_CHAIN_ID(), HUB_CHAIN_ID);
+    assertEq(taikoSpokeConnector.MIRROR_CHAIN_ID(), HUB_CHAIN_ID);
     assertEq(taikoSpokeConnector.gasCap(), _gasCap);
   }
 }

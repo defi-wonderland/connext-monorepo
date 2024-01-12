@@ -16,19 +16,30 @@ abstract contract BaseTaiko is GasCap {
   IBridge public immutable BRIDGE;
 
   /**
+   * @notice The mirror chain id
+   */
+  uint256 public immutable MIRROR_CHAIN_ID;
+
+  /**
    * @param _taikoBridge Taiko Signal Service address
    */
-  constructor(address _taikoBridge, uint256 _gasCap) GasCap(_gasCap) {
+  constructor(address _taikoBridge, uint256 _mirrorChainId, uint256 _gasCap) GasCap(_gasCap) {
     BRIDGE = IBridge(_taikoBridge);
+    MIRROR_CHAIN_ID = _mirrorChainId;
   }
 
-  function _sendMessage(bytes memory _data, uint256 _destinationChainId, address _mirrorConnector) internal {
+  /**
+   * @notice Sends a message to the mirror connector on the destination chain through the Taiko Bridge
+   * @param _data The root
+   * @param _mirrorConnector The mirror connector address on the destination chain
+   */
+  function _sendMessage(bytes memory _data, address _mirrorConnector) internal {
     bytes memory _calldata = abi.encodeWithSelector(Connector.processMessage.selector, _data);
     IBridge.Message memory _message = IBridge.Message({
       id: 0,
       from: address(this),
       srcChainId: block.chainid,
-      destChainId: _destinationChainId,
+      destChainId: MIRROR_CHAIN_ID,
       user: msg.sender,
       to: _mirrorConnector,
       refundTo: _mirrorConnector,
@@ -39,9 +50,5 @@ abstract contract BaseTaiko is GasCap {
       memo: ""
     });
     BRIDGE.sendMessage(_message);
-  }
-
-  function _verifySrcChain(uint256 _msgSrcChain, uint256 _mirrorChainId) internal pure returns (bool _isValid) {
-    _isValid = _msgSrcChain == _mirrorChainId;
   }
 }
