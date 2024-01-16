@@ -363,6 +363,34 @@ export const MESSAGING_PROTOCOL_CONFIGS: Record<string, MessagingProtocolConfig>
           },
         },
       },
+      // Taiko testnet Holesky-Taiko Katla
+      // They have recently deployed on Holesky and Katla, but they didn't verify the contracts.
+      // Due to this, we recommend using the addresses from the previous deployment on Sepolia-TaikoJoinr until they're verified.
+      167008: {
+        prefix: "Taiko",
+        networkName: "Holesky",
+        // The AMB argument must be the allowed off chain agent address.
+        ambs: {
+          // Holesky Bridge
+          // https://holesky.etherscan.io/address/0xf458747c6d6db57970dE80Da6474C0A3dfE94BF1
+          hub: "0xf458747c6d6db57970dE80Da6474C0A3dfE94BF1",
+          // Katla Bridge
+          // https://explorer.katla.taiko.xyz/address/0x1670080000000000000000000000000000000001
+          spoke: "0x1670080000000000000000000000000000000001",
+        },
+
+        delayBlocks: DEFAULT_DELAY_BLOCKS,
+        processGas: DEFAULT_PROCESS_GAS,
+        reserveGas: DEFAULT_RESERVE_GAS,
+        custom: {
+          hub: {
+            gasCap: BigNumber.from("200000"),
+          },
+          spoke: {
+            gasCap: DEFAULT_PROCESS_GAS,
+          },
+        },
+      },
       // Fuel Testnet Sepolia-Fuel
       // Fuel doesn't have chain id yet
       44444444: {
