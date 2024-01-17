@@ -6,12 +6,6 @@ export type AMBInfo = {
   spoke: string;
 };
 
-const THIRTY_MINUTES_IN_BLOCKS = Object.fromEntries(
-  Object.entries(BLOCKS_PER_MINUTE).map(([key, value]) => {
-    return [key, value * 30];
-  }),
-);
-
 export const OPTIMISM_AMB: AMBInfo = {
   hub: "0x5086d1eEF304eb5284A0f6720f79403b4e9bE294",
   spoke: "0x4200000000000000000000000000000000000007",
@@ -56,6 +50,12 @@ const BLOCKS_PER_MINUTE: Record<number, number> = {
   84531: 30, // base-goerli
   195: 60, // x1-testnet
 };
+
+const THIRTY_MINUTES_IN_BLOCKS = Object.fromEntries(
+  Object.entries(BLOCKS_PER_MINUTE).map(([key, value]) => {
+    return [key, value * 30];
+  }),
+);
 
 export const RELAYER_CONFIGS: {
   local: RelayerConfig;
