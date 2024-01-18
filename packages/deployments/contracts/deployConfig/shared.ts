@@ -313,6 +313,104 @@ export const MESSAGING_PROTOCOL_CONFIGS: Record<string, MessagingProtocolConfig>
         reserveGas: DEFAULT_RESERVE_GAS,
         delayBlocks: DEFAULT_DELAY_BLOCKS,
       },
+      // Scroll testnet Ethereum-sepolia (they don't supports 2 testnets, only sepolia with ethereum)
+      534352: {
+        prefix: "Scroll",
+        networkName: "Sepolia",
+        ambs: {
+          // Ethreum L1ScrollMessenger
+          // https://sepolia.etherscan.io/address/0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A
+          hub: "0x50c7d3e7f7c656493D1D76aaa1a836CedfCBB16A",
+          // L2ScrollMessenger
+          // https://sepolia.scrollscan.com/address/0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d
+          spoke: "0xBa50f5340FB9F3Bd074bD638c9BE13eCB36E603d",
+        },
+        delayBlocks: DEFAULT_DELAY_BLOCKS,
+        processGas: DEFAULT_PROCESS_GAS,
+        reserveGas: DEFAULT_RESERVE_GAS,
+        custom: {
+          hub: {
+            gasCap: BigNumber.from("200000"), // The test thrown 21_628 as gas needed. So 200_000 is almost 10x to be safe.
+          },
+          spoke: {
+            gasCap: DEFAULT_PROCESS_GAS,
+          },
+        },
+      },
+      // Taiko testnet Sepolia-Taiko Joinr L2
+      167007: {
+        prefix: "Taiko",
+        networkName: "Sepolia",
+        // The AMB argument must be the allowed off chain agent address.
+        ambs: {
+          hub: "",
+          spoke: "",
+        },
+
+        delayBlocks: DEFAULT_DELAY_BLOCKS,
+        processGas: DEFAULT_PROCESS_GAS,
+        reserveGas: DEFAULT_RESERVE_GAS,
+        custom: {
+          hub: {
+            gasCap: BigNumber.from("200000"), // The test thrown 21_628 as gas needed. So 200_000 is almost 10x to be safe.
+            // Sepolia SignalService
+            // https://sepolia.etherscan.io/address/0xcD5e2bebd3DfE46e4BF96aE2ac7B89B22cc6a982
+            taikoSignalService: "0xcD5e2bebd3DfE46e4BF96aE2ac7B89B22cc6a982",
+          },
+          spoke: {
+            gasCap: DEFAULT_PROCESS_GAS,
+            // Taiko Joinr SignalService
+            // https://explorer.jolnir.taiko.xyz/address/0x1000777700000000000000000000000000000007
+            taikoSignalService: "0x1000777700000000000000000000000000000007",
+          },
+        },
+      },
+      25: {
+        prefix: "Sygma",
+        networkName: "Cronos",
+        ambs: {
+          // Sepolia Bridge
+          // https://sepolia.etherscan.io/address/0x4CF326d3817558038D1DEF9e76b727202c3E8492
+          hub: "0x4CF326d3817558038D1DEF9e76b727202c3E8492",
+          // Cronos Bridge
+          // https://explorer.cronos.org/testnet/address/0x816bb9e810b6b97840f6818bf21fa25dd7364132
+          spoke: "0x816bb9E810b6b97840F6818bF21Fa25DD7364132",
+        },
+        delayBlocks: DEFAULT_DELAY_BLOCKS,
+        processGas: DEFAULT_PROCESS_GAS,
+        reserveGas: DEFAULT_RESERVE_GAS,
+        custom: {
+          hub: {
+            gasCap: BigNumber.from("200000"),
+            // Sepolia PermissionlessGenericHandler
+            // https://sepolia.etherscan.io/address/0x7dCBdb9cBA0Bb1871EECafAB290E5a2e45077479
+            permissionlessGenericHandler: "0x7dCBdb9cBA0Bb1871EECafAB290E5a2e45077479",
+          },
+          spoke: {
+            gasCap: DEFAULT_PROCESS_GAS,
+            // Cronos PermissionlessGenericHandler
+            // https://explorer.cronos.org/testnet/address/0x3CBbC542d10CD037cafb1632B29B5B0F59B08A48
+            permissionlessGenericHandler: "0x3CBbC542d10CD037cafb1632B29B5B0F59B08A48",
+          },
+        },
+      },
+      // Fuel Testnet Sepolia-Fuel
+      // Fuel doesn't have chain id yet
+      44444444: {
+        prefix: "Fuel",
+        networkName: "Fuel",
+        // The AMB argument must be the allowed off chain agent address.
+        ambs: {
+          // https://sepolia.etherscan.io/address/0x03f2901Db5723639978deBed3aBA66d4EA03aF73
+          hub: "0x03f2901Db5723639978deBed3aBA66d4EA03aF73",
+          // https://fuellabs.github.io/block-explorer-v2/beta-4/#/address/0x7369bdd627a10119d394d7bfd15d0c974609b5c269d4a5cb0fe8f19c5ed3140b
+          spoke: "0x7369bdd627a10119d394d7bfd15d0c974609b5c269d4a5cb0fe8f19c5ed3140b",
+        },
+        delayBlocks: DEFAULT_DELAY_BLOCKS,
+        processGas: DEFAULT_PROCESS_GAS,
+        reserveGas: DEFAULT_RESERVE_GAS,
+        custom: {},
+      },
     },
   },
   mainnet: {
@@ -441,6 +539,60 @@ export const MESSAGING_PROTOCOL_CONFIGS: Record<string, MessagingProtocolConfig>
           spoke: {
             gasCap: "400000", // gas limit for receiveWormholeMessages on mainnet
             mirrorChainId: "2", // mainnet wormhole chainid: 2
+          },
+        },
+      },
+      // Scroll
+      534352: {
+        prefix: "Scroll",
+        networkName: "Scroll",
+        ambs: {
+          // Ethreum L1ScrollMessenger
+          // https://etherscan.io/address/0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367
+          hub: "0x6774Bcbd5ceCeF1336b5300fb5186a12DDD8b367",
+          // Scroll L2ScrollMessenger
+          // https://scrollscan.com/address/0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC
+          spoke: "0x781e90f1c8Fc4611c9b7497C3B47F99Ef6969CbC",
+        },
+        delayBlocks: DEFAULT_DELAY_BLOCKS,
+        processGas: DEFAULT_PROCESS_GAS,
+        reserveGas: DEFAULT_RESERVE_GAS,
+        custom: {
+          hub: {
+            gasCap: BigNumber.from("200000"), // The test thrown 21_628 as gas needed. So 200_000 is almost 10x to be safe.
+          },
+          spoke: {
+            gasCap: DEFAULT_PROCESS_GAS,
+          },
+        },
+      },
+      // Sygma
+      25: {
+        prefix: "Sygma",
+        networkName: "Cronos",
+        ambs: {
+          // Bridge
+          // https://etherscan.io/address/0x4D878E8Fb90178588Cda4cf1DCcdC9a6d2757089
+          hub: "0x4D878E8Fb90178588Cda4cf1DCcdC9a6d2757089",
+          // Bridge
+          // https://cronoscan.com/address/0x44d1Ae962945c5B168282D5002705dE7A9B84657
+          spoke: "0x44d1Ae962945c5B168282D5002705dE7A9B84657",
+        },
+        delayBlocks: DEFAULT_DELAY_BLOCKS,
+        processGas: DEFAULT_PROCESS_GAS,
+        reserveGas: DEFAULT_RESERVE_GAS,
+        custom: {
+          hub: {
+            gasCap: BigNumber.from("200000"),
+            // Ethereum PermissionlessGenericHandler
+            // https://etherscan.io/address/0x31282123E7bcd947e2c1Bc364d564839574fAdCD
+            permissionlessGenericHandler: "0x31282123E7bcd947e2c1Bc364d564839574fAdCD",
+          },
+          spoke: {
+            gasCap: DEFAULT_PROCESS_GAS,
+            // Cronos PermissionlessGenericHandler
+            // https://cronoscan.com/address/0xB86bAe6A570a52cBc38Cf6Ac6557F169422cDf30
+            permissionlessGenericHandler: "0xB86bAe6A570a52cBc38Cf6Ac6557F169422cDf30",
           },
         },
       },
