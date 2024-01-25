@@ -6,7 +6,7 @@ import {Role} from "./LibConnextStorage.sol";
 import {TypeCasts} from "../../../shared/libraries/TypeCasts.sol";
 
 
-contract RolesManager is BaseConnext {
+abstract contract RolesManager is BaseConnext {
   // ========== Custom Errors ===========
   error RolesManager__proposeRouterAllowlistRemoval_noOwnershipChange();
   error RolesManager__removeRouterAllowlist_noOwnershipChange();

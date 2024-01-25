@@ -5,7 +5,7 @@ import {Role, TokenId, TransferInfo} from "./LibConnextStorage.sol";
 import {ConnextStorage} from "./ConnextStorage.sol";
 import {Constants} from "../../connext/libraries/Constants.sol";
 
-contract BaseConnext is ConnextStorage {
+abstract contract BaseConnext is ConnextStorage {
   // ========== Custom Errors ===========
   error BaseConnext__onlyOwner_notOwner();
   error BaseConnext__onlyOwnerOrRole_notOwnerOrRole(Role _role);

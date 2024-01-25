@@ -6,7 +6,7 @@ import {BaseConnext} from "./BaseConnext.sol";
 import {Constants} from "../../connext/libraries/Constants.sol";
 import {IConnectorManager} from "../../../messaging/interfaces/IConnectorManager.sol";
 
-contract ProtocolManager is BaseConnext {
+abstract contract ProtocolManager is BaseConnext {
   // ========== Custom Errors ===========
   error ProtocolManager__proposeNewOwner_invalidProposal();
   error ProtocolManager__proposeNewOwner_noOwnershipChange();

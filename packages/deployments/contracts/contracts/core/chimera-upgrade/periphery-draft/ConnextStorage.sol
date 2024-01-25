@@ -11,7 +11,7 @@ import {TokenId, TokenConfig, DestinationTransferStatus, Role, RouterConfig} fro
  *
  * BE VERY CAREFUL MODIFYING THE VALUES IN THIS FILE!
  */
-contract ConnextStorage {
+abstract contract ConnextStorage {
   //
   // 0
   bool initialized;
