@@ -1,4 +1,0 @@
-[
-  "function isKeeper(address _keeper) returns (bool _isKeeper)",
-  "function worked(address _keeper)"
-]

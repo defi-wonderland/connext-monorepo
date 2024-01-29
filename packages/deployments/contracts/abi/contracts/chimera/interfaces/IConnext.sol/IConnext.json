@@ -1,7 +1,0 @@
-[
-  "function bumpTransfer(bytes32 _transferId) payable",
-  "function execute(tuple(tuple(uint32 originDomain, uint32 destinationDomain, uint32 canonicalDomain, address to, address delegate, bool receiveLocal, bytes callData, uint256 slippage, address originSender, uint256 bridgedAmt, uint256 normalizedIn, uint256 nonce, bytes32 canonicalId) params, address[] routers, bytes[] routerSignatures, address sequencer, bytes sequencerSignature) _args) returns (bytes32 transferId)",
-  "function forceReceiveLocal(tuple(uint32 originDomain, uint32 destinationDomain, uint32 canonicalDomain, address to, address delegate, bool receiveLocal, bytes callData, uint256 slippage, address originSender, uint256 bridgedAmt, uint256 normalizedIn, uint256 nonce, bytes32 canonicalId) _params)",
-  "function xcall(uint32 _destination, address _to, address _asset, address _delegate, uint256 _amount, uint256 _slippage, bytes _callData) payable returns (bytes32)",
-  "function xcallIntoLocal(uint32 _destination, address _to, address _asset, address _delegate, uint256 _amount, uint256 _slippage, bytes _callData) payable returns (bytes32)"
-]
