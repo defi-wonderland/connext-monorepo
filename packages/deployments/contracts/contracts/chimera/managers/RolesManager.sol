@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import {BaseConnext} from "./BaseConnext.sol";
+import {BaseManager} from "./BaseManager.sol";
 import {Role} from "../libraries/LibConnextStorage.sol";
 import {TypeCasts} from "../../../shared/libraries/TypeCasts.sol";
 
 
-abstract contract RolesManager is BaseConnext {
+abstract contract RolesManager is BaseManager {
   // ========== Custom Errors ===========
   error RolesManager__proposeRouterAllowlistRemoval_noOwnershipChange();
   error RolesManager__removeRouterAllowlist_noOwnershipChange();

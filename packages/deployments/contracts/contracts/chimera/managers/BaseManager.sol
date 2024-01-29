@@ -3,12 +3,10 @@ pragma solidity 0.8.17;
 
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-
-import {Role, TokenId, TransferInfo, TokenConfig} from "../libraries/LibConnextStorage.sol";
 import {ConnextStorage} from "./ConnextStorage.sol";
 import {Constants} from "../libraries/Constants.sol";
 
-abstract contract BaseConnext is ConnextStorage {
+abstract contract BaseManager is ConnextStorage {
 
   // ============ Libraries ============
   

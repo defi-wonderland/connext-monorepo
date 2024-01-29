@@ -9,11 +9,11 @@ import {TypedMemView} from "../../../shared/libraries/TypedMemView.sol";
 import {BridgeMessage} from "../libraries/BridgeMessage.sol";
 
 import {Role, TokenId, TokenConfig, DestinationTransferStatus} from "../libraries/LibConnextStorage.sol";
-import {BaseConnext} from "./BaseConnext.sol";
+import {BaseManager} from "./BaseManager.sol";
 import {BridgeToken} from "../helpers/BridgeToken.sol";
 import {IBridgeToken} from "../interfaces/IBridgeToken.sol";
 
-abstract contract AssetsManager is BaseConnext {
+abstract contract AssetsManager is BaseManager {
   // ============ Libraries ============
 
   using TypedMemView for bytes;

@@ -2,11 +2,11 @@
 pragma solidity 0.8.17;
 
 import {Role} from "../libraries/LibConnextStorage.sol";
-import {BaseConnext} from "./BaseConnext.sol";
+import {BaseManager} from "./BaseManager.sol";
 import {Constants} from "../libraries/Constants.sol";
 import {IConnectorManager} from "../../../messaging/interfaces/IConnectorManager.sol";
 
-abstract contract ProtocolManager is BaseConnext {
+abstract contract ProtocolManager is BaseManager {
   // ========== Custom Errors ===========
   error ProtocolManager__proposeNewOwner_invalidProposal();
   error ProtocolManager__proposeNewOwner_noOwnershipChange();

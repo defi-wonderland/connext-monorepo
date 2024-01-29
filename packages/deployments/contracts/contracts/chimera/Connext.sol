@@ -11,8 +11,6 @@ import {TypedMemView} from "../../shared/libraries/TypedMemView.sol";
 import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
 
 import {IOutbox} from "../../messaging/interfaces/IOutbox.sol";
-import {IConnectorManager} from "../../messaging/interfaces/IConnectorManager.sol";
-
 import {ExecuteArgs, TransferInfo, DestinationTransferStatus, TokenConfig, AssetTransfer} from "./libraries/LibConnextStorage.sol";
 import {BridgeMessage} from "./libraries/BridgeMessage.sol";
 import {Constants} from "./libraries/Constants.sol";
@@ -366,35 +364,6 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
     _getApprovedCanonicalId(_relayerFeeAsset);
     // handle transferring asset to the relayer fee vault
     _bumpTransfer(_transferId, _relayerFeeAsset, _relayerFee); */
-  }
-
-
-  /**
-   * @notice Allows a user-specified account to update the slippage they are willing
-   * to take on destination transfers.
-   *
-   * @param _params TransferInfo associated with the transfer
-   * @param _slippage The updated slippage
-   */
-  function forceUpdateSlippage(TransferInfo calldata _params, uint256 _slippage) external onlyDelegate(_params) {
-    // Sanity check slippage
-    if (_slippage > Constants.BPS_FEE_DENOMINATOR) {
-      revert Connext__forceUpdateSlippage_invalidSlippage();
-    }
-
-    // Should only be called on destination domain
-    if (_params.destinationDomain != domain) {
-      revert Connext__forceUpdateSlippage_notDestination();
-    }
-
-    // Get transferId
-    bytes32 transferId = _calculateTransferId(_params);
-
-    // Store overrides
-    slippage[transferId] = _slippage;
-
-    // Emit event
-    emit SlippageUpdated(transferId, _slippage);
   }
 
   /**

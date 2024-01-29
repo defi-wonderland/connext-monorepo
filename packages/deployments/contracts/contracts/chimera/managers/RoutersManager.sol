@@ -1,16 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-
 import {TypeCasts} from "../../../shared/libraries/TypeCasts.sol";
-
 import {Constants} from "../libraries/Constants.sol";
 import {RouterConfig, Role} from "../libraries/LibConnextStorage.sol";
 import {TokenId} from "../libraries/TokenId.sol";
+import {BaseManager} from "./BaseManager.sol";
 
-import {BaseConnext} from "./BaseConnext.sol";
-
-abstract contract RoutersManager is BaseConnext {
+abstract contract RoutersManager is BaseManager {
 
   // ========== Custom Errors ===========
   error RoutersManager__acceptProposedRouterOwner_notElapsed();
