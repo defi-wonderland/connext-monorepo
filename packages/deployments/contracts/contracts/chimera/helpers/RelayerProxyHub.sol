@@ -7,9 +7,9 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.
 import {GelatoRelayFeeCollector} from "@gelatonetwork/relay-context/contracts/GelatoRelayFeeCollector.sol";
 
 import {ChainIDs} from "../libraries/ChainIDs.sol";
-import {Types} from "../../../messaging/connectors/optimism/lib/Types.sol";
-import {ProposedOwnable} from "../../../shared/ProposedOwnable.sol";
-import {RootManager} from "../../../messaging/RootManager.sol";
+import {Types} from "../../messaging/connectors/optimism/lib/Types.sol";
+import {ProposedOwnable} from "../../shared/ProposedOwnable.sol";
+import {RootManager} from "../../messaging/RootManager.sol";
 
 import {RelayerProxy} from "./RelayerProxy.sol";
 

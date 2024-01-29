@@ -104,11 +104,9 @@ interface IConnext {
     bytes calldata _callData
   ) external payable returns (bytes32);
 
-   function execute(ExecuteArgs calldata _args) external returns (bytes32 transferId);
+  function execute(ExecuteArgs calldata _args) external returns (bytes32 transferId);
 
-  function forceUpdateSlippage(TransferInfo calldata _params, uint256 _slippage) external;
-
-   function forceReceiveLocal(TransferInfo calldata _params) external;
+  function forceReceiveLocal(TransferInfo calldata _params) external;
 
   function bumpTransfer(bytes32 _transferId) external payable;
 

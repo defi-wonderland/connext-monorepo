@@ -2,7 +2,7 @@
 pragma solidity 0.8.17;
 
 // ============ External Imports ============
-import {TypedMemView} from "../../../shared/libraries/TypedMemView.sol";
+import {TypedMemView} from "../../shared/libraries/TypedMemView.sol";
 import {TokenId} from "./TokenId.sol";
 
 library BridgeMessage {

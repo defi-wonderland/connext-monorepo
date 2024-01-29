@@ -7,7 +7,7 @@ import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import {GelatoRelayFeeCollector} from "@gelatonetwork/relay-context/contracts/GelatoRelayFeeCollector.sol";
 
-import {ProposedOwnable} from "../../../shared/ProposedOwnable.sol";
+import {ProposedOwnable} from "../../shared/ProposedOwnable.sol";
 import {IConnext, ExecuteArgs} from "../interfaces/IConnext.sol";
 
 interface ISpokeConnector {

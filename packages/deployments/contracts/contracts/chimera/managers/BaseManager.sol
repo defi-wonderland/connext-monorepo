@@ -3,8 +3,10 @@ pragma solidity 0.8.17;
 
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {ConnextStorage} from "./ConnextStorage.sol";
+import {ConnextStorage} from "../ConnextStorage.sol";
 import {Constants} from "../libraries/Constants.sol";
+import {Role, TokenConfig} from "../libraries/LibConnextStorage.sol";
+
 
 abstract contract BaseManager is ConnextStorage {
 
@@ -13,16 +15,16 @@ abstract contract BaseManager is ConnextStorage {
   using SafeERC20 for IERC20Metadata;
 
   // ========== Custom Errors ===========
-  error BaseConnext__onlyOwner_notOwner();
-  error BaseConnext__onlyOwnerOrRole_notOwnerOrRole(Role _role);
-  error BaseConnext__whenNotPaused_paused();
-  error BaseConnext__nonReentrant_reentrantCall();
-  error BaseConnext__nonXCallReentrant_reentrantCall();
-  error BaseConnext__delayElapsed_delayNotElapsed();
-  error BaseConnext__handleIncomingAsset_nativeAssetNotSupported();
-  error BaseConnext__handleIncomingAsset_feeOnTransferNotSupported();
-  error BaseConnext__handleOutgoingAsset_notNative();
-  error BaseConnext__getConfig_notRegistered();
+  error BaseManager__onlyOwner_notOwner();
+  error BaseManager__onlyOwnerOrRole_notOwnerOrRole(Role _role);
+  error BaseManager__whenNotPaused_paused();
+  error BaseManager__nonReentrant_reentrantCall();
+  error BaseManager__nonXCallReentrant_reentrantCall();
+  error BaseManager__delayElapsed_delayNotElapsed();
+  error BaseManager__handleIncomingAsset_nativeAssetNotSupported();
+  error BaseManager__handleIncomingAsset_feeOnTransferNotSupported();
+  error BaseManager__handleOutgoingAsset_notNative();
+  error BaseManager__getConfig_notRegistered();
 
 
 
@@ -44,7 +46,7 @@ abstract contract BaseManager is ConnextStorage {
    */
   modifier nonReentrant() {
     // On the first call to nonReentrant, _notEntered will be true
-    if (_status == Constants.ENTERED) revert BaseConnext__nonReentrant_reentrantCall();
+    if (_status == Constants.ENTERED) revert BaseManager__nonReentrant_reentrantCall();
 
     // Any calls to nonReentrant after this point will fail
     _status = Constants.ENTERED;
@@ -58,7 +60,7 @@ abstract contract BaseManager is ConnextStorage {
 
   modifier nonXCallReentrant() {
     // On the first call to nonReentrant, _notEntered will be true
-    if (_xcallStatus == Constants.ENTERED) revert BaseConnext__nonXCallReentrant_reentrantCall();
+    if (_xcallStatus == Constants.ENTERED) revert BaseManager__nonXCallReentrant_reentrantCall();
 
     // Any calls to nonReentrant after this point will fail
     _xcallStatus = Constants.ENTERED;
@@ -74,13 +76,13 @@ abstract contract BaseManager is ConnextStorage {
    * @notice Throws if called by any account other than the owner.
    */
   modifier onlyOwner() {
-    if (owner != msg.sender) revert BaseConnext__onlyOwner_notOwner();
+    if (owner != msg.sender) revert BaseManager__onlyOwner_notOwner();
     _;
   }
 
   modifier onlyOwnerOrRole(Role _role) {
     if (owner != msg.sender && roles[msg.sender] != _role) {
-      revert BaseConnext__onlyOwnerOrRole_notOwnerOrRole(_role);
+      revert BaseManager__onlyOwnerOrRole_notOwnerOrRole(_role);
     }
     _;
   }
@@ -89,7 +91,7 @@ abstract contract BaseManager is ConnextStorage {
    * @notice Throws if all functionality is paused
    */
   modifier whenNotPaused() {
-    if (_paused) revert BaseConnext__whenNotPaused_paused();
+    if (_paused) revert BaseManager__whenNotPaused_paused();
     _;
   }
 
@@ -100,7 +102,7 @@ abstract contract BaseManager is ConnextStorage {
    */
   modifier delayElapsed(uint256 start) {
     // Ensure delay has elapsed
-    if ((block.timestamp - start) <= delay()) revert BaseConnext__delayElapsed_delayNotElapsed();
+    if ((block.timestamp - start) <= delay()) revert BaseManager__delayElapsed_delayNotElapsed();
     _;
   }
 
@@ -129,7 +131,7 @@ abstract contract BaseManager is ConnextStorage {
     }
     // Sanity check: asset address is not zero.
     if (_asset == address(0)) {
-      revert  BaseConnext__handleIncomingAsset_nativeAssetNotSupported();
+      revert  BaseManager__handleIncomingAsset_nativeAssetNotSupported();
     }
 
     IERC20Metadata asset = IERC20Metadata(_asset);
@@ -142,7 +144,7 @@ abstract contract BaseManager is ConnextStorage {
 
     // Ensure correct amount was transferred (i.e. this was not a fee-on-transfer token).
     if (asset.balanceOf(address(this)) - starting != _amount) {
-      revert  BaseConnext__handleIncomingAsset_feeOnTransferNotSupported();
+      revert  BaseManager__handleIncomingAsset_feeOnTransferNotSupported();
     }
   }
 
@@ -162,7 +164,7 @@ abstract contract BaseManager is ConnextStorage {
       return;
     }
     // Sanity check: asset address is not zero.
-    if (_asset == address(0)) revert BaseConnext__handleOutgoingAsset_notNative();
+    if (_asset == address(0)) revert BaseManager__handleOutgoingAsset_notNative();
 
     // Transfer ERC20 asset to target recipient.
     SafeERC20.safeTransfer(IERC20Metadata(_asset), _to, _amount);
@@ -176,7 +178,7 @@ abstract contract BaseManager is ConnextStorage {
     // for the asset). The same is not true for the representation assets, which
     // will always have 0 decimals on the canonical domain
     if (config.adoptedDecimals < 1) {
-      revert BaseConnext__getConfig_notRegistered();
+      revert BaseManager__getConfig_notRegistered();
     }
 
     return config;

@@ -4,7 +4,7 @@ pragma solidity 0.8.17;
 import {Role} from "../libraries/LibConnextStorage.sol";
 import {BaseManager} from "./BaseManager.sol";
 import {Constants} from "../libraries/Constants.sol";
-import {IConnectorManager} from "../../../messaging/interfaces/IConnectorManager.sol";
+import {IConnectorManager} from "../../messaging/interfaces/IConnectorManager.sol";
 
 abstract contract ProtocolManager is BaseManager {
   // ========== Custom Errors ===========

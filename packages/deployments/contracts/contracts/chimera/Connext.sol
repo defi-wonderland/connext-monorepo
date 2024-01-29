@@ -6,11 +6,11 @@ import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IER
 import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
-import {ExcessivelySafeCall} from "../../shared/libraries/ExcessivelySafeCall.sol";
-import {TypedMemView} from "../../shared/libraries/TypedMemView.sol";
-import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
+import {ExcessivelySafeCall} from "../shared/libraries/ExcessivelySafeCall.sol";
+import {TypedMemView} from "../shared/libraries/TypedMemView.sol";
+import {TypeCasts} from "../shared/libraries/TypeCasts.sol";
 
-import {IOutbox} from "../../messaging/interfaces/IOutbox.sol";
+import {IOutbox} from "../messaging/interfaces/IOutbox.sol";
 import {ExecuteArgs, TransferInfo, DestinationTransferStatus, TokenConfig, AssetTransfer} from "./libraries/LibConnextStorage.sol";
 import {BridgeMessage} from "./libraries/BridgeMessage.sol";
 import {Constants} from "./libraries/Constants.sol";

@@ -2,9 +2,9 @@
 pragma solidity 0.8.17;
 
 import {IERC20Metadata} from "@openzeppelin/contracts/interfaces/IERC20Metadata.sol";
-import {TypeCasts} from "../../../shared/libraries/TypeCasts.sol";
-import {TypeCasts} from "../../../shared/libraries/TypeCasts.sol";
-import {TypedMemView} from "../../../shared/libraries/TypedMemView.sol";
+import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
+import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
+import {TypedMemView} from "../../shared/libraries/TypedMemView.sol";
 
 import {BridgeMessage} from "../libraries/BridgeMessage.sol";
 

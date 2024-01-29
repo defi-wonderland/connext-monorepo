@@ -4,7 +4,6 @@ pragma solidity 0.8.17;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 
 import {IBridgeToken} from "../interfaces/IBridgeToken.sol";
-
 import {ERC20} from "./OZERC20.sol";
 
 contract BridgeToken is IBridgeToken, Ownable, ERC20 {

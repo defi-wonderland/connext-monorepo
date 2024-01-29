@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import {TypeCasts} from "../../../shared/libraries/TypeCasts.sol";
+import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
 import {Constants} from "../libraries/Constants.sol";
 import {RouterConfig, Role} from "../libraries/LibConnextStorage.sol";
 import {TokenId} from "../libraries/TokenId.sol";
