@@ -130,9 +130,11 @@ contract BridgeFacet is BaseConnextFacet {
       receiver: _to,
       delegate: _delegate,
       originAsset: _asset,
+      originAssetDecimals: IERC20Metadata(_asset).decimals(),
       bridgedAmt: _amount,
       callData: _callData,
       // The following values should be assigned in _xcall.
+      transferId: bytes32(0),
       nonce: 0,
       canonicalDomain: 0,
       canonicalId: bytes32(0),
@@ -171,9 +173,11 @@ contract BridgeFacet is BaseConnextFacet {
       receiver: _to,
       delegate: _delegate,
       originAsset: _asset,
+      originAssetDecimals: IERC20Metadata(_asset).decimals(),
       bridgedAmt: _amount,
       callData: _callData,
       // The following values should be assigned in _xcall.
+      transferId: bytes32(0),
       nonce: 0,
       canonicalDomain: 0,
       canonicalId: bytes32(0),
@@ -272,8 +276,6 @@ contract BridgeFacet is BaseConnextFacet {
       }
     }
 
-    uint64 transferId;
-    bytes32 transferHash;
     TokenId memory canonical;
     bool isCanonical;
     {
@@ -308,24 +310,23 @@ contract BridgeFacet is BaseConnextFacet {
         }
       }
 
-      // Calculate the transfer ID and hash
+      // Calculate the transfer ID
       _transferData.nonce = s.nonce++;
-      transferId = _originAndNonce(_transferData.originDomain, _transferData.nonce);
-      transferHash = _calculateTransferHash(_transferData);
+      _transferData.transferId = _originAndNonce(_transferData.originDomain, _transferData.nonce);
 
-      // Store the transfer hash
-      s.transferHashes[transferId] = transferHash;
+      // Calculate and store the transfer hash
+      s.transferHashes[_transferData.transferId] = _calculateTransferHash(_transferData);
     }
 
     // Handle the relayer fee.
     if (_relayer.amount > 0) {
-      _bumpTransfer(transferId, _relayer.asset, _relayer.amount);
+      _bumpTransfer(_transferData.transferId, _relayer.asset, _relayer.amount);
     }
 
     // Send the crosschain message.
-    _sendMessageAndEmit(transferId, _transferData, remoteInstance);
+    _sendMessageAndEmit(_transferData.transferId, _transferData, remoteInstance);
 
-    return transferId;
+    return _transferData.transferId;
   }
 
   /**
@@ -576,13 +577,7 @@ contract BridgeFacet is BaseConnextFacet {
    * @param _connextion The connext instance on the destination domain.
    */
   function _sendMessageAndEmit(bytes32 _transferId, TransferData memory _transferData, bytes32 _connextion) private {
-    bytes memory _messageBody = abi.encodePacked(
-      _transferData.canonicalDomain,
-      _transferData.canonicalId,
-      BridgeMessage.Types.Transfer,
-      _transferData.bridgedAmt,
-      _transferId
-    );
+    bytes memory _messageBody = abi.encodePacked(_transferData);
 
     // Send message to destination chain bridge router.
     // return message hash and unhashed body

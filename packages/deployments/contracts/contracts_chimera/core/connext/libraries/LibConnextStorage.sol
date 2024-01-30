@@ -72,6 +72,7 @@ enum DestinationTransferStatus {
  */
 struct TransferData {
   DestinationTransferStatus status;
+  bytes32 transferId;
   uint256 nonce;
   uint32 originDomain;
   uint32 destinationDomain;

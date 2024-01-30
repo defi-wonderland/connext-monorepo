@@ -8,6 +8,7 @@ import {BridgeMessage} from "../libraries/BridgeMessage.sol";
 import {DestinationTransferStatus} from "../libraries/LibConnextStorage.sol";
 
 import {IBridgeToken} from "../interfaces/IBridgeToken.sol";
+import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
 
 import {BaseConnextFacet} from "./BaseConnextFacet.sol";
 
@@ -32,6 +33,7 @@ contract InboxFacet is BaseConnextFacet {
   error InboxFacet__onlyRemoteRouter_notRemote();
   error InboxFacet__handle_notTransfer();
   error InboxFacet__reconcile_alreadyReconciled();
+  error InboxFacet__reconcile_notReconcileDomain();
 
   // ============ Events ============
 
@@ -48,6 +50,7 @@ contract InboxFacet is BaseConnextFacet {
   event Reconciled(
     bytes32 indexed transferId,
     uint32 indexed originDomain,
+    uint32 indexed reconcileDomain,
     address indexed adopted,
     address[] routers,
     uint256 amount,
@@ -115,23 +118,40 @@ contract InboxFacet is BaseConnextFacet {
     bytes32 _sender,
     bytes memory _message
   ) external onlyReplica onlyRemoteHandler(_origin, _sender) {
-    // Parse token ID and action from message body.
-    bytes29 _msg = _message.ref(0).mustBeMessage();
-    bytes29 _tokenId = _msg.tokenId();
-    bytes29 _action = _msg.action();
+    // Parse transfer data from message body.
+    TransferData memory _transferData = abi.decode(_message, (TransferData));
 
-    // Sanity check: action must be a valid transfer.
-    if (!_action.isTransfer()) {
+    // Sanity check: transfer must be valid.
+    bytes32 _transferId = _originAndNonce(_origin, _nonce);
+    bytes32 _transferHash = s.transferHashes[_transferId];
+    if (_transferHash != _calculateTransferHash(_transferData)) {
       revert InboxFacet__handle_notTransfer();
     }
 
     // If applicable, mint the local asset that corresponds with the message's token ID in the
     // amount specified by the message.
-    // Returns the adopted asset address and message's amount.
-    (address _token, uint256 _amount) = _creditTokens(_origin, _nonce, _tokenId, _action);
+    // Returns the adopted asset address and its decimals.
+    (_transferData.destinationAsset, _transferData.destinationAssetDecimals) = _creditTokens(
+      _transferData.originDomain,
+      _transferData.nonce,
+      _transferData.canonicalDomain,
+      _transferData.canonicalId,
+      _transferData.bridgedAmt
+    );
 
     // Reconcile the transfer.
-    _reconcile(_action.transferId(), _origin, _token, _amount);
+    _transferData.status = _reconcile(
+      _transferData.status,
+      _transferData.transferId,
+      _transferData.originDomain,
+      _transferData.reconcileDomain,
+      _transferData.destinationAsset,
+      _transferData.bridgedAmt
+      _transferData.routers
+    );
+
+    // Mark the transfer as reconciled.
+    s.transferHashes[_transferData.transferId] = _calculateTransferHash(_transferData);
   }
 
   // ============ Internal Functions ============
@@ -139,47 +159,58 @@ contract InboxFacet is BaseConnextFacet {
   /**
    * @notice Reconcile the transfer, marking the transfer ID in storage as authenticated. Reimburses
    * routers with local asset if it was a fast-liquidity transfer (i.e. it was previously executed).
+   * @param _status The status of the transfer.
    * @param _transferId Unique identifier of the transfer.
    * @param _origin Origin domain of the transfer.
+   * @param _reconcile Reconcile domain of the transfer.
    * @param _asset Adopted asset address (adopted or canonical).
    * @param _amount The amount of the local asset.
+   * @param _routers The routers that provided fast-liquidity for the transfer.
    */
-  function _reconcile(bytes32 _transferId, uint32 _origin, address _asset, uint256 _amount) internal {
+  function _reconcile(
+    DestinationTransferStatus _status,
+    bytes32 _transferId,
+    uint32 _origin,
+    uint32 _reconcile,
+    address _asset,
+    uint256 _amount,
+    address[] memory _routers
+  ) internal returns (DestinationTransferStatus) {
+    if (_reconcile != s.domain) {
+      revert InboxFacet__reconcile_notReconcileDomain();
+    }
+
     // Ensure the transfer has not already been handled (i.e. previously reconciled).
     // Will be previously reconciled IFF status == reconciled -or- status == executed
     // and there is no path length on the transfers (no fast liquidity)
-    DestinationTransferStatus status = s.transferStatus[_transferId];
-    if (status != DestinationTransferStatus.None && status != DestinationTransferStatus.Executed) {
+    if (_status != DestinationTransferStatus.None && _status != DestinationTransferStatus.Executed) {
       revert InboxFacet__reconcile_alreadyReconciled();
     }
-
-    // Mark the transfer as reconciled.
-    s.transferStatus[_transferId] = status == DestinationTransferStatus.None
-      ? DestinationTransferStatus.Reconciled
-      : DestinationTransferStatus.Completed;
 
     // If the transfer was executed using fast-liquidity provided by routers, then this value would be set
     // to the participating routers.
     // NOTE: If the transfer was not executed using fast-liquidity, then the funds will be reserved for
     // execution (i.e. funds will be delivered to the transfer's recipient in a subsequent `execute` call).
-    address[] memory routers = s.routedTransfers[_transferId];
-
-    uint256 pathLen = routers.length;
+    uint256 pathLen = _routers.length;
     if (pathLen != 0) {
       // Credit each router that provided liquidity their due 'share' of the asset.
       uint256 routerAmount = _amount / pathLen;
       for (uint256 i; i < pathLen - 1; ) {
-        s.routerBalances[routers[i]][_asset] += routerAmount;
+        s.routerBalances[_routers[i]][_asset] += routerAmount;
         unchecked {
           ++i;
         }
       }
       // The last router in the multipath will sweep the remaining balance to account for remainder dust.
       uint256 toSweep = routerAmount + (_amount % pathLen);
-      s.routerBalances[routers[pathLen - 1]][_asset] += toSweep;
+      s.routerBalances[_routers[pathLen - 1]][_asset] += toSweep;
     }
 
-    emit Reconciled(_transferId, _origin, _asset, routers, _amount, msg.sender);
+    emit Reconciled(_transferId, _origin, _reconcile, _asset, _routers, _amount, msg.sender);
+    return
+      _status == DestinationTransferStatus.None
+        ? DestinationTransferStatus.Reconciled
+        : DestinationTransferStatus.Completed;
   }
 
   /**
@@ -207,22 +238,18 @@ contract InboxFacet is BaseConnextFacet {
    *
    * @param _origin The domain of the chain from which the transfer originated.
    * @param _nonce The unique identifier for the message from origin to destination.
-   * @param _tokenId The canonical token identifier to credit.
-   * @param _action The contents of the transfer message.
-   * @return _token The address of the local token contract.
+   * @param _canonicalDomain The canonical domain of the token to credit.
+   * @param _canonicalId The canonical identifier of the token to credit.
+   * @param _amount The amount of the token to credit.
+   * @return _token The address of the adopted token contract.
    */
   function _creditTokens(
     uint32 _origin,
     uint32 _nonce,
-    bytes29 _tokenId,
-    bytes29 _action
-  ) internal returns (address, uint256) {
-    bytes32 _canonicalId = _tokenId.id();
-    uint32 _canonicalDomain = _tokenId.domain();
-
-    // Load amount once.
-    uint256 _amount = _action.amnt();
-
+    uint32 _canonicalDomain,
+    bytes32 _canonicalId,
+    uint256 _amount
+  ) internal returns (address, uint8) {
     // Check for the empty case -- if it is 0 value there is no strict requirement for the
     // canonical information be defined (i.e. you can supply address(0) to xcall). If this
     // is the case, return _token as address(0)
@@ -238,11 +265,13 @@ contract InboxFacet is BaseConnextFacet {
     if (_amount == 0) {
       // Emit Receive event and short-circuit remaining logic: no tokens need to be delivered.
       emit Receive(_originAndNonce(_origin, _nonce), _token, address(this), address(0), _amount);
-      return (_token, 0);
+      return (_token, _token.decimals());
     }
+
+    // Credit tokens
 
     // Emit Receive event.
     emit Receive(_originAndNonce(_origin, _nonce), _token, address(this), address(0), _amount);
-    return (_token, _amount);
+    return (_token, _token.decimals());
   }
 }
