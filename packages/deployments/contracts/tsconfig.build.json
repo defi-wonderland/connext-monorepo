@@ -9,19 +9,19 @@
   },
   "include": [
     "hardhat.config.ts",
-    "./scripts",
-    "./deploy",
-    "./deployHelpers",
-    "./deployConfig",
+    "./hardhat/scripts",
+    "./hardhat/deploy",
+    "./hardhat/deployHelpers",
+    "./hardhat/deployConfig",
     "./typechain_types",
-    "tasks/**/*.ts",
-    "src/**/*.ts",
+    "./hardhat/tasks/**/*.ts",
+    "./hardhat/src/**/*.ts",
     "./artifacts",
     "./deployments.json",
     "./devnet.deployments.json",
     "./local.deployments.json",
     "./abi/**/*.json",
-    "src/init/*.ts"
+    "./hardhat/src/init/*.ts"
   ],
   "exclude": ["test/**/*.ts"],
   "references": [
