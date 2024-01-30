@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity 0.8.17;
 
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import {GelatoRelayFeeCollector} from "@gelatonetwork/relay-context/contracts/GelatoRelayFeeCollector.sol";
+import {Address} from '@openzeppelin/contracts/utils/Address.sol';
+import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+import {ECDSA} from '@openzeppelin/contracts/utils/cryptography/ECDSA.sol';
+import {ReentrancyGuard} from '@openzeppelin/contracts/security/ReentrancyGuard.sol';
+import {GelatoRelayFeeCollector} from '@gelatonetwork/relay-context/contracts/GelatoRelayFeeCollector.sol';
 
-import {ProposedOwnable} from "../../shared/ProposedOwnable.sol";
-import {IConnext, ExecuteArgs} from "../interfaces/IConnext.sol";
+import {ProposedOwnable} from '../../shared/ProposedOwnable.sol';
+import {IConnext, ExecuteArgs} from '../interfaces/IConnext.sol';
 
 interface ISpokeConnector {
   struct Proof {
@@ -50,6 +50,7 @@ interface IKeep3rV2 {
 contract RelayerProxy is ProposedOwnable, ReentrancyGuard, GelatoRelayFeeCollector {
   using ECDSA for bytes32;
   // ============ Properties ============
+
   address public gelatoRelayer;
   address public feeCollector;
   IKeep3rV2 public keep3r;
@@ -191,8 +192,7 @@ contract RelayerProxy is ProposedOwnable, ReentrancyGuard, GelatoRelayFeeCollect
    * @param oldProposeAggregateRootCooldown Old cooldown period
    */
   event ProposeAggregateRootCooldownChanged(
-    uint256 proposeAggregateRootCooldown,
-    uint256 oldProposeAggregateRootCooldown
+    uint256 proposeAggregateRootCooldown, uint256 oldProposeAggregateRootCooldown
   );
 
   /**

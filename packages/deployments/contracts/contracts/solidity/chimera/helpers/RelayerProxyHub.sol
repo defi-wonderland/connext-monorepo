@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity 0.8.17;
 
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
-import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import {GelatoRelayFeeCollector} from "@gelatonetwork/relay-context/contracts/GelatoRelayFeeCollector.sol";
+import {Address} from '@openzeppelin/contracts/utils/Address.sol';
+import {ECDSA} from '@openzeppelin/contracts/utils/cryptography/ECDSA.sol';
+import {ReentrancyGuard} from '@openzeppelin/contracts/security/ReentrancyGuard.sol';
+import {GelatoRelayFeeCollector} from '@gelatonetwork/relay-context/contracts/GelatoRelayFeeCollector.sol';
 
-import {ChainIDs} from "../libraries/ChainIDs.sol";
-import {Types} from "../../messaging/connectors/optimism/lib/Types.sol";
-import {ProposedOwnable} from "../../shared/ProposedOwnable.sol";
-import {RootManager} from "../../messaging/RootManager.sol";
+import {ChainIDs} from '../libraries/ChainIDs.sol';
+import {Types} from '../../messaging/connectors/optimism/lib/Types.sol';
+import {ProposedOwnable} from '../../shared/ProposedOwnable.sol';
+import {RootManager} from '../../messaging/RootManager.sol';
 
-import {RelayerProxy} from "./RelayerProxy.sol";
+import {RelayerProxy} from './RelayerProxy.sol';
 
 interface IRootManager {
   function lastPropagatedRoot(uint32 _domain) external view returns (bytes32);
@@ -296,9 +296,7 @@ contract RelayerProxyHub is RelayerProxy {
   /**
    * @notice Creates a new RelayerProxyHub instance.
    */
-  constructor(
-    HubConstructorParams memory _params
-  )
+  constructor(HubConstructorParams memory _params)
     RelayerProxy(
       ConstructorParams(
         _params.connext,
@@ -372,7 +370,7 @@ contract RelayerProxyHub is RelayerProxy {
    * @return True if the RootManager has a workable root.
    */
   function propagateWorkable(uint32[] memory domains) public returns (bool) {
-    (bytes32 _aggregateRoot, ) = rootManager.dequeue();
+    (bytes32 _aggregateRoot,) = rootManager.dequeue();
     bool updatedRoot = false;
     for (uint256 i; i < domains.length; i++) {
       updatedRoot = rootManager.lastPropagatedRoot(domains[i]) != _aggregateRoot;
@@ -635,7 +633,7 @@ contract RelayerProxyHub is RelayerProxy {
   ) internal returns (uint256) {
     uint256 sum = 0;
     uint256 length = _connectors.length;
-    for (uint32 i; i < length; ) {
+    for (uint32 i; i < length;) {
       sum += _messageFees[i];
       unchecked {
         ++i;
@@ -655,7 +653,7 @@ contract RelayerProxyHub is RelayerProxy {
   ) internal returns (uint256) {
     uint256 sum = 0;
     uint256 length = _connectors.length;
-    for (uint32 i; i < length; ) {
+    for (uint32 i; i < length;) {
       sum += _fees[i];
       unchecked {
         ++i;
@@ -663,11 +661,7 @@ contract RelayerProxyHub is RelayerProxy {
     }
 
     rootManager.finalizeAndPropagate{value: sum}(
-      _connectors,
-      _fees,
-      _encodedData,
-      _proposedAggregateRoot,
-      _endOfDispute
+      _connectors, _fees, _encodedData, _proposedAggregateRoot, _endOfDispute
     );
     return sum;
   }
@@ -687,46 +681,26 @@ contract RelayerProxyHub is RelayerProxy {
     processedRootMessages[fromChain][l2Hash] = true;
 
     if (fromChain == ChainIDs.GNOSIS || fromChain == ChainIDs.GNOSIS_CHIADO) {
-      IGnosisHubConnector.GnosisRootMessageData memory data = abi.decode(
-        encodedData,
-        (IGnosisHubConnector.GnosisRootMessageData)
-      );
+      IGnosisHubConnector.GnosisRootMessageData memory data =
+        abi.decode(encodedData, (IGnosisHubConnector.GnosisRootMessageData));
       IGnosisHubConnector(hubConnectors[fromChain]).executeSignatures(data._data, data._signatures);
     } else if (fromChain == ChainIDs.ARBITRUM_ONE || fromChain == ChainIDs.ARBITRUM_GOERLI) {
-      IArbitrumHubConnector.ArbitrumRootMessageData memory data = abi.decode(
-        encodedData,
-        (IArbitrumHubConnector.ArbitrumRootMessageData)
-      );
+      IArbitrumHubConnector.ArbitrumRootMessageData memory data =
+        abi.decode(encodedData, (IArbitrumHubConnector.ArbitrumRootMessageData));
       IArbitrumHubConnector(hubConnectors[fromChain]).processMessageFromRoot(
-        data._nodeNum,
-        data._sendRoot,
-        data._blockHash,
-        data._proof,
-        data._index,
-        data._message
+        data._nodeNum, data._sendRoot, data._blockHash, data._proof, data._index, data._message
       );
     } else if (fromChain == ChainIDs.OPTIMISM || fromChain == ChainIDs.OPTIMISM_GOERLI) {
-      IOptimismHubConnector.OptimismRootMessageData memory data = abi.decode(
-        encodedData,
-        (IOptimismHubConnector.OptimismRootMessageData)
-      );
+      IOptimismHubConnector.OptimismRootMessageData memory data =
+        abi.decode(encodedData, (IOptimismHubConnector.OptimismRootMessageData));
       IOptimismHubConnector(hubConnectors[fromChain]).processMessageFromRoot(
-        data._tx,
-        data._l2OutputIndex,
-        data._outputRootProof,
-        data._withdrawalProof
+        data._tx, data._l2OutputIndex, data._outputRootProof, data._withdrawalProof
       );
     } else if (fromChain == ChainIDs.ZKSYNC || fromChain == ChainIDs.ZKSYNC_TEST) {
-      IZkSyncHubConnector.ZkSyncRootMessageData memory data = abi.decode(
-        encodedData,
-        (IZkSyncHubConnector.ZkSyncRootMessageData)
-      );
+      IZkSyncHubConnector.ZkSyncRootMessageData memory data =
+        abi.decode(encodedData, (IZkSyncHubConnector.ZkSyncRootMessageData));
       IZkSyncHubConnector(hubConnectors[fromChain]).processMessageFromRoot(
-        data._l2BlockNumber,
-        data._l2MessageIndex,
-        data._l2TxNumberInBlock,
-        data._message,
-        data._proof
+        data._l2BlockNumber, data._l2MessageIndex, data._l2TxNumberInBlock, data._message, data._proof
       );
     } else if (fromChain == ChainIDs.POLYGON_POS || fromChain == ChainIDs.MUMBAI) {
       IPolygonHubConnector(hubConnectors[fromChain]).receiveMessage(encodedData);

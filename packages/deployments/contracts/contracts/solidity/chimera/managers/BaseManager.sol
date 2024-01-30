@@ -1,17 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {ConnextStorage} from "../ConnextStorage.sol";
-import {Constants} from "../libraries/Constants.sol";
-import {Role, TokenConfig} from "../libraries/LibConnextStorage.sol";
-
+import {IERC20Metadata} from '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
+import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
+import {ConnextStorage} from '../ConnextStorage.sol';
+import {Constants} from '../libraries/Constants.sol';
+import {Role, TokenConfig} from '../libraries/LibConnextStorage.sol';
 
 abstract contract BaseManager is ConnextStorage {
-
   // ============ Libraries ============
-  
+
   using SafeERC20 for IERC20Metadata;
 
   // ========== Custom Errors ===========
@@ -25,8 +23,6 @@ abstract contract BaseManager is ConnextStorage {
   error BaseManager__handleIncomingAsset_feeOnTransferNotSupported();
   error BaseManager__handleOutgoingAsset_notNative();
   error BaseManager__getConfig_notRegistered();
-
-
 
   /**
    * @notice Returns the delay period before a new owner can be accepted.
@@ -106,7 +102,7 @@ abstract contract BaseManager is ConnextStorage {
     _;
   }
 
-    /**
+  /**
    * @notice Calculates the hash of canonical ID and domain.
    * @dev This hash is used as the key for many asset-related mappings.
    * @param _id Canonical ID.
@@ -117,7 +113,7 @@ abstract contract BaseManager is ConnextStorage {
     return keccak256(abi.encode(_id, _domain));
   }
 
-      /**
+  /**
    * @notice Handles transferring funds from msg.sender to the Connext contract.
    * @dev Does NOT work with fee-on-transfer tokens: will revert.
    *
@@ -131,7 +127,7 @@ abstract contract BaseManager is ConnextStorage {
     }
     // Sanity check: asset address is not zero.
     if (_asset == address(0)) {
-      revert  BaseManager__handleIncomingAsset_nativeAssetNotSupported();
+      revert BaseManager__handleIncomingAsset_nativeAssetNotSupported();
     }
 
     IERC20Metadata asset = IERC20Metadata(_asset);
@@ -144,21 +140,17 @@ abstract contract BaseManager is ConnextStorage {
 
     // Ensure correct amount was transferred (i.e. this was not a fee-on-transfer token).
     if (asset.balanceOf(address(this)) - starting != _amount) {
-      revert  BaseManager__handleIncomingAsset_feeOnTransferNotSupported();
+      revert BaseManager__handleIncomingAsset_feeOnTransferNotSupported();
     }
   }
 
-    /**
+  /**
    * @notice Handles transferring funds from the Connext contract to a specified address
    * @param _asset - The address of the ERC20 token to transfer.
    * @param _to - The recipient address that will receive the funds.
    * @param _amount - The amount to withdraw from contract.
    */
-  function _handleOutgoingAsset(
-    address _asset,
-    address _to,
-    uint256 _amount
-  ) internal {
+  function _handleOutgoingAsset(address _asset, address _to, uint256 _amount) internal {
     // Sanity check: if amount is 0, do nothing.
     if (_amount == 0) {
       return;

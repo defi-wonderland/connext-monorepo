@@ -1,10 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import {BaseManager} from "./BaseManager.sol";
-import {Role} from "../libraries/LibConnextStorage.sol";
-import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
-
+import {BaseManager} from './BaseManager.sol';
+import {Role} from '../libraries/LibConnextStorage.sol';
+import {TypeCasts} from '../../shared/libraries/TypeCasts.sol';
 
 abstract contract RolesManager is BaseManager {
   // ========== Custom Errors ===========
@@ -33,7 +32,6 @@ abstract contract RolesManager is BaseManager {
   event RevokeRole(address revokedAddress, Role revokedRole);
 
   event AssignRole(address account, Role role);
-  
 
   /**
    * @notice Emitted when a relayer is added or removed from allowlists
@@ -63,7 +61,7 @@ abstract contract RolesManager is BaseManager {
    */
   event SequencerRemoved(address sequencer, address caller);
 
-    /**
+  /**
    * @notice Emitted when a new remote instance is added
    * @param domain - The domain the remote instance is on
    * @param remote - The address of the remote instance
@@ -198,7 +196,7 @@ abstract contract RolesManager is BaseManager {
     emit SequencerRemoved(_sequencer, msg.sender);
   }
 
-   /**
+  /**
    * @notice Register the address of a Router contract for the same xApp on a remote chain
    * @param _domain The domain of the remote xApp Router
    * @param _router The address of the remote xApp Router

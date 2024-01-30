@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import {IConnectorManager} from "../messaging/interfaces/IConnectorManager.sol";
-import {TokenId, TokenConfig, DestinationTransferStatus, Role, RouterConfig} from "./libraries/LibConnextStorage.sol";
+import {IConnectorManager} from '../messaging/interfaces/IConnectorManager.sol';
+import {TokenId, TokenConfig, DestinationTransferStatus, Role, RouterConfig} from './libraries/LibConnextStorage.sol';
 
 /**
  * @notice THIS FILE DEFINES OUR STORAGE LAYOUT AND ID GENERATION SCHEMA. IT CAN ONLY BE MODIFIED FREELY FOR FRESH

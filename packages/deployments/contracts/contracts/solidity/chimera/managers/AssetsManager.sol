@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import {IERC20Metadata} from "@openzeppelin/contracts/interfaces/IERC20Metadata.sol";
-import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
-import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
-import {TypedMemView} from "../../shared/libraries/TypedMemView.sol";
+import {IERC20Metadata} from '@openzeppelin/contracts/interfaces/IERC20Metadata.sol';
+import {TypeCasts} from '../../shared/libraries/TypeCasts.sol';
+import {TypeCasts} from '../../shared/libraries/TypeCasts.sol';
+import {TypedMemView} from '../../shared/libraries/TypedMemView.sol';
 
-import {BridgeMessage} from "../libraries/BridgeMessage.sol";
+import {BridgeMessage} from '../libraries/BridgeMessage.sol';
 
-import {Role, TokenId, TokenConfig, DestinationTransferStatus} from "../libraries/LibConnextStorage.sol";
-import {BaseManager} from "./BaseManager.sol";
-import {BridgeToken} from "../helpers/BridgeToken.sol";
-import {IBridgeToken} from "../interfaces/IBridgeToken.sol";
+import {Role, TokenId, TokenConfig, DestinationTransferStatus} from '../libraries/LibConnextStorage.sol';
+import {BaseManager} from './BaseManager.sol';
+import {BridgeToken} from '../helpers/BridgeToken.sol';
+import {IBridgeToken} from '../interfaces/IBridgeToken.sol';
 
 abstract contract AssetsManager is BaseManager {
   // ============ Libraries ============
@@ -42,7 +42,6 @@ abstract contract AssetsManager is BaseManager {
   error AssetsManager__reconcile_alreadyReconciled();
   error AssetsManager__reconcile_noPortalRouter();
 
-
   // ============ Events ============
 
   /**
@@ -62,11 +61,7 @@ abstract contract AssetsManager is BaseManager {
    * @param caller - The account that called the function
    */
   event LiquidityCapUpdated(
-    bytes32 indexed key,
-    bytes32 indexed canonicalId,
-    uint32 indexed domain,
-    uint256 cap,
-    address caller
+    bytes32 indexed key, bytes32 indexed canonicalId, uint32 indexed domain, uint256 cap, address caller
   );
 
   /**
@@ -214,11 +209,7 @@ abstract contract AssetsManager is BaseManager {
 
       // On remote, deploy a local representation.
       _local = _deployRepresentation(
-        _canonical.id,
-        _canonical.domain,
-        _canonicalDecimals,
-        _representationName,
-        _representationSymbol
+        _canonical.id, _canonical.domain, _canonicalDecimals, _representationName, _representationSymbol
       );
       // Enroll the asset.
       // TODO: Fix stack too deep in the line below
@@ -306,8 +297,7 @@ abstract contract AssetsManager is BaseManager {
    * @notice Used to remove assets from the allowlist
    * @param _key - The hash of the canonical id and domain to remove (mapping key)
    * @param _adoptedAssetId - Corresponding adopted asset to remove
-      * @param _representation - Corresponding representation asset to remove
-
+   * @param _representation - Corresponding representation asset to remove
    */
   function removeAssetId(
     bytes32 _key,
@@ -378,7 +368,7 @@ abstract contract AssetsManager is BaseManager {
     bytes32 _key
   ) internal {
     // Sanity check: canonical ID and domain are not 0.
-    if (_canonical.domain == 0 || _canonical.id == bytes32("")) {
+    if (_canonical.domain == 0 || _canonical.id == bytes32('')) {
       revert AssetsManager__enrollAdoptedAndLocalAssets_emptyCanonical();
     }
 
@@ -497,8 +487,9 @@ abstract contract AssetsManager is BaseManager {
     if (!config.approval) revert AssetsManager__removeAssetId_notAdded();
 
     // Sanity check: consistent set of params
-    if (config.adopted != _adoptedAssetId || config.representation != _representation)
+    if (config.adopted != _adoptedAssetId || config.representation != _representation) {
       revert AssetsManager__removeAssetId_invalidParams();
+    }
 
     bool onCanonical = domain == _canonical.domain;
     if (onCanonical) {
@@ -757,7 +748,7 @@ abstract contract AssetsManager is BaseManager {
 
   /*   function _isLocalOrigin(address _token) internal view returns (bool) {
     return AssetLogic.isLocalOrigin(_token, s);
-  } */
+    } */
 
   /**
    * @notice Internal utility function that combines
@@ -770,8 +761,6 @@ abstract contract AssetsManager is BaseManager {
   function _originAndNonce(uint32 _origin, uint32 _nonce) internal pure returns (uint64) {
     return (uint64(_origin) << 32) | _nonce;
   }
-
-
 
   // TODO: functions
   // addAssetWithStrategy

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity 0.8.17;
 
-import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
 
-import {IBridgeToken} from "../interfaces/IBridgeToken.sol";
-import {ERC20} from "./OZERC20.sol";
+import {IBridgeToken} from '../interfaces/IBridgeToken.sol';
+import {ERC20} from './OZERC20.sol';
 
 contract BridgeToken is IBridgeToken, Ownable, ERC20 {
   // ============ Constructor ============
@@ -12,7 +12,7 @@ contract BridgeToken is IBridgeToken, Ownable, ERC20 {
     uint8 decimals_,
     string memory name_,
     string memory symbol_
-  ) Ownable() ERC20(decimals_, name_, symbol_, "1") {}
+  ) Ownable() ERC20(decimals_, name_, symbol_, '1') {}
 
   // ============ Events ============
 
@@ -34,7 +34,8 @@ contract BridgeToken is IBridgeToken, Ownable, ERC20 {
     _burn(_from, _amnt);
   }
 
-  /** @notice Creates `_amnt` tokens and assigns them to `_to`, increasing
+  /**
+   * @notice Creates `_amnt` tokens and assigns them to `_to`, increasing
    * the total supply.
    * @dev Emits a {Transfer} event with `from` set to the zero address.
    * Requirements:

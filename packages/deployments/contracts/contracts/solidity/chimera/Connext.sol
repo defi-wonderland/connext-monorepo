@@ -1,40 +1,46 @@
-// SPDX-License-Identifier: MIT 
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
+import {IERC20Metadata} from '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
+import {ECDSA} from '@openzeppelin/contracts/utils/cryptography/ECDSA.sol';
+import {Address} from '@openzeppelin/contracts/utils/Address.sol';
 
-import {ExcessivelySafeCall} from "../shared/libraries/ExcessivelySafeCall.sol";
-import {TypedMemView} from "../shared/libraries/TypedMemView.sol";
-import {TypeCasts} from "../shared/libraries/TypeCasts.sol";
+import {ExcessivelySafeCall} from '../shared/libraries/ExcessivelySafeCall.sol';
+import {TypedMemView} from '../shared/libraries/TypedMemView.sol';
+import {TypeCasts} from '../shared/libraries/TypeCasts.sol';
 
-import {IOutbox} from "../messaging/interfaces/IOutbox.sol";
-import {ExecuteArgs, TransferInfo, DestinationTransferStatus, TokenConfig, AssetTransfer} from "./libraries/LibConnextStorage.sol";
-import {BridgeMessage} from "./libraries/BridgeMessage.sol";
-import {Constants} from "./libraries/Constants.sol";
-import {TokenId} from "./libraries/TokenId.sol";
+import {IOutbox} from '../messaging/interfaces/IOutbox.sol';
+import {
+  ExecuteArgs,
+  TransferInfo,
+  DestinationTransferStatus,
+  TokenConfig,
+  AssetTransfer
+} from './libraries/LibConnextStorage.sol';
+import {BridgeMessage} from './libraries/BridgeMessage.sol';
+import {Constants} from './libraries/Constants.sol';
+import {TokenId} from './libraries/TokenId.sol';
 
-import {IXReceiver} from "./interfaces/IXReceiver.sol";
-import {IBridgeToken} from "./interfaces/IBridgeToken.sol";
+import {IXReceiver} from './interfaces/IXReceiver.sol';
+import {IBridgeToken} from './interfaces/IBridgeToken.sol';
 
-import {IConnext} from "./interfaces/IConnext.sol";
-import {AssetsManager} from "./managers/AssetsManager.sol";
-import {ProtocolManager} from "./managers/ProtocolManager.sol";
-import {RolesManager} from "./managers/RolesManager.sol";
-import {RoutersManager} from "./managers/RoutersManager.sol";
+import {IConnext} from './interfaces/IConnext.sol';
+import {AssetsManager} from './managers/AssetsManager.sol';
+import {ProtocolManager} from './managers/ProtocolManager.sol';
+import {RolesManager} from './managers/RolesManager.sol';
+import {RoutersManager} from './managers/RoutersManager.sol';
 
 // Core contract
 contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, RoutersManager {
-    // ============ Libraries ============
+  // ============ Libraries ============
 
   using TypedMemView for bytes;
   using TypedMemView for bytes29;
   using BridgeMessage for bytes29;
   using SafeERC20 for IERC20Metadata;
 
-    // ========== Custom Errors ===========
+  // ========== Custom Errors ===========
 
   error Connext__onlyDelegate_notDelegate();
   error Connext__xcall_nativeAssetNotSupported();
@@ -142,7 +148,6 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
    */
   event ForceReceiveLocal(bytes32 indexed transferId);
 
-
   // ============ Modifiers ============
 
   /**
@@ -153,7 +158,6 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
     if (_params.delegate != msg.sender) revert Connext__onlyDelegate_notDelegate();
     _;
   }
-
 
   // ============ Public Functions: Bridge ==============
   function xcall(
@@ -323,13 +327,8 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
     );
 
     // Execute the transaction using the designated calldata.
-    uint256 amount = _handleExecuteTransaction(
-      _args,
-      amountOut,
-      asset,
-      transferId,
-      updated == DestinationTransferStatus.Completed
-    );
+    uint256 amount =
+      _handleExecuteTransaction(_args, amountOut, asset, transferId, updated == DestinationTransferStatus.Completed);
 
     // Emit event.
     emit Executed(transferId, _args.params.to, asset, _args, local, amount, msg.sender);
@@ -358,7 +357,7 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
     address _relayerFeeAsset,
     uint256 _relayerFee
   ) external nonReentrant whenNotPaused {
-/*     if (_relayerFee == 0) revert Connext__bumpTransfer_valueIsZero();
+    /*     if (_relayerFee == 0) revert Connext__bumpTransfer_valueIsZero();
     // check that the asset is whitelisted (the following reverts if asset
     // is not approved)
     _getApprovedCanonicalId(_relayerFeeAsset);
@@ -416,7 +415,7 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
     whenNotPaused
     returns (bytes32)
   {
-   /*  // Sanity checks.
+    /*  // Sanity checks.
     bytes32 remoteInstance;
     {
       // Not native asset.
@@ -802,16 +801,16 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
 
   /**
    * @notice Executes external calldata.
-   * 
+   *
    * @dev Once a transfer is reconciled (i.e. data is authenticated), external calls will
    * fail gracefully. This means errors will be emitted in an event, but the function itself
    * will not revert.
-
+   *
    * In the case where a transaction is *not* reconciled (i.e. data is unauthenticated), this
    * external call will fail loudly. This allows all functions that rely on authenticated data
    * (using a specific check on the origin sender), to be forced into the slow path for
    * execution to succeed.
-   * 
+   *
    */
   function _executeCalldata(
     bytes32 _transferId,
@@ -886,21 +885,13 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
       // NOTE: The tokens should be in the contract already at this point from xcall.
     }
 
-    bytes memory _messageBody = abi.encodePacked(
-      _canonical.domain,
-      _canonical.id,
-      BridgeMessage.Types.Transfer,
-      bridgedAmt,
-      _transferId
-    );
+    bytes memory _messageBody =
+      abi.encodePacked(_canonical.domain, _canonical.id, BridgeMessage.Types.Transfer, bridgedAmt, _transferId);
 
     // Send message to destination chain bridge router.
     // return message hash and unhashed body
-    (bytes32 messageHash, bytes memory messageBody) = IOutbox(xAppConnectionManager.home()).dispatch(
-      _params.destinationDomain,
-      _connextion,
-      _messageBody
-    );
+    (bytes32 messageHash, bytes memory messageBody) =
+      IOutbox(xAppConnectionManager.home()).dispatch(_params.destinationDomain, _connextion, _messageBody);
 
     // emit event
     emit XCalled(_transferId, _params.nonce, messageHash, _params, _asset, _amount, _local, messageBody);
@@ -918,7 +909,7 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
     }
   }
 
-    /**
+  /**
    * @notice Calculates a transferId
    */
   function _calculateTransferId(TransferInfo memory _params) internal pure returns (bytes32) {

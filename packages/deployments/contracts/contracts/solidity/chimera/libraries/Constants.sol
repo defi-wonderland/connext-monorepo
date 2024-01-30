@@ -7,7 +7,7 @@ library Constants {
   /**
    * @notice Sets the initial lp fee at 5 bps
    */
-  uint256 public constant INITIAL_LIQUIDITY_FEE_NUMERATOR = 9_995;
+  uint256 public constant INITIAL_LIQUIDITY_FEE_NUMERATOR = 9995;
 
   /**
    * @notice Sets the initial max routers per transfer
@@ -37,7 +37,7 @@ library Constants {
   /**
    * @notice Contains hash of empty bytes
    */
-  bytes32 internal constant EMPTY_HASH = keccak256("");
+  bytes32 internal constant EMPTY_HASH = keccak256('');
 
   /**
    * @notice Denominator for BPS values
@@ -141,7 +141,7 @@ library Constants {
    * @dev stored here to keep easily in sync between `SwapUtils` and `SwapUtilsExternal`
    */
   uint256 public constant A_PRECISION = 100;
-  uint256 public constant MAX_A = 10**6;
+  uint256 public constant MAX_A = 10 ** 6;
   uint256 public constant MAX_A_CHANGE = 2;
   uint256 public constant MIN_RAMP_TIME = 14 days;
   uint256 public constant MIN_RAMP_DELAY = 1 days;

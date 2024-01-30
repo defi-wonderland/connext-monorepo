@@ -1,14 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
-import {Constants} from "../libraries/Constants.sol";
-import {RouterConfig, Role} from "../libraries/LibConnextStorage.sol";
-import {TokenId} from "../libraries/TokenId.sol";
-import {BaseManager} from "./BaseManager.sol";
+import {TypeCasts} from '../../shared/libraries/TypeCasts.sol';
+import {Constants} from '../libraries/Constants.sol';
+import {RouterConfig, Role} from '../libraries/LibConnextStorage.sol';
+import {TokenId} from '../libraries/TokenId.sol';
+import {BaseManager} from './BaseManager.sol';
 
 abstract contract RoutersManager is BaseManager {
-
   // ========== Custom Errors ===========
   error RoutersManager__acceptProposedRouterOwner_notElapsed();
   error RoutersManager__acceptProposedRouterOwner_badCaller();
@@ -100,12 +99,7 @@ abstract contract RoutersManager is BaseManager {
    * @param caller - The account that called the function
    */
   event RouterLiquidityRemoved(
-    address indexed router,
-    address to,
-    address local,
-    bytes32 key,
-    uint256 amount,
-    address caller
+    address indexed router, address to, address local, bytes32 key, uint256 amount, address caller
   );
 
   // ============ Modifiers ============
@@ -254,8 +248,9 @@ abstract contract RoutersManager is BaseManager {
     RouterConfig memory config = routerConfigs[_router];
 
     // Check timestamp has passed
-    if (block.timestamp - config.proposedTimestamp <= Constants.GOVERNANCE_DELAY)
+    if (block.timestamp - config.proposedTimestamp <= Constants.GOVERNANCE_DELAY) {
       revert RoutersManager__acceptProposedRouterOwner_notElapsed();
+    }
 
     // Check the caller
     address expected = config.proposed == address(0) ? config.owner : config.proposed;
@@ -283,10 +278,8 @@ abstract contract RoutersManager is BaseManager {
     // Ensure the config is empty
     RouterConfig memory config = routerConfigs[msg.sender];
     if (
-      config.owner != address(0) ||
-      config.recipient != address(0) ||
-      config.proposed != address(0) ||
-      config.proposedTimestamp > 0
+      config.owner != address(0) || config.recipient != address(0) || config.proposed != address(0)
+        || config.proposedTimestamp > 0
     ) {
       revert RoutersManager__initializeRouter_configNotEmpty();
     }
@@ -445,8 +438,9 @@ abstract contract RoutersManager is BaseManager {
     }
 
     // Sanity check: router is approved.
-    if (!_isRouterAllowlistRemoved() && !getRouterApproval(_router))
+    if (!_isRouterAllowlistRemoved() && !getRouterApproval(_router)) {
       revert RoutersManager__addLiquidityForRouter_badRouter();
+    }
 
     // Transfer funds to contract.
     _handleIncomingAsset(_local, _amount);
