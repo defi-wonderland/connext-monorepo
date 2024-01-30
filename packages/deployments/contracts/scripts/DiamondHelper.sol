@@ -9,8 +9,8 @@ pragma solidity ^0.8.0;
 /******************************************************************************/
 
 import "solidity-stringutils/strings.sol";
-import "../contracts/core/connext/interfaces/IDiamondCut.sol";
-import "../contracts/core/connext/interfaces/IDiamondLoupe.sol";
+import "@contracts/core/connext/interfaces/IDiamondCut.sol";
+import "@contracts/core/connext/interfaces/IDiamondLoupe.sol";
 import "forge-std/Test.sol";
 
 abstract contract DiamondHelper is Test {

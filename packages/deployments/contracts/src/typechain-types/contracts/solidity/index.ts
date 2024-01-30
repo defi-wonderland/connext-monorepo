@@ -9,5 +9,5 @@ import type * as messaging from "./messaging";
 export type { messaging };
 import type * as shared from "./shared";
 export type { shared };
-import type * as test from "./test";
-export type { test };
+import type * as testHardhat from "./test_hardhat";
+export type { testHardhat };

@@ -10,18 +10,18 @@ import {Deployer} from "./Deployer.sol";
 
 import {DeployConfig} from "./DeployConfig.s.sol";
 
-import {TestERC20, IERC20} from "../contracts/test/TestERC20.sol";
-import {WatcherManager} from "../contracts/messaging/WatcherManager.sol";
-import {MerkleTreeManager} from "../contracts/messaging/MerkleTreeManager.sol";
-import {RootManager} from "../contracts/messaging/RootManager.sol";
-import {AdminHubConnector} from "../contracts/messaging/connectors/admin/AdminHubConnector.sol";
-import {AdminSpokeConnector} from "../contracts/messaging/connectors/admin/AdminSpokeConnector.sol";
-import {RelayerProxyHub} from "../contracts/core/connext/helpers/RelayerProxyHub.sol";
-import {RelayerProxy} from "../contracts/core/connext/helpers/RelayerProxy.sol";
-import {LPToken} from "../contracts/core/connext/helpers/LPToken.sol";
-import {IConnext} from "../contracts/core/connext/interfaces/IConnext.sol";
-import {TypeCasts} from "../contracts/shared/libraries/TypeCasts.sol";
-import {TokenId} from "../contracts/core/connext/libraries/TokenId.sol";
+import {TestERC20, IERC20} from "@contracts/test/TestERC20.sol";
+import {WatcherManager} from "@contracts/messaging/WatcherManager.sol";
+import {MerkleTreeManager} from "@contracts/messaging/MerkleTreeManager.sol";
+import {RootManager} from "@contracts/messaging/RootManager.sol";
+import {AdminHubConnector} from "@contracts/messaging/connectors/admin/AdminHubConnector.sol";
+import {AdminSpokeConnector} from "@contracts/messaging/connectors/admin/AdminSpokeConnector.sol";
+import {RelayerProxyHub} from "@contracts/core/connext/helpers/RelayerProxyHub.sol";
+import {RelayerProxy} from "@contracts/core/connext/helpers/RelayerProxy.sol";
+import {LPToken} from "@contracts/core/connext/helpers/LPToken.sol";
+import {IConnext} from "@contracts/core/connext/interfaces/IConnext.sol";
+import {TypeCasts} from "@contracts/shared/libraries/TypeCasts.sol";
+import {TokenId} from "@contracts/core/connext/libraries/TokenId.sol";
 
 /// @title Initialize
 /// @notice Script used to initialize connext system. The entire system is initialized within the `run` function.

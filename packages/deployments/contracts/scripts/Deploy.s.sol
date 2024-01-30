@@ -12,17 +12,17 @@ import {DiamondDeployer} from "./DiamondDeployer.sol";
 
 import {DeployConfig} from "./DeployConfig.s.sol";
 
-import {TestERC20} from "../contracts/test/TestERC20.sol";
-import {WatcherManager} from "../contracts/messaging/WatcherManager.sol";
-import {MerkleTreeManager} from "../contracts/messaging/MerkleTreeManager.sol";
-import {RootManager} from "../contracts/messaging/RootManager.sol";
-import {SpokeConnector} from "../contracts/messaging/connectors/SpokeConnector.sol";
-import {AdminHubConnector} from "../contracts/messaging/connectors/admin/AdminHubConnector.sol";
-import {AdminSpokeConnector} from "../contracts/messaging/connectors/admin/AdminSpokeConnector.sol";
-import {RelayerProxyHub} from "../contracts/core/connext/helpers/RelayerProxyHub.sol";
-import {RelayerProxy} from "../contracts/core/connext/helpers/RelayerProxy.sol";
-import {LPToken} from "../contracts/core/connext/helpers/LPToken.sol";
-import {MultiSend} from "../contracts/shared/libraries/Multisend.sol";
+import {TestERC20} from "@contracts/test/TestERC20.sol";
+import {WatcherManager} from "@contracts/messaging/WatcherManager.sol";
+import {MerkleTreeManager} from "@contracts/messaging/MerkleTreeManager.sol";
+import {RootManager} from "@contracts/messaging/RootManager.sol";
+import {SpokeConnector} from "@contracts/messaging/connectors/SpokeConnector.sol";
+import {AdminHubConnector} from "@contracts/messaging/connectors/admin/AdminHubConnector.sol";
+import {AdminSpokeConnector} from "@contracts/messaging/connectors/admin/AdminSpokeConnector.sol";
+import {RelayerProxyHub} from "@contracts/core/connext/helpers/RelayerProxyHub.sol";
+import {RelayerProxy} from "@contracts/core/connext/helpers/RelayerProxy.sol";
+import {LPToken} from "@contracts/core/connext/helpers/LPToken.sol";
+import {MultiSend} from "@contracts/shared/libraries/Multisend.sol";
 
 /// @title Deploy
 /// @notice Script used to deploy connext contracts. The entire system is deployed within the `run` function.

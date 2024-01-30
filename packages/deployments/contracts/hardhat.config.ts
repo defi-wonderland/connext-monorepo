@@ -66,6 +66,7 @@ import "./tasks/connector/receiveHubAggregateRoot";
 import "./tasks/connector/wormholeDeliver";
 import "./tasks/connector/claimLinea";
 import "./tasks/connector/setOptimisticMode";
+import "./tasks/ignoreForgeTests";
 import { hardhatNetworks } from "./src/config";
 
 tdly.setup({
@@ -98,7 +99,7 @@ const config: HardhatUserConfig = {
   paths: {
     artifacts: "./artifacts",
     sources: "./contracts",
-    tests: "./test",
+    tests: "./test/old",
   },
   defaultNetwork: "hardhat",
   namedAccounts: {
