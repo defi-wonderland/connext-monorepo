@@ -324,9 +324,3 @@ export type { UpgradeBeaconController } from "./contracts/solidity/shared/upgrad
 export { UpgradeBeaconController__factory } from "./factories/contracts/solidity/shared/upgrade/UpgradeBeaconController__factory";
 export type { UpgradeBeaconProxy } from "./contracts/solidity/shared/upgrade/UpgradeBeaconProxy";
 export { UpgradeBeaconProxy__factory } from "./factories/contracts/solidity/shared/upgrade/UpgradeBeaconProxy__factory";
-export type { TestAavePool } from "./contracts/solidity/test_hardhat/TestAavePool";
-export { TestAavePool__factory } from "./factories/contracts/solidity/test_hardhat/TestAavePool__factory";
-export type { TestAggregator } from "./contracts/solidity/test_hardhat/TestAggregator";
-export { TestAggregator__factory } from "./factories/contracts/solidity/test_hardhat/TestAggregator__factory";
-export type { TestERC20 } from "./contracts/solidity/test_hardhat/TestERC20";
-export { TestERC20__factory } from "./factories/contracts/solidity/test_hardhat/TestERC20__factory";

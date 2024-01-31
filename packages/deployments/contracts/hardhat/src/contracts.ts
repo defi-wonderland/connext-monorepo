@@ -10,9 +10,9 @@ import {
   RootManagerAbi,
 } from "./abi";
 import { ConnextInterface as TConnextInterface } from "./typechain-types/hardhat-diamond-abi/HardhatDiamondABI.sol/Connext";
-import { AdminSpokeConnectorInterface as TAdminSpokeConnectorInterface } from "./typechain-types/contracts/messaging/connectors/admin/AdminSpokeConnector";
-import { AdminHubConnectorInterface as TAdminHubConnectorInterface } from "./typechain-types/contracts/messaging/connectors/admin/AdminHubConnector";
-import { RootManagerInterface as TRootManagerInterface } from "./typechain-types/contracts/messaging/RootManager";
+import { AdminSpokeConnectorInterface as TAdminSpokeConnectorInterface } from "./typechain-types/contracts/solidity/messaging/connectors/admin/AdminSpokeConnector";
+import { AdminHubConnectorInterface as TAdminHubConnectorInterface } from "./typechain-types/contracts/solidity/messaging/connectors/admin/AdminHubConnector";
+import { RootManagerInterface as TRootManagerInterface } from "./typechain-types/contracts/solidity/messaging/RootManager";
 
 const connextAbi = ConnextAbi.concat(
   TokenFacetAbi.filter((k) => k.includes("event"))
