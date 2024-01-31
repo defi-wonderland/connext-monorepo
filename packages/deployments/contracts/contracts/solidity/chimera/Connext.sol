@@ -327,11 +327,24 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
     );
 
     // Execute the transaction using the designated calldata.
-    uint256 amount =
-      _handleExecuteTransaction(_args, amountOut, asset, transferId, updated == DestinationTransferStatus.Completed);
+    uint256 amount = _handleExecuteTransaction({
+      _args: _args,
+      _amountOut: amountOut,
+      _asset: asset,
+      _transferId: transferId,
+      _reconciled: updated == DestinationTransferStatus.Completed
+    });
 
     // Emit event.
-    emit Executed(transferId, _args.params.to, asset, _args, local, amount, msg.sender);
+    emit Executed({
+      transferId: transferId,
+      to: _args.params.to,
+      asset: asset,
+      args: _args,
+      local: local,
+      amount: amount,
+      caller: msg.sender
+    });
 
     return transferId;
   }
@@ -794,7 +807,13 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
     _handleOutgoingAsset(_asset, _args.params.to, _amountOut);
 
     // execute the calldata
-    _executeCalldata(_transferId, _amountOut, _asset, _reconciled, _args.params);
+    _executeCalldata({
+      _transferId: _transferId,
+      _amount: _amountOut,
+      _asset: _asset,
+      _reconciled: _reconciled,
+      _params: _args.params
+    });
 
     return _amountOut;
   }
@@ -825,12 +844,20 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
       return;
     }
 
-    (bool success, bytes memory returnData) = ExcessivelySafeCall.excessivelySafeCall(
-      _params.to,
-      gasleft() - Constants.EXECUTE_CALLDATA_RESERVE_GAS,
-      0, // native asset value (always 0)
-      Constants.DEFAULT_COPY_BYTES, // only copy 256 bytes back as calldata
-      abi.encodeWithSelector(
+    /*
+  address _target,
+    uint256 _gas,
+    uint256 _value,
+    uint16 _maxCopy,
+    bytes memory _calldata
+    */
+    (bool success, bytes memory returnData) = ExcessivelySafeCall.excessivelySafeCall({
+      _target: _params.to,
+      _gas: gasleft() - Constants.EXECUTE_CALLDATA_RESERVE_GAS,
+      _value: 0, // native asset value (always 0)
+      _maxCopy: Constants.DEFAULT_COPY_BYTES, // only copy 256 bytes back as calldata
+      // solhint-disable-next-line func-named-parameters
+      _calldata: abi.encodeWithSelector(
         IXReceiver.xReceive.selector,
         _transferId,
         _amount,
@@ -838,8 +865,8 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
         _reconciled ? _params.originSender : address(0), // use passed in value iff authenticated
         _params.originDomain,
         _params.callData
-      )
-    );
+        )
+    });
 
     if (!_reconciled && !success) {
       // See above devnote, reverts if unsuccessful on fast path
@@ -886,7 +913,8 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
     }
 
     bytes memory _messageBody =
-      abi.encodePacked(_canonical.domain, _canonical.id, BridgeMessage.Types.Transfer, bridgedAmt, _transferId);
+    // solhint-disable-next-line func-named-parameters
+     abi.encodePacked(_canonical.domain, _canonical.id, BridgeMessage.Types.Transfer, bridgedAmt, _transferId);
 
     // Send message to destination chain bridge router.
     // return message hash and unhashed body
@@ -894,7 +922,16 @@ contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, Rout
       IOutbox(xAppConnectionManager.home()).dispatch(_params.destinationDomain, _connextion, _messageBody);
 
     // emit event
-    emit XCalled(_transferId, _params.nonce, messageHash, _params, _asset, _amount, _local, messageBody);
+    emit XCalled({
+      transferId: _transferId,
+      nonce: _params.nonce,
+      messageHash: messageHash,
+      params: _params,
+      asset: _asset,
+      amount: _amount,
+      local: _local,
+      messageBody: messageBody
+    });
   }
 
   /**

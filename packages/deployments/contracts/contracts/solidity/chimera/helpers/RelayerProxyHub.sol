@@ -298,15 +298,15 @@ contract RelayerProxyHub is RelayerProxy {
    */
   constructor(HubConstructorParams memory _params)
     RelayerProxy(
-      ConstructorParams(
-        _params.connext,
-        _params.spokeConnector,
-        _params.gelatoRelayer,
-        _params.feeCollector,
-        _params.keep3r,
-        _params.proposeAggregateRootCooldown,
-        _params.finalizeCooldown
-      )
+      ConstructorParams({
+        connext: _params.connext,
+        spokeConnector: _params.spokeConnector,
+        gelatoRelayer: _params.gelatoRelayer,
+        feeCollector: _params.feeCollector,
+        keep3r: _params.keep3r,
+        proposeAggregateRootCooldown: _params.proposeAggregateRootCooldown,
+        finalizeCooldown: _params.finalizeCooldown
+      })
     )
   {
     _setRootManager(_params.rootManager);
@@ -530,7 +530,13 @@ contract RelayerProxyHub is RelayerProxy {
     uint256 _endOfDispute
   ) external onlyRelayer onlyPropagateCooledDown nonReentrant returns (uint256 _fee) {
     // Finalized the proposed aggregate root
-    _fee = _finalizeAndPropagate(_connectors, _fees, _encodedData, _proposedAggregateRoot, _endOfDispute);
+    _fee = _finalizeAndPropagate({
+      _connectors: _connectors,
+      _fees: _fees,
+      _encodedData: _encodedData,
+      _proposedAggregateRoot: _proposedAggregateRoot,
+      _endOfDispute: _endOfDispute
+    });
   }
 
   /**
@@ -568,7 +574,13 @@ contract RelayerProxyHub is RelayerProxy {
     nonReentrant
     returns (uint256 _fee)
   {
-    _fee = _finalizeAndPropagate(_connectors, _fees, _encodedData, _proposedAggregateRoot, _endOfDispute);
+    _fee = _finalizeAndPropagate({
+      _connectors: _connectors,
+      _fees: _fees,
+      _encodedData: _encodedData,
+      _proposedAggregateRoot: _proposedAggregateRoot,
+      _endOfDispute: _endOfDispute
+    });
   }
 
   /**
@@ -660,6 +672,7 @@ contract RelayerProxyHub is RelayerProxy {
       }
     }
 
+    // solhint-disable-next-line func-named-parameters
     rootManager.finalizeAndPropagate{value: sum}(
       _connectors, _fees, _encodedData, _proposedAggregateRoot, _endOfDispute
     );
@@ -687,21 +700,33 @@ contract RelayerProxyHub is RelayerProxy {
     } else if (fromChain == ChainIDs.ARBITRUM_ONE || fromChain == ChainIDs.ARBITRUM_GOERLI) {
       IArbitrumHubConnector.ArbitrumRootMessageData memory data =
         abi.decode(encodedData, (IArbitrumHubConnector.ArbitrumRootMessageData));
-      IArbitrumHubConnector(hubConnectors[fromChain]).processMessageFromRoot(
-        data._nodeNum, data._sendRoot, data._blockHash, data._proof, data._index, data._message
-      );
+      IArbitrumHubConnector(hubConnectors[fromChain]).processMessageFromRoot({
+        _nodeNum: data._nodeNum,
+        _sendRoot: data._sendRoot,
+        _blockHash: data._blockHash,
+        _proof: data._proof,
+        _index: data._index,
+        _message: data._message
+      });
     } else if (fromChain == ChainIDs.OPTIMISM || fromChain == ChainIDs.OPTIMISM_GOERLI) {
       IOptimismHubConnector.OptimismRootMessageData memory data =
         abi.decode(encodedData, (IOptimismHubConnector.OptimismRootMessageData));
-      IOptimismHubConnector(hubConnectors[fromChain]).processMessageFromRoot(
-        data._tx, data._l2OutputIndex, data._outputRootProof, data._withdrawalProof
-      );
+      IOptimismHubConnector(hubConnectors[fromChain]).processMessageFromRoot({
+        _tx: data._tx,
+        _l2OutputIndex: data._l2OutputIndex,
+        _outputRootProof: data._outputRootProof,
+        _withdrawalProof: data._withdrawalProof
+      });
     } else if (fromChain == ChainIDs.ZKSYNC || fromChain == ChainIDs.ZKSYNC_TEST) {
       IZkSyncHubConnector.ZkSyncRootMessageData memory data =
         abi.decode(encodedData, (IZkSyncHubConnector.ZkSyncRootMessageData));
-      IZkSyncHubConnector(hubConnectors[fromChain]).processMessageFromRoot(
-        data._l2BlockNumber, data._l2MessageIndex, data._l2TxNumberInBlock, data._message, data._proof
-      );
+      IZkSyncHubConnector(hubConnectors[fromChain]).processMessageFromRoot({
+        _l2BlockNumber: data._l2BlockNumber,
+        _l2MessageIndex: data._l2MessageIndex,
+        _l2TxNumberInBlock: data._l2TxNumberInBlock,
+        _message: data._message,
+        _proof: data._proof
+      });
     } else if (fromChain == ChainIDs.POLYGON_POS || fromChain == ChainIDs.MUMBAI) {
       IPolygonHubConnector(hubConnectors[fromChain]).receiveMessage(encodedData);
     } else {

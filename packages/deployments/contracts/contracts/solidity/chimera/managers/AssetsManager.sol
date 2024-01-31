@@ -208,9 +208,14 @@ abstract contract AssetsManager is BaseManager {
       }
 
       // On remote, deploy a local representation.
-      _local = _deployRepresentation(
-        _canonical.id, _canonical.domain, _canonicalDecimals, _representationName, _representationSymbol
-      );
+      _local = _deployRepresentation({
+        _id: _canonical.id,
+        _domain: _canonical.domain,
+        _decimals: _canonicalDecimals,
+        _name: _representationName,
+        _symbol: _representationSymbol
+      });
+
       // Enroll the asset.
       // TODO: Fix stack too deep in the line below
       /*
@@ -270,16 +275,16 @@ abstract contract AssetsManager is BaseManager {
     // Calculate the canonical key.
     bytes32 key = calculateCanonicalHash(_canonical.id, _canonical.domain);
 
-    _enrollAdoptedAndLocalAssets(
-      false,
-      IERC20Metadata(_representation).decimals(),
-      _adoptedAssetId,
-      _representation,
-      _stableSwapPool,
-      _canonical,
-      0,
-      key
-    );
+    _enrollAdoptedAndLocalAssets({
+      _onCanonical: false,
+      _localDecimals: IERC20Metadata(_representation).decimals(),
+      _adopted: _adoptedAssetId,
+      _local: _representation,
+      _stableSwapPool: _stableSwapPool,
+      _canonical: _canonical,
+      _cap: 0,
+      _key: key
+    });
 
     return _representation;
   }
@@ -395,21 +400,30 @@ abstract contract AssetsManager is BaseManager {
         revert AssetsManager__addAssetId_badBurn();
       }
     }
-
+    /*
+  address representation;
+  uint8 representationDecimals;
+  address adopted;
+  uint8 adoptedDecimals;
+  address adoptedToLocalExternalPools; // TODO: remove
+  bool approval;
+  uint256 cap;
+  uint256 custodied;
+    */
     // Generate Config
     // NOTE: Using address(0) for stable swap, then using `_addStableSwap`. Slightly less
     // efficient, but preserves event Same case for cap / custodied.
     // NOTE: IFF on canonical domain, `representation` must *always* be address(0)!
-    tokenConfigs[_key] = TokenConfig(
-      _onCanonical ? address(0) : _local, // representation
-      _localDecimals, // representationDecimals
-      adopted, // adopted
-      adoptedIsLocal ? _localDecimals : IERC20Metadata(adopted).decimals(), // adoptedDecimals
-      address(0), // adoptedToLocalExternalPools, see note
-      true, // approval
-      0, // cap, see note
-      0 // custodied, see note
-    );
+    tokenConfigs[_key] = TokenConfig({
+      representation: _onCanonical ? address(0) : _local,
+      representationDecimals: _localDecimals,
+      adopted: adopted,
+      adoptedDecimals: adoptedIsLocal ? _localDecimals : IERC20Metadata(adopted).decimals(),
+      adoptedToLocalExternalPools: address(0),
+      approval: true,
+      cap: _onCanonical ? _cap : 0,
+      custodied: 0
+    });
 
     // Update reverse lookups
     // Update the adopted mapping using convention of local == adopted iff (_adopted == address(0))
@@ -430,7 +444,14 @@ abstract contract AssetsManager is BaseManager {
     }
 
     // Emit event
-    emit AssetAdded(_key, _canonical.id, _canonical.domain, adopted, _local, msg.sender);
+    emit AssetAdded({
+      key: _key,
+      canonicalId: _canonical.id,
+      domain: _canonical.domain,
+      adoptedAsset: adopted,
+      localAsset: _local,
+      caller: msg.sender
+    });
   }
 
   /**
@@ -461,7 +482,13 @@ abstract contract AssetsManager is BaseManager {
       tokenConfigs[_key].custodied = IERC20Metadata(canonical).balanceOf(address(this));
     }
 
-    emit LiquidityCapUpdated(_key, _canonical.id, _canonical.domain, _updated, msg.sender);
+    emit LiquidityCapUpdated({
+      key: _key,
+      canonicalId: _canonical.id,
+      domain: _canonical.domain,
+      cap: _updated,
+      caller: msg.sender
+    });
   }
 
   /**

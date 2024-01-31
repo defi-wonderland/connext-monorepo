@@ -434,7 +434,8 @@ contract ERC20 is IERC20Metadata, IERC20Permit {
     require(block.timestamp <= _deadline, 'ERC20Permit: expired deadline');
 
     bytes32 _structHash =
-      keccak256(abi.encode(_PERMIT_TYPEHASH, _owner, _spender, _value, _useNonce(_owner), _deadline));
+    // solhint-disable-next-line func-named-parameters
+     keccak256(abi.encode(_PERMIT_TYPEHASH, _owner, _spender, _value, _useNonce(_owner), _deadline));
 
     bytes32 _hash = _hashTypedDataV4(_structHash);
 
@@ -489,6 +490,7 @@ contract ERC20 is IERC20Metadata, IERC20Permit {
     bytes32 nameHash,
     bytes32 versionHash
   ) internal view returns (bytes32) {
+    // solhint-disable-next-line func-named-parameters
     return keccak256(abi.encode(typeHash, nameHash, versionHash, block.chainid, address(this)));
   }
 

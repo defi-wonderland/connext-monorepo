@@ -449,7 +449,7 @@ abstract contract RoutersManager is BaseManager {
     // the fee on transfer tokens.
     routerBalances[_router][_local] += _amount;
 
-    emit RouterLiquidityAdded(_router, _local, key, _amount, msg.sender);
+    emit RouterLiquidityAdded({router: _router, local: _local, key: key, amount: _amount, caller: msg.sender});
   }
 
   /**
@@ -497,7 +497,14 @@ abstract contract RoutersManager is BaseManager {
     // Transfer from contract to specified `to` address.
     _handleOutgoingAsset(local, recipient, _amount);
 
-    emit RouterLiquidityRemoved(_router, recipient, local, key, _amount, msg.sender);
+    emit RouterLiquidityRemoved({
+      router: _router,
+      to: recipient,
+      local: local,
+      key: key,
+      amount: _amount,
+      caller: msg.sender
+    });
   }
 
   /**
