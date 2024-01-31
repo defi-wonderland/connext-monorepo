@@ -3,6 +3,7 @@
 /* eslint-disable */
 export type { AssetsManager } from "./AssetsManager";
 export type { BaseManager } from "./BaseManager";
+export type { CreditsManager } from "./CreditsManager";
 export type { ProtocolManager } from "./ProtocolManager";
 export type { RolesManager } from "./RolesManager";
 export type { RoutersManager } from "./RoutersManager";

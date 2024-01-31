@@ -102,6 +102,8 @@ export type { AssetsManager } from "./contracts/solidity/chimera/managers/Assets
 export { AssetsManager__factory } from "./factories/contracts/solidity/chimera/managers/AssetsManager__factory";
 export type { BaseManager } from "./contracts/solidity/chimera/managers/BaseManager";
 export { BaseManager__factory } from "./factories/contracts/solidity/chimera/managers/BaseManager__factory";
+export type { CreditsManager } from "./contracts/solidity/chimera/managers/CreditsManager";
+export { CreditsManager__factory } from "./factories/contracts/solidity/chimera/managers/CreditsManager__factory";
 export type { ProtocolManager } from "./contracts/solidity/chimera/managers/ProtocolManager";
 export { ProtocolManager__factory } from "./factories/contracts/solidity/chimera/managers/ProtocolManager__factory";
 export type { RolesManager } from "./contracts/solidity/chimera/managers/RolesManager";

@@ -3,6 +3,7 @@
 /* eslint-disable */
 export { AssetsManager__factory } from "./AssetsManager__factory";
 export { BaseManager__factory } from "./BaseManager__factory";
+export { CreditsManager__factory } from "./CreditsManager__factory";
 export { ProtocolManager__factory } from "./ProtocolManager__factory";
 export { RolesManager__factory } from "./RolesManager__factory";
 export { RoutersManager__factory } from "./RoutersManager__factory";
