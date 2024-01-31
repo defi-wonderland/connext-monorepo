@@ -8,12 +8,13 @@
     "tsBuildInfoFile": "./tsconfig.tsBuildInfo"
   },
   "include": [
+    "./typechain_types",
     "hardhat.config.ts",
     "./hardhat/scripts",
     "./hardhat/deploy",
     "./hardhat/deployHelpers",
     "./hardhat/deployConfig",
-    "./typechain_types",
+    
     "./hardhat/tasks/**/*.ts",
     "./hardhat/src/**/*.ts",
     "./artifacts",

@@ -24,7 +24,7 @@ import {
   Connext,
   DiamondInit,
   PortalFacet,
-} from "../src/typechain-types";
+} from "../artifacts/typechain-types";
 
 import {
   asyncForEach,

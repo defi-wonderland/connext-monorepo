@@ -10,7 +10,7 @@ import {
   ProtocolNetwork,
 } from "../../src/utils";
 import { getContract } from "../../src/cli/helpers";
-import { IPolygonZkEVMBridge__factory } from "../../src";
+import { IPolygonZkEVMBridge__factory } from "../../../artifacts/typechain-types";
 
 type TaskArgs = {
   spoke: string;

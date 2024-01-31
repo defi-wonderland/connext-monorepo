@@ -22,7 +22,7 @@ import {
   BridgeFacet,
   ProposedOwnableFacet,
   IERC20,
-} from "../src/typechain-types";
+} from "../artifacts/typechain-types";
 import { Artifact } from "hardhat/types";
 
 export const MAX_FEE_PER_GAS = BigNumber.from("975000000");

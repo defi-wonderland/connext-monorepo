@@ -19,8 +19,9 @@
     "abi"
   ],
   "scripts": {
+    "generate-types": "hardhat typechain",
     "allowlist": "ts-node ./src/allowlist.ts",
-    "build": "hardhat compile && tsc --build ./tsconfig.build.json",
+    "build": "yarn generate-types && hardhat compile && tsc --build ./tsconfig.build.json",
     "clean": "hardhat clean && forge clean && rimraf ./dist ./tsconfig.tsBuildInfo ./artifacts ./cache",
     "coverage": "hardhat coverage --solcoverjs ./.solcover.js",
     "create-router": "ts-node ./src/createRouter.ts",
