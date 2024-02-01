@@ -56,7 +56,7 @@ import "./hardhat/tasks/connector/proveAndProcess";
 import "./hardhat/tasks/addSender";
 import "./hardhat/tasks/connector/processFromRoot";
 import "./hardhat/tasks/connector/redeem";
-//import "./hardhat/tasks/connector/claimPolygonZk";
+import "./hardhat/tasks/connector/claimPolygonZk";
 import "./hardhat/tasks/pause";
 import "./hardhat/tasks/unpause";
 import "./hardhat/tasks/bumpTransfer";
@@ -97,7 +97,7 @@ const config: HardhatUserConfig = {
     settings: {},
   },
   paths: {
-    artifacts: "./artifacts",
+    artifacts: "./artifacts_build",
     sources: "./contracts",
     tests: "./test/old",
   },
@@ -195,10 +195,10 @@ const config: HardhatUserConfig = {
     privateVerification: false, // if true, contracts will be verified privately, if false, contracts will be verified publicly
   },
   typechain: {
-    outDir: "artifacts/typechain-types",
+    outDir: "./artifacts/typechain-types",
   },
   abiExporter: {
-    path: "./abi",
+    path: "./artifacts/abi",
     runOnCompile: true,
     clear: true,
     spacing: 2,

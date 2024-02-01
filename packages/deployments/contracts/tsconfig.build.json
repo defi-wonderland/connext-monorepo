@@ -2,7 +2,7 @@
   "extends": "../../../config/tsconfig.node.json",
   "compilerOptions": {
     "outDir": "dist",
-    "typeRoots": ["./typechain_types", "./node_modules/@types"],
+    "typeRoots": ["./artifacts/typechain_types", "./node_modules/@types"],
     "rootDir": ".",
     "composite": true,
     "tsBuildInfoFile": "./tsconfig.tsBuildInfo"
@@ -13,15 +13,14 @@
     "./hardhat/deploy",
     "./hardhat/deployHelpers",
     "./hardhat/deployConfig",
-    "./typechain_types",
     "./hardhat/tasks/**/*.ts",
     "./hardhat/src/**/*.ts",
-    "./artifacts",
+    "./hardhat/src/init/*.ts",
     "./deployments.json",
     "./devnet.deployments.json",
     "./local.deployments.json",
-    "./abi/**/*.json",
-    "./hardhat/src/init/*.ts"
+    "./artifacts/typechain-types",
+    "./artifacts/abi/**/*.json"
   ],
   "exclude": ["contracts/solidity/test/**/*.t.sol"],
   "references": [
