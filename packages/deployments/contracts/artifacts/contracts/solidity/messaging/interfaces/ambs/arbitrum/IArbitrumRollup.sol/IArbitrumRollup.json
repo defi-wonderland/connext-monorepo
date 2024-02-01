@@ -1,0 +1,92 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IArbitrumRollup",
+  "sourceName": "contracts/solidity/messaging/interfaces/ambs/arbitrum/IArbitrumRollup.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "uint64",
+          "name": "nodeNum",
+          "type": "uint64"
+        }
+      ],
+      "name": "getNode",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "stateHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "challengeHash",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "confirmData",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint64",
+              "name": "prevNum",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "deadlineBlock",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "noChildConfirmedBeforeBlock",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "stakerCount",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "childStakerCount",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "firstChildBlock",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "latestChildNumber",
+              "type": "uint64"
+            },
+            {
+              "internalType": "uint64",
+              "name": "createdAtBlock",
+              "type": "uint64"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "nodeHash",
+              "type": "bytes32"
+            }
+          ],
+          "internalType": "struct Node",
+          "name": "",
+          "type": "tuple"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}

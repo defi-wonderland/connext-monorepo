@@ -8,13 +8,12 @@
     "tsBuildInfoFile": "./tsconfig.tsBuildInfo"
   },
   "include": [
-    "./typechain_types",
     "hardhat.config.ts",
     "./hardhat/scripts",
     "./hardhat/deploy",
     "./hardhat/deployHelpers",
     "./hardhat/deployConfig",
-    
+    "./typechain_types",
     "./hardhat/tasks/**/*.ts",
     "./hardhat/src/**/*.ts",
     "./artifacts",
@@ -24,7 +23,7 @@
     "./abi/**/*.json",
     "./hardhat/src/init/*.ts"
   ],
-  "exclude": ["test/**/*.ts"],
+  "exclude": ["contracts/solidity/test/**/*.t.sol"],
   "references": [
     {
       "path": "../../utils/tsconfig.build.json"

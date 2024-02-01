@@ -56,7 +56,7 @@ import "./hardhat/tasks/connector/proveAndProcess";
 import "./hardhat/tasks/addSender";
 import "./hardhat/tasks/connector/processFromRoot";
 import "./hardhat/tasks/connector/redeem";
-import "./hardhat/tasks/connector/claimPolygonZk";
+//import "./hardhat/tasks/connector/claimPolygonZk";
 import "./hardhat/tasks/pause";
 import "./hardhat/tasks/unpause";
 import "./hardhat/tasks/bumpTransfer";

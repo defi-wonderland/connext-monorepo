@@ -1,0 +1,65 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "IArbitrumInbox",
+  "sourceName": "contracts/solidity/messaging/interfaces/ambs/arbitrum/IArbitrumInbox.sol",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "destAddr",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "arbTxCallValue",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "maxSubmissionCost",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "submissionRefundAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "valueRefundAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "maxGas",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "gasPriceBid",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "createRetryableTicket",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
