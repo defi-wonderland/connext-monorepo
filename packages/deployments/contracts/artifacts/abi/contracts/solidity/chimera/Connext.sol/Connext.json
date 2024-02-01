@@ -136,6 +136,7 @@
   "event TransferRelayerFeesIncreased(bytes32 indexed transferId, uint256 increase, address asset, address caller)",
   "event Unpaused()",
   "event XAppConnectionManagerSet(address updated, address caller)",
+  "event XCalled(bytes32 indexed transferId, uint256 indexed nonce, bytes32 indexed messageHash, tuple(uint32 originDomain, uint32 destinationDomain, uint32 canonicalDomain, address to, address delegate, bool receiveLocal, bytes callData, uint256 slippage, address originSender, uint256 bridgedAmt, uint256 normalizedIn, uint256 nonce, bytes32 canonicalId) params, address asset, uint256 amount, address local, bytes messageBody)",
   "function LIQUIDITY_FEE_DENOMINATOR() pure returns (uint256)",
   "function acceptProposedOwner()",
   "function acceptProposedRouterOwner(address _router)",

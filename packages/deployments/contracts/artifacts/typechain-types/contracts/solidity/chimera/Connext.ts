@@ -754,6 +754,7 @@ export interface ConnextInterface extends utils.Interface {
     "TransferRelayerFeesIncreased(bytes32,uint256,address,address)": EventFragment;
     "Unpaused()": EventFragment;
     "XAppConnectionManagerSet(address,address)": EventFragment;
+    "XCalled(bytes32,uint256,bytes32,tuple,address,uint256,address,bytes)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "AssetAdded"): EventFragment;
@@ -799,6 +800,7 @@ export interface ConnextInterface extends utils.Interface {
   ): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "XAppConnectionManagerSet"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "XCalled"): EventFragment;
 }
 
 export interface AssetAddedEventObject {
@@ -1221,6 +1223,32 @@ export type XAppConnectionManagerSetEvent = TypedEvent<
 
 export type XAppConnectionManagerSetEventFilter =
   TypedEventFilter<XAppConnectionManagerSetEvent>;
+
+export interface XCalledEventObject {
+  transferId: string;
+  nonce: BigNumber;
+  messageHash: string;
+  params: TransferInfoStructOutput;
+  asset: string;
+  amount: BigNumber;
+  local: string;
+  messageBody: string;
+}
+export type XCalledEvent = TypedEvent<
+  [
+    string,
+    BigNumber,
+    string,
+    TransferInfoStructOutput,
+    string,
+    BigNumber,
+    string,
+    string
+  ],
+  XCalledEventObject
+>;
+
+export type XCalledEventFilter = TypedEventFilter<XCalledEvent>;
 
 export interface Connext extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -2563,6 +2591,27 @@ export interface Connext extends BaseContract {
       updated?: null,
       caller?: null
     ): XAppConnectionManagerSetEventFilter;
+
+    "XCalled(bytes32,uint256,bytes32,tuple,address,uint256,address,bytes)"(
+      transferId?: PromiseOrValue<BytesLike> | null,
+      nonce?: PromiseOrValue<BigNumberish> | null,
+      messageHash?: PromiseOrValue<BytesLike> | null,
+      params?: null,
+      asset?: null,
+      amount?: null,
+      local?: null,
+      messageBody?: null
+    ): XCalledEventFilter;
+    XCalled(
+      transferId?: PromiseOrValue<BytesLike> | null,
+      nonce?: PromiseOrValue<BigNumberish> | null,
+      messageHash?: PromiseOrValue<BytesLike> | null,
+      params?: null,
+      asset?: null,
+      amount?: null,
+      local?: null,
+      messageBody?: null
+    ): XCalledEventFilter;
   };
 
   estimateGas: {

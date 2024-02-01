@@ -27,9 +27,10 @@ import {AssetsManager} from './managers/AssetsManager.sol';
 import {ProtocolManager} from './managers/ProtocolManager.sol';
 import {RolesManager} from './managers/RolesManager.sol';
 import {RoutersManager} from './managers/RoutersManager.sol';
+import {CreditsManager} from './managers/CreditsManager.sol';
 
 // Core contract
-contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, RoutersManager {
+contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, RoutersManager, CreditsManager {
   // ============ Libraries ============
 
   using TypedMemView for bytes;
