@@ -92,7 +92,7 @@ export type ExecuteArgsStructOutput = [
   sequencerSignature: string;
 };
 
-export interface IConnextInterface extends utils.Interface {
+export interface IConnextCoreInterface extends utils.Interface {
   functions: {
     "bumpTransfer(bytes32)": FunctionFragment;
     "execute(((uint32,uint32,uint32,address,address,bool,bytes,uint256,address,uint256,uint256,uint256,bytes32),address[],bytes[],address,bytes))": FunctionFragment;
@@ -165,12 +165,12 @@ export interface IConnextInterface extends utils.Interface {
   events: {};
 }
 
-export interface IConnext extends BaseContract {
+export interface IConnextCore extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: IConnextInterface;
+  interface: IConnextCoreInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,

@@ -2,6 +2,6 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { IBridgeToken } from "./IBridgeToken";
-export type { IConnext } from "./IConnext";
+export type { IConnextCore } from "./IConnextCore";
 export type { IERC165 } from "./IERC165";
 export type { IXReceiver } from "./IXReceiver";

@@ -10,7 +10,7 @@ import {
   getConversionRate as _getConversionRate,
 } from "@connext/nxtp-utils";
 import { getContractInterfaces, ConnextContractInterfaces, ChainReader } from "@connext/nxtp-txservice";
-import { Connext, Connext__factory, IERC20, IERC20__factory } from "@connext/smart-contracts";
+import { Connext, Connext__factory, IERC20, IERC20__factory } from "@connext/smart-contracts/dist/hardhat/src";
 import memoize from "memoizee";
 
 import { parseConnextLog, validateUri, axiosGetRequest } from "./lib/helpers";

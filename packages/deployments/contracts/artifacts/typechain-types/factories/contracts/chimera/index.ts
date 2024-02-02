@@ -5,4 +5,4 @@ export * as helpers from "./helpers";
 export * as interfaces from "./interfaces";
 export * as libraries from "./libraries";
 export * as managers from "./managers";
-export { Connext__factory } from "./Connext__factory";
+export { ConnextCore__factory } from "./ConnextCore__factory";

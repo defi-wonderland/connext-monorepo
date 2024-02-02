@@ -58,8 +58,8 @@ export type { IBridge } from "./@openzeppelin/contracts/vendor/arbitrum/IBridge"
 export { IBridge__factory } from "./factories/@openzeppelin/contracts/vendor/arbitrum/IBridge__factory";
 export type { IOutbox } from "./@openzeppelin/contracts/vendor/arbitrum/IOutbox";
 export { IOutbox__factory } from "./factories/@openzeppelin/contracts/vendor/arbitrum/IOutbox__factory";
-export type { Connext } from "./contracts/chimera/Connext";
-export { Connext__factory } from "./factories/contracts/chimera/Connext__factory";
+export type { ConnextCore } from "./contracts/chimera/ConnextCore";
+export { ConnextCore__factory } from "./factories/contracts/chimera/ConnextCore__factory";
 export type { BridgeToken } from "./contracts/chimera/helpers/BridgeToken";
 export { BridgeToken__factory } from "./factories/contracts/chimera/helpers/BridgeToken__factory";
 export type { ConnextProxyAdmin } from "./contracts/chimera/helpers/ConnextProxyAdmin";
@@ -88,8 +88,8 @@ export type { RelayerProxyHub } from "./contracts/chimera/helpers/RelayerProxyHu
 export { RelayerProxyHub__factory } from "./factories/contracts/chimera/helpers/RelayerProxyHub.sol/RelayerProxyHub__factory";
 export type { IBridgeToken } from "./contracts/chimera/interfaces/IBridgeToken";
 export { IBridgeToken__factory } from "./factories/contracts/chimera/interfaces/IBridgeToken__factory";
-export type { IConnext } from "./contracts/chimera/interfaces/IConnext";
-export { IConnext__factory } from "./factories/contracts/chimera/interfaces/IConnext__factory";
+export type { IConnextCore } from "./contracts/chimera/interfaces/IConnextCore";
+export { IConnextCore__factory } from "./factories/contracts/chimera/interfaces/IConnextCore__factory";
 export type { IERC165 } from "./contracts/chimera/interfaces/IERC165";
 export { IERC165__factory } from "./factories/contracts/chimera/interfaces/IERC165__factory";
 export type { IXReceiver } from "./contracts/chimera/interfaces/IXReceiver";
@@ -152,6 +152,8 @@ export type { StableSwap } from "./contracts/core/connext/helpers/StableSwap";
 export { StableSwap__factory } from "./factories/contracts/core/connext/helpers/StableSwap__factory";
 export type { IAavePool } from "./contracts/core/connext/interfaces/IAavePool";
 export { IAavePool__factory } from "./factories/contracts/core/connext/interfaces/IAavePool__factory";
+export type { IConnext } from "./contracts/core/connext/interfaces/IConnext";
+export { IConnext__factory } from "./factories/contracts/core/connext/interfaces/IConnext__factory";
 export type { IDiamondCut } from "./contracts/core/connext/interfaces/IDiamondCut";
 export { IDiamondCut__factory } from "./factories/contracts/core/connext/interfaces/IDiamondCut__factory";
 export type { IDiamondLoupe } from "./contracts/core/connext/interfaces/IDiamondLoupe";
@@ -326,3 +328,5 @@ export type { UpgradeBeaconController } from "./contracts/shared/upgrade/Upgrade
 export { UpgradeBeaconController__factory } from "./factories/contracts/shared/upgrade/UpgradeBeaconController__factory";
 export type { UpgradeBeaconProxy } from "./contracts/shared/upgrade/UpgradeBeaconProxy";
 export { UpgradeBeaconProxy__factory } from "./factories/contracts/shared/upgrade/UpgradeBeaconProxy__factory";
+export type { Connext } from "./hardhat-diamond-abi/HardhatDiamondABI.sol/Connext";
+export { Connext__factory } from "./factories/hardhat-diamond-abi/HardhatDiamondABI.sol/Connext__factory";

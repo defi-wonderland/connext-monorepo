@@ -1,7 +1,7 @@
 import { Logger, XCallArgs } from "@connext/nxtp-utils";
 import { SdkBase, SdkXCallParams } from "@connext/sdk-core";
 import { providers, utils, Wallet } from "ethers";
-import { ConnextInterface } from "@connext/smart-contracts";
+import { ConnextInterface } from "@connext/smart-contracts/hardhat/src";
 import { logger } from "./logger";
 
 export const sendXCall = async (

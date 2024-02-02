@@ -21,7 +21,7 @@
   "scripts": {
     "allowlist": "ts-node ./src/allowlist.ts",
     "build": "hardhat compile && tsc --build ./tsconfig.build.json",
-    "clean": "hardhat clean && forge clean && rimraf ./dist ./tsconfig.tsBuildInfo ./artifacts ./cache",
+    "clean": "forge clean && rimraf ./dist ./tsconfig.tsBuildInfo ./artifacts_build ./cache",
     "coverage": "hardhat coverage --solcoverjs ./.solcover.js",
     "create-router": "ts-node ./src/createRouter.ts",
     "devnet:deploy": "ts-node ./src/devnet/devnetDeploy.ts",

@@ -106,7 +106,7 @@ export type TokenIdStructOutput = [number, string] & {
   id: string;
 };
 
-export interface ConnextInterface extends utils.Interface {
+export interface ConnextCoreInterface extends utils.Interface {
   functions: {
     "LIQUIDITY_FEE_DENOMINATOR()": FunctionFragment;
     "acceptProposedOwner()": FunctionFragment;
@@ -1250,12 +1250,12 @@ export type XCalledEvent = TypedEvent<
 
 export type XCalledEventFilter = TypedEventFilter<XCalledEvent>;
 
-export interface Connext extends BaseContract {
+export interface ConnextCore extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: ConnextInterface;
+  interface: ConnextCoreInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,

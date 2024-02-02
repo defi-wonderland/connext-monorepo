@@ -9,4 +9,4 @@ import type * as libraries from "./libraries";
 export type { libraries };
 import type * as managers from "./managers";
 export type { managers };
-export type { Connext } from "./Connext";
+export type { ConnextCore } from "./ConnextCore";
