@@ -15,20 +15,20 @@ import {
   MultiSend as TMultisend,
   Unwrapper as TUnwrapper,
 } from "@connext/smart-contracts";
-import RootManagerAbi from "@connext/smart-contracts/abi/contracts/messaging/RootManager.sol/RootManager.json";
-import PriceOracleAbi from "@connext/smart-contracts/abi/contracts/core/connext/helpers/ConnextPriceOracle.sol/ConnextPriceOracle.json";
-import ConnextAbi from "@connext/smart-contracts/abi/hardhat-diamond-abi/HardhatDiamondABI.sol/Connext.json";
-import StableSwapAbi from "@connext/smart-contracts/abi/contracts/core/connext/helpers/StableSwap.sol/StableSwap.json";
-import SpokeConnectorAbi from "@connext/smart-contracts/abi/contracts/messaging/connectors/SpokeConnector.sol/SpokeConnector.json";
-import MerkleTreeManagerAbi from "@connext/smart-contracts/abi/contracts/messaging/MerkleTreeManager.sol/MerkleTreeManager.json";
-import RelayerProxyAbi from "@connext/smart-contracts/abi/contracts/core/connext/helpers/RelayerProxy.sol/RelayerProxy.json";
-import RelayerProxyHubAbi from "@connext/smart-contracts/abi/contracts/core/connext/helpers/RelayerProxyHub.sol/RelayerProxyHub.json";
-import MultiSendAbi from "@connext/smart-contracts/abi/contracts/shared/libraries/Multisend.sol/MultiSend.json";
-import UnwrapperAbi from "@connext/smart-contracts/abi/contracts/core/xreceivers/Unwrapper.sol/Unwrapper.json";
-import GnosisAmbAbi from "@connext/smart-contracts/abi/contracts/messaging/interfaces/ambs/GnosisAmb.sol/GnosisAmb.json";
-import MultichainAmbAbi from "@connext/smart-contracts/abi/contracts/messaging/interfaces/ambs/Multichain.sol/Multichain.json";
-import OptimismAmbAbi from "@connext/smart-contracts/abi/contracts/messaging/interfaces/ambs/optimism/OptimismAmb.sol/OptimismAmb.json";
-import ArbitrumAmbAbi from "@connext/smart-contracts/abi/contracts/messaging/interfaces/ambs/arbitrum/ArbitrumL2Amb.sol/ArbitrumL2Amb.json";
+import RootManagerAbi from "@connext/smart-contracts/artifacts/abi/contracts/messaging/RootManager.sol/RootManager.json";
+import PriceOracleAbi from "@connext/smart-contracts/artifacts/abi/contracts/core/connext/helpers/ConnextPriceOracle.sol/ConnextPriceOracle.json";
+import ConnextAbi from "@connext/smart-contracts/artifacts/abi/hardhat-diamond-abi/HardhatDiamondABI.sol/Connext.json";
+import StableSwapAbi from "@connext/smart-contracts/artifacts/abi/contracts/core/connext/helpers/StableSwap.sol/StableSwap.json";
+import SpokeConnectorAbi from "@connext/smart-contracts/artifacts/abi/contracts/messaging/connectors/SpokeConnector.sol/SpokeConnector.json";
+import MerkleTreeManagerAbi from "@connext/smart-contracts/artifacts/abi/contracts/messaging/MerkleTreeManager.sol/MerkleTreeManager.json";
+import RelayerProxyAbi from "@connext/smart-contracts/artifacts/abi/contracts/core/connext/helpers/RelayerProxy.sol/RelayerProxy.json";
+import RelayerProxyHubAbi from "@connext/smart-contracts/artifacts/abi/contracts/core/connext/helpers/RelayerProxyHub.sol/RelayerProxyHub.json";
+import MultiSendAbi from "@connext/smart-contracts/artifacts/abi/contracts/shared/libraries/Multisend.sol/MultiSend.json";
+import UnwrapperAbi from "@connext/smart-contracts/artifacts/abi/contracts/core/xreceivers/Unwrapper.sol/Unwrapper.json";
+import GnosisAmbAbi from "@connext/smart-contracts/artifacts/abi/contracts/messaging/interfaces/ambs/GnosisAmb.sol/GnosisAmb.json";
+import MultichainAmbAbi from "@connext/smart-contracts/artifacts/abi/contracts/messaging/interfaces/ambs/Multichain.sol/Multichain.json";
+import OptimismAmbAbi from "@connext/smart-contracts/artifacts/abi/contracts/messaging/interfaces/ambs/optimism/OptimismAmb.sol/OptimismAmb.json";
+import ArbitrumAmbAbi from "@connext/smart-contracts/artifacts/abi/contracts/messaging/interfaces/ambs/arbitrum/ArbitrumL2Amb.sol/ArbitrumL2Amb.json";
 import { ERC20Abi } from "@connext/nxtp-utils";
 
 export type ContractPostfix = "Staging" | "";
