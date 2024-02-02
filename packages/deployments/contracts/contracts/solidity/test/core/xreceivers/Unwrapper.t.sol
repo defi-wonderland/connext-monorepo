@@ -3,8 +3,8 @@ pragma solidity 0.8.17;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import {Unwrapper, IWrapper} from "../../../contracts/core/xreceivers/Unwrapper.sol";
-import {ProposedOwnable} from "../../../contracts/shared/ProposedOwnable.sol";
+import {Unwrapper, IWrapper} from "../../../core/xreceivers/Unwrapper.sol";
+import {ProposedOwnable} from "../../../shared/ProposedOwnable.sol";
 
 import "../../utils/ForgeHelper.sol";
 import "../../utils/Mock.sol";
@@ -59,11 +59,7 @@ contract UnwrapperTest is ForgeHelper {
     vm.mockCall(MOCK_ERC20, abi.encodeWithSelector(IERC20.transfer.selector), abi.encode(transferSuccess));
   }
 
-  function utils_expectRecipientToReceive(
-    address _recipient,
-    address asset,
-    uint256 amount
-  ) internal {
+  function utils_expectRecipientToReceive(address _recipient, address asset, uint256 amount) internal {
     if (asset == MOCK_WRAPPER) {
       // Assert there was an unwrap call
       vm.expectCall(MOCK_WRAPPER, abi.encodeWithSelector(IWrapper.withdraw.selector, amount));

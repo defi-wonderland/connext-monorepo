@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity 0.8.17;
 
-import {SnapshotId} from "../../../contracts/messaging/libraries/SnapshotId.sol";
+import {SnapshotId} from "../../../messaging/libraries/SnapshotId.sol";
 
 import "../../utils/ForgeHelper.sol";
 

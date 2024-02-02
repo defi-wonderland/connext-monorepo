@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 pragma solidity 0.8.17;
 
-import {QueueLib} from "../../../contracts/messaging/libraries/Queue.sol";
+import {QueueLib} from "../../../messaging/libraries/Queue.sol";
 
 import "../../utils/ForgeHelper.sol";
 

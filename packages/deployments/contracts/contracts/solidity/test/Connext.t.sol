@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.17;
 
-import {IConnectorManager} from "../contracts/messaging/interfaces/IConnectorManager.sol";
+import {IConnectorManager} from "../messaging/interfaces/IConnectorManager.sol";
 
-import {IConnext} from "../contracts/core/connext/interfaces/IConnext.sol";
-import {ExecuteArgs} from "../contracts/core/connext/facets/BridgeFacet.sol";
-import {DestinationTransferStatus} from "../contracts/core/connext/libraries/LibConnextStorage.sol";
-import {LPToken} from "../contracts/core/connext/helpers/LPToken.sol";
+import {IConnext} from "../core/connext/interfaces/IConnext.sol";
+import {ExecuteArgs} from "../core/connext/facets/BridgeFacet.sol";
+import {DestinationTransferStatus} from "../core/connext/libraries/LibConnextStorage.sol";
+import {LPToken} from "../core/connext/helpers/LPToken.sol";
 
-import {TestERC20} from "../contracts/test/TestERC20.sol";
+import {TestERC20} from "../test/TestERC20.sol";
 
 import "./utils/Mock.sol";
 import "./utils/Deployer.sol";

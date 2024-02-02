@@ -2,16 +2,16 @@
 pragma solidity 0.8.17;
 
 import {MockSpokeConnector} from "../../utils/Mock.sol";
-import {SpokeConnector} from "../../../contracts/messaging/connectors/SpokeConnector.sol";
-import {WatcherManager} from "../../../contracts/messaging/WatcherManager.sol";
-import {RootManager} from "../../../contracts/messaging/RootManager.sol";
-import {MerkleTreeManager} from "../../../contracts/messaging/MerkleTreeManager.sol";
-import {Message} from "../../../contracts/messaging/libraries/Message.sol";
-import {RateLimited} from "../../../contracts/messaging/libraries/RateLimited.sol";
-import {TypeCasts} from "../../../contracts/shared/libraries/TypeCasts.sol";
-import {MerkleLib} from "../../../contracts/messaging/libraries/MerkleLib.sol";
-import {SnapshotId} from "../../../contracts/messaging/libraries/SnapshotId.sol";
-import {ProposedOwnable} from "../../../contracts/shared/ProposedOwnable.sol";
+import {SpokeConnector} from "../../../messaging/connectors/SpokeConnector.sol";
+import {WatcherManager} from "../../../messaging/WatcherManager.sol";
+import {RootManager} from "../../../messaging/RootManager.sol";
+import {MerkleTreeManager} from "../../../messaging/MerkleTreeManager.sol";
+import {Message} from "../../../messaging/libraries/Message.sol";
+import {RateLimited} from "../../../messaging/libraries/RateLimited.sol";
+import {TypeCasts} from "../../../shared/libraries/TypeCasts.sol";
+import {MerkleLib} from "../../../messaging/libraries/MerkleLib.sol";
+import {SnapshotId} from "../../../messaging/libraries/SnapshotId.sol";
+import {ProposedOwnable} from "../../../shared/ProposedOwnable.sol";
 
 import "../../utils/ForgeHelper.sol";
 

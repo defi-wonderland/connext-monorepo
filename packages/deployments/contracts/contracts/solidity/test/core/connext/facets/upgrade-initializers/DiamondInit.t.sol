@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.17;
 
-import {LibDiamond} from "../../../../../contracts/core/connext/libraries/LibDiamond.sol";
-import {DiamondInit, BaseConnextFacet, IConnectorManager} from "../../../../../contracts/core/connext/facets/upgrade-initializers/DiamondInit.sol";
+import {LibDiamond} from "../../../../../core/connext/libraries/LibDiamond.sol";
+import {DiamondInit, BaseConnextFacet, IConnectorManager} from "../../../../../core/connext/facets/upgrade-initializers/DiamondInit.sol";
 
 import "../../../../utils/FacetHelper.sol";
 

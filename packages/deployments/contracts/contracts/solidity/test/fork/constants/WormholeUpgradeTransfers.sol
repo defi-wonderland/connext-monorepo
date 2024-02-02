@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity 0.8.17;
 
-import "../../../contracts/messaging/connectors/SpokeConnector.sol";
+import "../../../messaging/connectors/SpokeConnector.sol";
 
 contract WormholeUpgradeTransfers {
   // Define all of the information needed for transfer tests
