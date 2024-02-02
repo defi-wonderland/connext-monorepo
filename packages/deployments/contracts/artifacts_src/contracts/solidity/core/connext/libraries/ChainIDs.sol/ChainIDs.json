@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ChainIDs",
-  "sourceName": "contracts/solidity/core/connext/libraries/ChainIDs.sol",
+  "sourceName": "contracts//core/connext/libraries/ChainIDs.sol",
   "abi": [
     {
       "inputs": [],

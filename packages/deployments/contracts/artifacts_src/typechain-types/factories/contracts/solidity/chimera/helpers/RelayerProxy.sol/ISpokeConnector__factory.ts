@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   ISpokeConnector,
   ISpokeConnectorInterface,
-} from "../../../../../../contracts/solidity/chimera/helpers/RelayerProxy.sol/ISpokeConnector";
+} from "../../../../../../contracts//chimera/helpers/RelayerProxy.sol/ISpokeConnector";
 
 const _abi = [
   {
@@ -148,10 +148,7 @@ export class ISpokeConnector__factory {
   static createInterface(): ISpokeConnectorInterface {
     return new utils.Interface(_abi) as ISpokeConnectorInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): ISpokeConnector {
+  static connect(address: string, signerOrProvider: Signer | Provider): ISpokeConnector {
     return new Contract(address, _abi, signerOrProvider) as ISpokeConnector;
   }
 }

@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "OptimismAmb",
-  "sourceName": "contracts/solidity/messaging/interfaces/ambs/optimism/OptimismAmb.sol",
+  "sourceName": "contracts//messaging/interfaces/ambs/optimism/OptimismAmb.sol",
   "abi": [
     {
       "inputs": [

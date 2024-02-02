@@ -4,10 +4,7 @@
 import { Signer, utils, Contract, ContractFactory, Overrides } from "ethers";
 import type { Provider, TransactionRequest } from "@ethersproject/providers";
 import type { PromiseOrValue } from "../../../../../../common";
-import type {
-  ChainIDs,
-  ChainIDsInterface,
-} from "../../../../../../contracts/solidity/core/connext/libraries/ChainIDs";
+import type { ChainIDs, ChainIDsInterface } from "../../../../../../contracts//core/connext/libraries/ChainIDs";
 
 const _abi = [
   {
@@ -236,13 +233,10 @@ const _abi = [
 const _bytecode =
   "0x6101fe61003a600b82828239805160001a60731461002d57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600436106101155760003560e01c806358f7f6d2116100ac57806389c80d2f1161007b57806389c80d2f1461019a578063af0712d7146101a4578063cd7c6f5e146101ad578063efe17646146101b6578063fb61f62f146101bf57600080fd5b806358f7f6d21461017857806359a655311461018057806361148af0146101885780636de99f081461019057600080fd5b80633c130daf116100e85780633c130daf146101565780633f1b42fb1461015e578063476d7ff514610167578063510547f91461017057600080fd5b8063015ff39f1461011a5780630f7fedfb1461013b5780632168ca0f14610144578063274423de1461014d575b600080fd5b610122606481565b60405163ffffffff909116815260200160405180910390f35b6101226105a281565b61012261a4b181565b6101226127d881565b610122600a81565b61012261044d81565b6101226101a481565b610122600181565b610122603881565b610122608981565b610122600581565b61012262066eed81565b6101226201388181565b61012261e70881565b61012261011881565b61012261e70481565b6101226101448156fea26469706673582212206731d533eec4c1b636c6c5cb7a4424d9ab66b362e266a221acc97d64d68bdd0564736f6c63430008110033";
 
-type ChainIDsConstructorParams =
-  | [signer?: Signer]
-  | ConstructorParameters<typeof ContractFactory>;
+type ChainIDsConstructorParams = [signer?: Signer] | ConstructorParameters<typeof ContractFactory>;
 
-const isSuperArgs = (
-  xs: ChainIDsConstructorParams
-): xs is ConstructorParameters<typeof ContractFactory> => xs.length > 1;
+const isSuperArgs = (xs: ChainIDsConstructorParams): xs is ConstructorParameters<typeof ContractFactory> =>
+  xs.length > 1;
 
 export class ChainIDs__factory extends ContractFactory {
   constructor(...args: ChainIDsConstructorParams) {
@@ -253,14 +247,10 @@ export class ChainIDs__factory extends ContractFactory {
     }
   }
 
-  override deploy(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ChainIDs> {
+  override deploy(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ChainIDs> {
     return super.deploy(overrides || {}) as Promise<ChainIDs>;
   }
-  override getDeployTransaction(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): TransactionRequest {
+  override getDeployTransaction(overrides?: Overrides & { from?: PromiseOrValue<string> }): TransactionRequest {
     return super.getDeployTransaction(overrides || {});
   }
   override attach(address: string): ChainIDs {
@@ -275,10 +265,7 @@ export class ChainIDs__factory extends ContractFactory {
   static createInterface(): ChainIDsInterface {
     return new utils.Interface(_abi) as ChainIDsInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): ChainIDs {
+  static connect(address: string, signerOrProvider: Signer | Provider): ChainIDs {
     return new Contract(address, _abi, signerOrProvider) as ChainIDs;
   }
 }

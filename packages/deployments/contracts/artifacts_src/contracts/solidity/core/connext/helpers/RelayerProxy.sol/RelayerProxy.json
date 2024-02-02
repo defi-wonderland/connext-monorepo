@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "RelayerProxy",
-  "sourceName": "contracts/solidity/core/connext/helpers/RelayerProxy.sol",
+  "sourceName": "contracts//core/connext/helpers/RelayerProxy.sol",
   "abi": [
     {
       "inputs": [

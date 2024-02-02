@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "SwapUtilsExternal",
-  "sourceName": "contracts/solidity/core/connext/libraries/SwapUtilsExternal.sol",
+  "sourceName": "contracts//core/connext/libraries/SwapUtilsExternal.sol",
   "abi": [
     {
       "inputs": [],

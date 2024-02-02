@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ArbitrumSpokeConnector",
-  "sourceName": "contracts/solidity/messaging/connectors/arbitrum/ArbitrumSpokeConnector.sol",
+  "sourceName": "contracts//messaging/connectors/arbitrum/ArbitrumSpokeConnector.sol",
   "abi": [
     {
       "inputs": [

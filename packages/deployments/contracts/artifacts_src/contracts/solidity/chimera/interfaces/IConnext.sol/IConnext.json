@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IConnext",
-  "sourceName": "contracts/solidity/chimera/interfaces/IConnext.sol",
+  "sourceName": "contracts//chimera/interfaces/IConnext.sol",
   "abi": [
     {
       "inputs": [

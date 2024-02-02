@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IKeep3rV2,
   IKeep3rV2Interface,
-} from "../../../../../../contracts/solidity/chimera/helpers/RelayerProxy.sol/IKeep3rV2";
+} from "../../../../../../contracts//chimera/helpers/RelayerProxy.sol/IKeep3rV2";
 
 const _abi = [
   {
@@ -49,10 +49,7 @@ export class IKeep3rV2__factory {
   static createInterface(): IKeep3rV2Interface {
     return new utils.Interface(_abi) as IKeep3rV2Interface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IKeep3rV2 {
+  static connect(address: string, signerOrProvider: Signer | Provider): IKeep3rV2 {
     return new Contract(address, _abi, signerOrProvider) as IKeep3rV2;
   }
 }

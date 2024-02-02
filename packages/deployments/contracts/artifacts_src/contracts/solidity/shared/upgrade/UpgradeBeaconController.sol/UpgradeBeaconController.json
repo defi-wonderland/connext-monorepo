@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "UpgradeBeaconController",
-  "sourceName": "contracts/solidity/shared/upgrade/UpgradeBeaconController.sol",
+  "sourceName": "contracts//shared/upgrade/UpgradeBeaconController.sol",
   "abi": [
     {
       "inputs": [],

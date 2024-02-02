@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "RootManager",
-  "sourceName": "contracts/solidity/messaging/RootManager.sol",
+  "sourceName": "contracts//messaging/RootManager.sol",
   "abi": [
     {
       "inputs": [

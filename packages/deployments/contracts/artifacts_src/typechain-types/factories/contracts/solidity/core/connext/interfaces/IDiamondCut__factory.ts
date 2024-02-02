@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IDiamondCut,
   IDiamondCutInterface,
-} from "../../../../../../contracts/solidity/core/connext/interfaces/IDiamondCut";
+} from "../../../../../../contracts//core/connext/interfaces/IDiamondCut";
 
 const _abi = [
   {
@@ -315,10 +315,7 @@ export class IDiamondCut__factory {
   static createInterface(): IDiamondCutInterface {
     return new utils.Interface(_abi) as IDiamondCutInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IDiamondCut {
+  static connect(address: string, signerOrProvider: Signer | Provider): IDiamondCut {
     return new Contract(address, _abi, signerOrProvider) as IDiamondCut;
   }
 }

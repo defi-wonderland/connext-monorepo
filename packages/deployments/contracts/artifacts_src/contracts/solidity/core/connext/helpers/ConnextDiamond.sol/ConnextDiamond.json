@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ConnextDiamond",
-  "sourceName": "contracts/solidity/core/connext/helpers/ConnextDiamond.sol",
+  "sourceName": "contracts//core/connext/helpers/ConnextDiamond.sol",
   "abi": [
     {
       "inputs": [

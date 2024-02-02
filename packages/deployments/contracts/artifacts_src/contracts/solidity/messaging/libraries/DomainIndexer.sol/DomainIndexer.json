@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "DomainIndexer",
-  "sourceName": "contracts/solidity/messaging/libraries/DomainIndexer.sol",
+  "sourceName": "contracts//messaging/libraries/DomainIndexer.sol",
   "abi": [
     {
       "anonymous": false,

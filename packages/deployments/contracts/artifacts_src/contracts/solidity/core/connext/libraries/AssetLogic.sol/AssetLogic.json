@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "AssetLogic",
-  "sourceName": "contracts/solidity/core/connext/libraries/AssetLogic.sol",
+  "sourceName": "contracts//core/connext/libraries/AssetLogic.sol",
   "abi": [
     {
       "inputs": [],

@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "SwapAdminFacet",
-  "sourceName": "contracts/solidity/core/connext/facets/SwapAdminFacet.sol",
+  "sourceName": "contracts//core/connext/facets/SwapAdminFacet.sol",
   "abi": [
     {
       "inputs": [],

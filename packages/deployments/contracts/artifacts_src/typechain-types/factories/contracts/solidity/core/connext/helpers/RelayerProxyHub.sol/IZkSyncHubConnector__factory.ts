@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IZkSyncHubConnector,
   IZkSyncHubConnectorInterface,
-} from "../../../../../../../contracts/solidity/core/connext/helpers/RelayerProxyHub.sol/IZkSyncHubConnector";
+} from "../../../../../../../contracts//core/connext/helpers/RelayerProxyHub.sol/IZkSyncHubConnector";
 
 const _abi = [
   {
@@ -50,10 +50,7 @@ export class IZkSyncHubConnector__factory {
   static createInterface(): IZkSyncHubConnectorInterface {
     return new utils.Interface(_abi) as IZkSyncHubConnectorInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IZkSyncHubConnector {
+  static connect(address: string, signerOrProvider: Signer | Provider): IZkSyncHubConnector {
     return new Contract(address, _abi, signerOrProvider) as IZkSyncHubConnector;
   }
 }

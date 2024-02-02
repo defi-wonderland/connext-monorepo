@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  IBridgeToken,
-  IBridgeTokenInterface,
-} from "../../../../../contracts/solidity/chimera/interfaces/IBridgeToken";
+import type { IBridgeToken, IBridgeTokenInterface } from "../../../../../contracts//chimera/interfaces/IBridgeToken";
 
 const _abi = [
   {
@@ -293,10 +290,7 @@ export class IBridgeToken__factory {
   static createInterface(): IBridgeTokenInterface {
     return new utils.Interface(_abi) as IBridgeTokenInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IBridgeToken {
+  static connect(address: string, signerOrProvider: Signer | Provider): IBridgeToken {
     return new Contract(address, _abi, signerOrProvider) as IBridgeToken;
   }
 }

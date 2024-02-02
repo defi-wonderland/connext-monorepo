@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   GnosisBase,
   GnosisBaseInterface,
-} from "../../../../../../contracts/solidity/messaging/connectors/gnosis/GnosisBase";
+} from "../../../../../../contracts//messaging/connectors/gnosis/GnosisBase";
 
 const _abi = [
   {
@@ -279,10 +279,7 @@ export class GnosisBase__factory {
   static createInterface(): GnosisBaseInterface {
     return new utils.Interface(_abi) as GnosisBaseInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): GnosisBase {
+  static connect(address: string, signerOrProvider: Signer | Provider): GnosisBase {
     return new Contract(address, _abi, signerOrProvider) as GnosisBase;
   }
 }

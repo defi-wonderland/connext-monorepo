@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ConnextProxyAdmin",
-  "sourceName": "contracts/solidity/chimera/helpers/ConnextProxyAdmin.sol",
+  "sourceName": "contracts//chimera/helpers/ConnextProxyAdmin.sol",
   "abi": [
     {
       "inputs": [

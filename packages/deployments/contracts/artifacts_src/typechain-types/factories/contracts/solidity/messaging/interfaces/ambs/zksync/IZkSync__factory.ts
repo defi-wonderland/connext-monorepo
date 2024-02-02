@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IZkSync,
   IZkSyncInterface,
-} from "../../../../../../../contracts/solidity/messaging/interfaces/ambs/zksync/IZkSync";
+} from "../../../../../../../contracts//messaging/interfaces/ambs/zksync/IZkSync";
 
 const _abi = [
   {
@@ -573,10 +573,7 @@ export class IZkSync__factory {
   static createInterface(): IZkSyncInterface {
     return new utils.Interface(_abi) as IZkSyncInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IZkSync {
+  static connect(address: string, signerOrProvider: Signer | Provider): IZkSync {
     return new Contract(address, _abi, signerOrProvider) as IZkSync;
   }
 }

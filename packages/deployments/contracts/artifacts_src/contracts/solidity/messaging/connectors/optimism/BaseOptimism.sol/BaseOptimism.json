@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "BaseOptimism",
-  "sourceName": "contracts/solidity/messaging/connectors/optimism/BaseOptimism.sol",
+  "sourceName": "contracts//messaging/connectors/optimism/BaseOptimism.sol",
   "abi": [
     {
       "inputs": [],

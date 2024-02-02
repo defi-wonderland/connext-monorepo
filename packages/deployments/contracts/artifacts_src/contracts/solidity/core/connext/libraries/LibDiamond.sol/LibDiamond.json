@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "LibDiamond",
-  "sourceName": "contracts/solidity/core/connext/libraries/LibDiamond.sol",
+  "sourceName": "contracts//core/connext/libraries/LibDiamond.sol",
   "abi": [
     {
       "anonymous": false,

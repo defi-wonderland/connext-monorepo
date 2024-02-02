@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IDiamondLoupe",
-  "sourceName": "contracts/solidity/core/connext/interfaces/IDiamondLoupe.sol",
+  "sourceName": "contracts//core/connext/interfaces/IDiamondLoupe.sol",
   "abi": [
     {
       "inputs": [

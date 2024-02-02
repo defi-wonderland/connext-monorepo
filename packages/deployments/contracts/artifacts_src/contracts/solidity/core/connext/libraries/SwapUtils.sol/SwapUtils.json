@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "SwapUtils",
-  "sourceName": "contracts/solidity/core/connext/libraries/SwapUtils.sol",
+  "sourceName": "contracts//core/connext/libraries/SwapUtils.sol",
   "abi": [
     {
       "anonymous": false,

@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "AdminMainnetSpokeConnector",
-  "sourceName": "contracts/solidity/messaging/connectors/admin/AdminMainnetSpokeConnector.sol",
+  "sourceName": "contracts//messaging/connectors/admin/AdminMainnetSpokeConnector.sol",
   "abi": [
     {
       "inputs": [

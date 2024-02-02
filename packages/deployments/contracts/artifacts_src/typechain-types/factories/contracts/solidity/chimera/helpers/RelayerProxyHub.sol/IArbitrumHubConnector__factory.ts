@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IArbitrumHubConnector,
   IArbitrumHubConnectorInterface,
-} from "../../../../../../contracts/solidity/chimera/helpers/RelayerProxyHub.sol/IArbitrumHubConnector";
+} from "../../../../../../contracts//chimera/helpers/RelayerProxyHub.sol/IArbitrumHubConnector";
 
 const _abi = [
   {
@@ -92,14 +92,7 @@ export class IArbitrumHubConnector__factory {
   static createInterface(): IArbitrumHubConnectorInterface {
     return new utils.Interface(_abi) as IArbitrumHubConnectorInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IArbitrumHubConnector {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as IArbitrumHubConnector;
+  static connect(address: string, signerOrProvider: Signer | Provider): IArbitrumHubConnector {
+    return new Contract(address, _abi, signerOrProvider) as IArbitrumHubConnector;
   }
 }

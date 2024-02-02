@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IOutbox",
-  "sourceName": "contracts/solidity/messaging/interfaces/IOutbox.sol",
+  "sourceName": "contracts//messaging/interfaces/IOutbox.sol",
   "abi": [
     {
       "anonymous": false,

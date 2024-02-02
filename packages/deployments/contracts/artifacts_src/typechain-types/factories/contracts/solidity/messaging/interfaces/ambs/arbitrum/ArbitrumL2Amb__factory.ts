@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   ArbitrumL2Amb,
   ArbitrumL2AmbInterface,
-} from "../../../../../../../contracts/solidity/messaging/interfaces/ambs/arbitrum/ArbitrumL2Amb";
+} from "../../../../../../../contracts//messaging/interfaces/ambs/arbitrum/ArbitrumL2Amb";
 
 const _abi = [
   {
@@ -35,10 +35,7 @@ export class ArbitrumL2Amb__factory {
   static createInterface(): ArbitrumL2AmbInterface {
     return new utils.Interface(_abi) as ArbitrumL2AmbInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): ArbitrumL2Amb {
+  static connect(address: string, signerOrProvider: Signer | Provider): ArbitrumL2Amb {
     return new Contract(address, _abi, signerOrProvider) as ArbitrumL2Amb;
   }
 }

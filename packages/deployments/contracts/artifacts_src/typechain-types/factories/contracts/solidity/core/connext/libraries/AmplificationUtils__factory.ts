@@ -7,7 +7,7 @@ import type { PromiseOrValue } from "../../../../../../common";
 import type {
   AmplificationUtils,
   AmplificationUtilsInterface,
-} from "../../../../../../contracts/solidity/core/connext/libraries/AmplificationUtils";
+} from "../../../../../../contracts//core/connext/libraries/AmplificationUtils";
 
 const _abi = [
   {
@@ -65,13 +65,10 @@ const _abi = [
 const _bytecode =
   "0x60566037600b82828239805160001a607314602a57634e487b7160e01b600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea2646970667358221220ac975b94f74d05e658911cec2810f120359ab4298b02167cd8264fc9f8b19ef064736f6c63430008110033";
 
-type AmplificationUtilsConstructorParams =
-  | [signer?: Signer]
-  | ConstructorParameters<typeof ContractFactory>;
+type AmplificationUtilsConstructorParams = [signer?: Signer] | ConstructorParameters<typeof ContractFactory>;
 
-const isSuperArgs = (
-  xs: AmplificationUtilsConstructorParams
-): xs is ConstructorParameters<typeof ContractFactory> => xs.length > 1;
+const isSuperArgs = (xs: AmplificationUtilsConstructorParams): xs is ConstructorParameters<typeof ContractFactory> =>
+  xs.length > 1;
 
 export class AmplificationUtils__factory extends ContractFactory {
   constructor(...args: AmplificationUtilsConstructorParams) {
@@ -82,14 +79,10 @@ export class AmplificationUtils__factory extends ContractFactory {
     }
   }
 
-  override deploy(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<AmplificationUtils> {
+  override deploy(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<AmplificationUtils> {
     return super.deploy(overrides || {}) as Promise<AmplificationUtils>;
   }
-  override getDeployTransaction(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): TransactionRequest {
+  override getDeployTransaction(overrides?: Overrides & { from?: PromiseOrValue<string> }): TransactionRequest {
     return super.getDeployTransaction(overrides || {});
   }
   override attach(address: string): AmplificationUtils {
@@ -104,10 +97,7 @@ export class AmplificationUtils__factory extends ContractFactory {
   static createInterface(): AmplificationUtilsInterface {
     return new utils.Interface(_abi) as AmplificationUtilsInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): AmplificationUtils {
+  static connect(address: string, signerOrProvider: Signer | Provider): AmplificationUtils {
     return new Contract(address, _abi, signerOrProvider) as AmplificationUtils;
   }
 }

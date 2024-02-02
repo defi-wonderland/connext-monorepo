@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IDiamondLoupe,
   IDiamondLoupeInterface,
-} from "../../../../../../contracts/solidity/core/connext/interfaces/IDiamondLoupe";
+} from "../../../../../../contracts//core/connext/interfaces/IDiamondLoupe";
 
 const _abi = [
   {
@@ -93,10 +93,7 @@ export class IDiamondLoupe__factory {
   static createInterface(): IDiamondLoupeInterface {
     return new utils.Interface(_abi) as IDiamondLoupeInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IDiamondLoupe {
+  static connect(address: string, signerOrProvider: Signer | Provider): IDiamondLoupe {
     return new Contract(address, _abi, signerOrProvider) as IDiamondLoupe;
   }
 }

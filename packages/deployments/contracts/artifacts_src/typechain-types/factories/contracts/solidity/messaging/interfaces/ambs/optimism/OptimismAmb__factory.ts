@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   OptimismAmb,
   OptimismAmbInterface,
-} from "../../../../../../../contracts/solidity/messaging/interfaces/ambs/optimism/OptimismAmb";
+} from "../../../../../../../contracts//messaging/interfaces/ambs/optimism/OptimismAmb";
 
 const _abi = [
   {
@@ -53,10 +53,7 @@ export class OptimismAmb__factory {
   static createInterface(): OptimismAmbInterface {
     return new utils.Interface(_abi) as OptimismAmbInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): OptimismAmb {
+  static connect(address: string, signerOrProvider: Signer | Provider): OptimismAmb {
     return new Contract(address, _abi, signerOrProvider) as OptimismAmb;
   }
 }

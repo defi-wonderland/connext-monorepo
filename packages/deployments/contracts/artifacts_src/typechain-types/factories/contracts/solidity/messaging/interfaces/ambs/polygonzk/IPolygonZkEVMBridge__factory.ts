@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IPolygonZkEVMBridge,
   IPolygonZkEVMBridgeInterface,
-} from "../../../../../../../contracts/solidity/messaging/interfaces/ambs/polygonzk/IPolygonZkEVMBridge";
+} from "../../../../../../../contracts//messaging/interfaces/ambs/polygonzk/IPolygonZkEVMBridge";
 
 const _abi = [
   {
@@ -285,10 +285,7 @@ export class IPolygonZkEVMBridge__factory {
   static createInterface(): IPolygonZkEVMBridgeInterface {
     return new utils.Interface(_abi) as IPolygonZkEVMBridgeInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IPolygonZkEVMBridge {
+  static connect(address: string, signerOrProvider: Signer | Provider): IPolygonZkEVMBridge {
     return new Contract(address, _abi, signerOrProvider) as IPolygonZkEVMBridge;
   }
 }

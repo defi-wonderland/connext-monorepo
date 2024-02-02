@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "HubConnector",
-  "sourceName": "contracts/solidity/messaging/connectors/HubConnector.sol",
+  "sourceName": "contracts//messaging/connectors/HubConnector.sol",
   "abi": [
     {
       "inputs": [],

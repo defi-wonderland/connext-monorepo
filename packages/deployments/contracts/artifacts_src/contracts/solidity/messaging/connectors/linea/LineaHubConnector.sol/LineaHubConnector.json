@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "LineaHubConnector",
-  "sourceName": "contracts/solidity/messaging/connectors/linea/LineaHubConnector.sol",
+  "sourceName": "contracts//messaging/connectors/linea/LineaHubConnector.sol",
   "abi": [
     {
       "inputs": [

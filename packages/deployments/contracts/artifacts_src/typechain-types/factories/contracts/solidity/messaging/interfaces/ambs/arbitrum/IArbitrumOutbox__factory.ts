@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IArbitrumOutbox,
   IArbitrumOutboxInterface,
-} from "../../../../../../../contracts/solidity/messaging/interfaces/ambs/arbitrum/IArbitrumOutbox";
+} from "../../../../../../../contracts//messaging/interfaces/ambs/arbitrum/IArbitrumOutbox";
 
 const _abi = [
   {
@@ -412,10 +412,7 @@ export class IArbitrumOutbox__factory {
   static createInterface(): IArbitrumOutboxInterface {
     return new utils.Interface(_abi) as IArbitrumOutboxInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IArbitrumOutbox {
+  static connect(address: string, signerOrProvider: Signer | Provider): IArbitrumOutbox {
     return new Contract(address, _abi, signerOrProvider) as IArbitrumOutbox;
   }
 }

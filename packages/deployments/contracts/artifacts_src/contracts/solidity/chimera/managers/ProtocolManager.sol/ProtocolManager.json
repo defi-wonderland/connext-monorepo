@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ProtocolManager",
-  "sourceName": "contracts/solidity/chimera/managers/ProtocolManager.sol",
+  "sourceName": "contracts//chimera/managers/ProtocolManager.sol",
   "abi": [
     {
       "inputs": [],

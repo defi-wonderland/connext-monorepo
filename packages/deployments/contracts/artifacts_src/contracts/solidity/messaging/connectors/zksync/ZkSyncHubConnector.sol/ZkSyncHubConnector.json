@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ZkSyncHubConnector",
-  "sourceName": "contracts/solidity/messaging/connectors/zksync/ZkSyncHubConnector.sol",
+  "sourceName": "contracts//messaging/connectors/zksync/ZkSyncHubConnector.sol",
   "abi": [
     {
       "inputs": [

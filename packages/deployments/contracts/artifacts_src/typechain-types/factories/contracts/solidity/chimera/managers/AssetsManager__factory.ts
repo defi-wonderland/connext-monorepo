@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  AssetsManager,
-  AssetsManagerInterface,
-} from "../../../../../contracts/solidity/chimera/managers/AssetsManager";
+import type { AssetsManager, AssetsManagerInterface } from "../../../../../contracts//chimera/managers/AssetsManager";
 
 const _abi = [
   {
@@ -769,10 +766,7 @@ export class AssetsManager__factory {
   static createInterface(): AssetsManagerInterface {
     return new utils.Interface(_abi) as AssetsManagerInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): AssetsManager {
+  static connect(address: string, signerOrProvider: Signer | Provider): AssetsManager {
     return new Contract(address, _abi, signerOrProvider) as AssetsManager;
   }
 }

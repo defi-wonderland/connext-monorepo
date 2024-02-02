@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "BaseConnextFacet",
-  "sourceName": "contracts/solidity/core/connext/facets/BaseConnextFacet.sol",
+  "sourceName": "contracts//core/connext/facets/BaseConnextFacet.sol",
   "abi": [
     {
       "inputs": [],

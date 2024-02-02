@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   RoutersManager,
   RoutersManagerInterface,
-} from "../../../../../contracts/solidity/chimera/managers/RoutersManager";
+} from "../../../../../contracts//chimera/managers/RoutersManager";
 
 const _abi = [
   {
@@ -714,10 +714,7 @@ export class RoutersManager__factory {
   static createInterface(): RoutersManagerInterface {
     return new utils.Interface(_abi) as RoutersManagerInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): RoutersManager {
+  static connect(address: string, signerOrProvider: Signer | Provider): RoutersManager {
     return new Contract(address, _abi, signerOrProvider) as RoutersManager;
   }
 }

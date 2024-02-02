@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ConnextProxyAdmin",
-  "sourceName": "contracts/solidity/core/connext/helpers/ConnextProxyAdmin.sol",
+  "sourceName": "contracts//core/connext/helpers/ConnextProxyAdmin.sol",
   "abi": [
     {
       "inputs": [

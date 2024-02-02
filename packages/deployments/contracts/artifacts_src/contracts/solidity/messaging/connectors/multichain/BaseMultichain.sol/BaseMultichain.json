@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "BaseMultichain",
-  "sourceName": "contracts/solidity/messaging/connectors/multichain/BaseMultichain.sol",
+  "sourceName": "contracts//messaging/connectors/multichain/BaseMultichain.sol",
   "abi": [
     {
       "inputs": [],

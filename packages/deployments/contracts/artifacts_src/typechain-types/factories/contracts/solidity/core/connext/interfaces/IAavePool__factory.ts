@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  IAavePool,
-  IAavePoolInterface,
-} from "../../../../../../contracts/solidity/core/connext/interfaces/IAavePool";
+import type { IAavePool, IAavePoolInterface } from "../../../../../../contracts//core/connext/interfaces/IAavePool";
 
 const _abi = [
   {
@@ -97,10 +94,7 @@ export class IAavePool__factory {
   static createInterface(): IAavePoolInterface {
     return new utils.Interface(_abi) as IAavePoolInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IAavePool {
+  static connect(address: string, signerOrProvider: Signer | Provider): IAavePool {
     return new Contract(address, _abi, signerOrProvider) as IAavePool;
   }
 }

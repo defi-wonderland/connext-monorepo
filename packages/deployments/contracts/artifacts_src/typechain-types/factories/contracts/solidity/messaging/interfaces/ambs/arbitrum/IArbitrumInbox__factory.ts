@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IArbitrumInbox,
   IArbitrumInboxInterface,
-} from "../../../../../../../contracts/solidity/messaging/interfaces/ambs/arbitrum/IArbitrumInbox";
+} from "../../../../../../../contracts//messaging/interfaces/ambs/arbitrum/IArbitrumInbox";
 
 const _abi = [
   {
@@ -71,10 +71,7 @@ export class IArbitrumInbox__factory {
   static createInterface(): IArbitrumInboxInterface {
     return new utils.Interface(_abi) as IArbitrumInboxInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IArbitrumInbox {
+  static connect(address: string, signerOrProvider: Signer | Provider): IArbitrumInbox {
     return new Contract(address, _abi, signerOrProvider) as IArbitrumInbox;
   }
 }

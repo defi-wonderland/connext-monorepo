@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "Unwrapper",
-  "sourceName": "contracts/solidity/core/xreceivers/Unwrapper.sol",
+  "sourceName": "contracts//core/xreceivers/Unwrapper.sol",
   "abi": [
     {
       "inputs": [

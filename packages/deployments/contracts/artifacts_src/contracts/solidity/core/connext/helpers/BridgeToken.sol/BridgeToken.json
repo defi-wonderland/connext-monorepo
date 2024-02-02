@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "BridgeToken",
-  "sourceName": "contracts/solidity/core/connext/helpers/BridgeToken.sol",
+  "sourceName": "contracts//core/connext/helpers/BridgeToken.sol",
   "abi": [
     {
       "inputs": [

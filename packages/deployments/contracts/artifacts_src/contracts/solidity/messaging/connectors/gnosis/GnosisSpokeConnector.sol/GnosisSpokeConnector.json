@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "GnosisSpokeConnector",
-  "sourceName": "contracts/solidity/messaging/connectors/gnosis/GnosisSpokeConnector.sol",
+  "sourceName": "contracts//messaging/connectors/gnosis/GnosisSpokeConnector.sol",
   "abi": [
     {
       "inputs": [

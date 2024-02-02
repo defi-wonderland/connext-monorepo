@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "StableSwapFacet",
-  "sourceName": "contracts/solidity/core/connext/facets/StableSwapFacet.sol",
+  "sourceName": "contracts//core/connext/facets/StableSwapFacet.sol",
   "abi": [
     {
       "inputs": [],

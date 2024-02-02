@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  GasCap,
-  GasCapInterface,
-} from "../../../../../contracts/solidity/messaging/connectors/GasCap";
+import type { GasCap, GasCapInterface } from "../../../../../contracts//messaging/connectors/GasCap";
 
 const _abi = [
   {

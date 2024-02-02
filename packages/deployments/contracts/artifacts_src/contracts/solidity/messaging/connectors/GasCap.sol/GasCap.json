@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "GasCap",
-  "sourceName": "contracts/solidity/messaging/connectors/GasCap.sol",
+  "sourceName": "contracts//messaging/connectors/GasCap.sol",
   "abi": [
     {
       "inputs": [],

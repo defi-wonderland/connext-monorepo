@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   ProtocolManager,
   ProtocolManagerInterface,
-} from "../../../../../contracts/solidity/chimera/managers/ProtocolManager";
+} from "../../../../../contracts//chimera/managers/ProtocolManager";
 
 const _abi = [
   {
@@ -363,10 +363,7 @@ export class ProtocolManager__factory {
   static createInterface(): ProtocolManagerInterface {
     return new utils.Interface(_abi) as ProtocolManagerInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): ProtocolManager {
+  static connect(address: string, signerOrProvider: Signer | Provider): ProtocolManager {
     return new Contract(address, _abi, signerOrProvider) as ProtocolManager;
   }
 }

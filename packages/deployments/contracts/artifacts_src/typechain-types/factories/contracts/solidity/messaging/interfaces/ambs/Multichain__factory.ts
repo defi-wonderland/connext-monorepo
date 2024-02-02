@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   Multichain,
   MultichainInterface,
-} from "../../../../../../contracts/solidity/messaging/interfaces/ambs/Multichain";
+} from "../../../../../../contracts//messaging/interfaces/ambs/Multichain";
 
 const _abi = [
   {
@@ -115,10 +115,7 @@ export class Multichain__factory {
   static createInterface(): MultichainInterface {
     return new utils.Interface(_abi) as MultichainInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): Multichain {
+  static connect(address: string, signerOrProvider: Signer | Provider): Multichain {
     return new Contract(address, _abi, signerOrProvider) as Multichain;
   }
 }

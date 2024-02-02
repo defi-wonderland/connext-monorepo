@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "BridgeToken",
-  "sourceName": "contracts/solidity/chimera/helpers/BridgeToken.sol",
+  "sourceName": "contracts//chimera/helpers/BridgeToken.sol",
   "abi": [
     {
       "inputs": [

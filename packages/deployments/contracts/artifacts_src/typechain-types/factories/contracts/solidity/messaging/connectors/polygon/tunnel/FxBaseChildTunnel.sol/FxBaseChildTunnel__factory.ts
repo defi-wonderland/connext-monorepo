@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   FxBaseChildTunnel,
   FxBaseChildTunnelInterface,
-} from "../../../../../../../../contracts/solidity/messaging/connectors/polygon/tunnel/FxBaseChildTunnel.sol/FxBaseChildTunnel";
+} from "../../../../../../../../contracts//messaging/connectors/polygon/tunnel/FxBaseChildTunnel.sol/FxBaseChildTunnel";
 
 const _abi = [
   {
@@ -79,10 +79,7 @@ export class FxBaseChildTunnel__factory {
   static createInterface(): FxBaseChildTunnelInterface {
     return new utils.Interface(_abi) as FxBaseChildTunnelInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): FxBaseChildTunnel {
+  static connect(address: string, signerOrProvider: Signer | Provider): FxBaseChildTunnel {
     return new Contract(address, _abi, signerOrProvider) as FxBaseChildTunnel;
   }
 }

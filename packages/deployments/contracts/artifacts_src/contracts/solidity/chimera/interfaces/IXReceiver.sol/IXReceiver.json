@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IXReceiver",
-  "sourceName": "contracts/solidity/chimera/interfaces/IXReceiver.sol",
+  "sourceName": "contracts//chimera/interfaces/IXReceiver.sol",
   "abi": [
     {
       "inputs": [

@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "SpokeConnector",
-  "sourceName": "contracts/solidity/messaging/connectors/SpokeConnector.sol",
+  "sourceName": "contracts//messaging/connectors/SpokeConnector.sol",
   "abi": [
     {
       "inputs": [],

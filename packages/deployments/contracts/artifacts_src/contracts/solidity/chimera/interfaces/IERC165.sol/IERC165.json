@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IERC165",
-  "sourceName": "contracts/solidity/chimera/interfaces/IERC165.sol",
+  "sourceName": "contracts//chimera/interfaces/IERC165.sol",
   "abi": [
     {
       "inputs": [

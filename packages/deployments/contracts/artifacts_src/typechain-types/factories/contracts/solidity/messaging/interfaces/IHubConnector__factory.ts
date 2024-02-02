@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IHubConnector,
   IHubConnectorInterface,
-} from "../../../../../contracts/solidity/messaging/interfaces/IHubConnector";
+} from "../../../../../contracts//messaging/interfaces/IHubConnector";
 
 const _abi = [
   {
@@ -189,10 +189,7 @@ export class IHubConnector__factory {
   static createInterface(): IHubConnectorInterface {
     return new utils.Interface(_abi) as IHubConnectorInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IHubConnector {
+  static connect(address: string, signerOrProvider: Signer | Provider): IHubConnector {
     return new Contract(address, _abi, signerOrProvider) as IHubConnector;
   }
 }

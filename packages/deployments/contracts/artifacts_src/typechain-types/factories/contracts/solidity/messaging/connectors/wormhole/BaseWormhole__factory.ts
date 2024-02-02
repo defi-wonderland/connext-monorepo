@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   BaseWormhole,
   BaseWormholeInterface,
-} from "../../../../../../contracts/solidity/messaging/connectors/wormhole/BaseWormhole";
+} from "../../../../../../contracts//messaging/connectors/wormhole/BaseWormhole";
 
 const _abi = [
   {
@@ -322,10 +322,7 @@ export class BaseWormhole__factory {
   static createInterface(): BaseWormholeInterface {
     return new utils.Interface(_abi) as BaseWormholeInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): BaseWormhole {
+  static connect(address: string, signerOrProvider: Signer | Provider): BaseWormhole {
     return new Contract(address, _abi, signerOrProvider) as BaseWormhole;
   }
 }

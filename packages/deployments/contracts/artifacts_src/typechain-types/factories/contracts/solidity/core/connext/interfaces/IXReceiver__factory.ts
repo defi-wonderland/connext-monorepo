@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  IXReceiver,
-  IXReceiverInterface,
-} from "../../../../../../contracts/solidity/core/connext/interfaces/IXReceiver";
+import type { IXReceiver, IXReceiverInterface } from "../../../../../../contracts//core/connext/interfaces/IXReceiver";
 
 const _abi = [
   {
@@ -61,10 +58,7 @@ export class IXReceiver__factory {
   static createInterface(): IXReceiverInterface {
     return new utils.Interface(_abi) as IXReceiverInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IXReceiver {
+  static connect(address: string, signerOrProvider: Signer | Provider): IXReceiver {
     return new Contract(address, _abi, signerOrProvider) as IXReceiver;
   }
 }

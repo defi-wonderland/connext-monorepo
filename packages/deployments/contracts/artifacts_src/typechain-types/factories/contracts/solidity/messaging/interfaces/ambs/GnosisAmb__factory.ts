@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  GnosisAmb,
-  GnosisAmbInterface,
-} from "../../../../../../contracts/solidity/messaging/interfaces/ambs/GnosisAmb";
+import type { GnosisAmb, GnosisAmbInterface } from "../../../../../../contracts//messaging/interfaces/ambs/GnosisAmb";
 
 const _abi = [
   {
@@ -302,10 +299,7 @@ export class GnosisAmb__factory {
   static createInterface(): GnosisAmbInterface {
     return new utils.Interface(_abi) as GnosisAmbInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): GnosisAmb {
+  static connect(address: string, signerOrProvider: Signer | Provider): GnosisAmb {
     return new Contract(address, _abi, signerOrProvider) as GnosisAmb;
   }
 }

@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   BasePolygonZk,
   BasePolygonZkInterface,
-} from "../../../../../../contracts/solidity/messaging/connectors/polygonzk/BasePolygonZk";
+} from "../../../../../../contracts//messaging/connectors/polygonzk/BasePolygonZk";
 
 const _abi = [
   {
@@ -40,10 +40,7 @@ export class BasePolygonZk__factory {
   static createInterface(): BasePolygonZkInterface {
     return new utils.Interface(_abi) as BasePolygonZkInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): BasePolygonZk {
+  static connect(address: string, signerOrProvider: Signer | Provider): BasePolygonZk {
     return new Contract(address, _abi, signerOrProvider) as BasePolygonZk;
   }
 }

@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "BasePolygonZk",
-  "sourceName": "contracts/solidity/messaging/connectors/polygonzk/BasePolygonZk.sol",
+  "sourceName": "contracts//messaging/connectors/polygonzk/BasePolygonZk.sol",
   "abi": [
     {
       "inputs": [

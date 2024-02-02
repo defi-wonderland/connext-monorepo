@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "FxBaseChildTunnel",
-  "sourceName": "contracts/solidity/messaging/connectors/polygon/tunnel/FxBaseChildTunnel.sol",
+  "sourceName": "contracts//messaging/connectors/polygon/tunnel/FxBaseChildTunnel.sol",
   "abi": [
     {
       "anonymous": false,

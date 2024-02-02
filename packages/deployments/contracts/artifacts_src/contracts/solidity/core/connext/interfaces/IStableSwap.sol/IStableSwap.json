@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IStableSwap",
-  "sourceName": "contracts/solidity/core/connext/interfaces/IStableSwap.sol",
+  "sourceName": "contracts//core/connext/interfaces/IStableSwap.sol",
   "abi": [
     {
       "anonymous": false,

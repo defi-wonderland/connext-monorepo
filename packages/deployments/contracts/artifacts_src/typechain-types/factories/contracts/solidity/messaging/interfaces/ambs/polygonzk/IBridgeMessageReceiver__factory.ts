@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IBridgeMessageReceiver,
   IBridgeMessageReceiverInterface,
-} from "../../../../../../../contracts/solidity/messaging/interfaces/ambs/polygonzk/IBridgeMessageReceiver";
+} from "../../../../../../../contracts//messaging/interfaces/ambs/polygonzk/IBridgeMessageReceiver";
 
 const _abi = [
   {
@@ -40,14 +40,7 @@ export class IBridgeMessageReceiver__factory {
   static createInterface(): IBridgeMessageReceiverInterface {
     return new utils.Interface(_abi) as IBridgeMessageReceiverInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IBridgeMessageReceiver {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as IBridgeMessageReceiver;
+  static connect(address: string, signerOrProvider: Signer | Provider): IBridgeMessageReceiver {
+    return new Contract(address, _abi, signerOrProvider) as IBridgeMessageReceiver;
   }
 }

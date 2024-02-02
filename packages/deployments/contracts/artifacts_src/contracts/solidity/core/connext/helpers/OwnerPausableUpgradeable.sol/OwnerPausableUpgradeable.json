@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "OwnerPausableUpgradeable",
-  "sourceName": "contracts/solidity/core/connext/helpers/OwnerPausableUpgradeable.sol",
+  "sourceName": "contracts//core/connext/helpers/OwnerPausableUpgradeable.sol",
   "abi": [
     {
       "anonymous": false,

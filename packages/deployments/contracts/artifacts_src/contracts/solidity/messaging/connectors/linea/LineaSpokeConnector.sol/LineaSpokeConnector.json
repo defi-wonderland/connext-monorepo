@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "LineaSpokeConnector",
-  "sourceName": "contracts/solidity/messaging/connectors/linea/LineaSpokeConnector.sol",
+  "sourceName": "contracts//messaging/connectors/linea/LineaSpokeConnector.sol",
   "abi": [
     {
       "inputs": [

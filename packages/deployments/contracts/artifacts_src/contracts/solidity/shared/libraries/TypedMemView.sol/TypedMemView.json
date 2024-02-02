@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "TypedMemView",
-  "sourceName": "contracts/solidity/shared/libraries/TypedMemView.sol",
+  "sourceName": "contracts//shared/libraries/TypedMemView.sol",
   "abi": [
     {
       "inputs": [

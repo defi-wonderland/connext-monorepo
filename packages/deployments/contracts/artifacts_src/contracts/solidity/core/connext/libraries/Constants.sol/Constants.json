@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "Constants",
-  "sourceName": "contracts/solidity/core/connext/libraries/Constants.sol",
+  "sourceName": "contracts//core/connext/libraries/Constants.sol",
   "abi": [
     {
       "inputs": [],

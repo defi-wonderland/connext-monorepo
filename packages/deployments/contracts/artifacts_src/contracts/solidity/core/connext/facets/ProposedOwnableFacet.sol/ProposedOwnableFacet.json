@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ProposedOwnableFacet",
-  "sourceName": "contracts/solidity/core/connext/facets/ProposedOwnableFacet.sol",
+  "sourceName": "contracts//core/connext/facets/ProposedOwnableFacet.sol",
   "abi": [
     {
       "inputs": [],

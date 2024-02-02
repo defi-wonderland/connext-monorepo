@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IProposedOwnable,
   IProposedOwnableInterface,
-} from "../../../../../contracts/solidity/shared/interfaces/IProposedOwnable";
+} from "../../../../../contracts//shared/interfaces/IProposedOwnable";
 
 const _abi = [
   {
@@ -95,10 +95,7 @@ export class IProposedOwnable__factory {
   static createInterface(): IProposedOwnableInterface {
     return new utils.Interface(_abi) as IProposedOwnableInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IProposedOwnable {
+  static connect(address: string, signerOrProvider: Signer | Provider): IProposedOwnable {
     return new Contract(address, _abi, signerOrProvider) as IProposedOwnable;
   }
 }

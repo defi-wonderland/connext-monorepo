@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IArbitrumInbox",
-  "sourceName": "contracts/solidity/messaging/interfaces/ambs/arbitrum/IArbitrumInbox.sol",
+  "sourceName": "contracts//messaging/interfaces/ambs/arbitrum/IArbitrumInbox.sol",
   "abi": [
     {
       "inputs": [

@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "RelayerProxy",
-  "sourceName": "contracts/solidity/chimera/helpers/RelayerProxy.sol",
+  "sourceName": "contracts//chimera/helpers/RelayerProxy.sol",
   "abi": [
     {
       "inputs": [

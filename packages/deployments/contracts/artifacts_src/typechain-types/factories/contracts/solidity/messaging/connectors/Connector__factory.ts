@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  Connector,
-  ConnectorInterface,
-} from "../../../../../contracts/solidity/messaging/connectors/Connector";
+import type { Connector, ConnectorInterface } from "../../../../../contracts//messaging/connectors/Connector";
 
 const _abi = [
   {
@@ -427,10 +424,7 @@ export class Connector__factory {
   static createInterface(): ConnectorInterface {
     return new utils.Interface(_abi) as ConnectorInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): Connector {
+  static connect(address: string, signerOrProvider: Signer | Provider): Connector {
     return new Contract(address, _abi, signerOrProvider) as Connector;
   }
 }

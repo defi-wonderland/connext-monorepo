@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IMessageRecipient,
   IMessageRecipientInterface,
-} from "../../../../../contracts/solidity/messaging/interfaces/IMessageRecipient";
+} from "../../../../../contracts//messaging/interfaces/IMessageRecipient";
 
 const _abi = [
   {
@@ -45,10 +45,7 @@ export class IMessageRecipient__factory {
   static createInterface(): IMessageRecipientInterface {
     return new utils.Interface(_abi) as IMessageRecipientInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IMessageRecipient {
+  static connect(address: string, signerOrProvider: Signer | Provider): IMessageRecipient {
     return new Contract(address, _abi, signerOrProvider) as IMessageRecipient;
   }
 }

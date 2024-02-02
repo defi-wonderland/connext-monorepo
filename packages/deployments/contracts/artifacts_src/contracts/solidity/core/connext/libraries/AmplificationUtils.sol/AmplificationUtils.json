@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "AmplificationUtils",
-  "sourceName": "contracts/solidity/core/connext/libraries/AmplificationUtils.sol",
+  "sourceName": "contracts//core/connext/libraries/AmplificationUtils.sol",
   "abi": [
     {
       "anonymous": false,

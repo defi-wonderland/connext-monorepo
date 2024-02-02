@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "Constants",
-  "sourceName": "contracts/solidity/chimera/libraries/Constants.sol",
+  "sourceName": "contracts//chimera/libraries/Constants.sol",
   "abi": [
     {
       "inputs": [],

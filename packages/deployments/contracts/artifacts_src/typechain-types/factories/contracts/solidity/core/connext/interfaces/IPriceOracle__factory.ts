@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IPriceOracle,
   IPriceOracleInterface,
-} from "../../../../../../contracts/solidity/core/connext/interfaces/IPriceOracle";
+} from "../../../../../../contracts//core/connext/interfaces/IPriceOracle";
 
 const _abi = [
   {
@@ -55,10 +55,7 @@ export class IPriceOracle__factory {
   static createInterface(): IPriceOracleInterface {
     return new utils.Interface(_abi) as IPriceOracleInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IPriceOracle {
+  static connect(address: string, signerOrProvider: Signer | Provider): IPriceOracle {
     return new Contract(address, _abi, signerOrProvider) as IPriceOracle;
   }
 }

@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IAavePool",
-  "sourceName": "contracts/solidity/core/connext/interfaces/IAavePool.sol",
+  "sourceName": "contracts//core/connext/interfaces/IAavePool.sol",
   "abi": [
     {
       "inputs": [

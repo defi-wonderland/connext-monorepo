@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IArbitrumOutbox",
-  "sourceName": "contracts/solidity/messaging/interfaces/ambs/arbitrum/IArbitrumOutbox.sol",
+  "sourceName": "contracts//messaging/interfaces/ambs/arbitrum/IArbitrumOutbox.sol",
   "abi": [
     {
       "anonymous": false,

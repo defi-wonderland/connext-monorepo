@@ -7,7 +7,7 @@ import type { PromiseOrValue } from "../../../../../../../../common";
 import type {
   ICheckpointManager,
   ICheckpointManagerInterface,
-} from "../../../../../../../../contracts/solidity/messaging/connectors/polygon/tunnel/FxBaseRootTunnel.sol/ICheckpointManager";
+} from "../../../../../../../../contracts//messaging/connectors/polygon/tunnel/FxBaseRootTunnel.sol/ICheckpointManager";
 
 const _abi = [
   {
@@ -54,13 +54,10 @@ const _abi = [
 const _bytecode =
   "0x608060405234801561001057600080fd5b5060f38061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c806341539d4a14602d575b600080fd5b6070603836600460a5565b60006020819052908152604090208054600182015460028301546003840154600490940154929391929091906001600160a01b031685565b6040805195865260208601949094529284019190915260608301526001600160a01b0316608082015260a00160405180910390f35b60006020828403121560b657600080fd5b503591905056fea2646970667358221220c5d846d381fd7035af584ed6866f334a81a075befd02ab029860e625171c81d564736f6c63430008110033";
 
-type ICheckpointManagerConstructorParams =
-  | [signer?: Signer]
-  | ConstructorParameters<typeof ContractFactory>;
+type ICheckpointManagerConstructorParams = [signer?: Signer] | ConstructorParameters<typeof ContractFactory>;
 
-const isSuperArgs = (
-  xs: ICheckpointManagerConstructorParams
-): xs is ConstructorParameters<typeof ContractFactory> => xs.length > 1;
+const isSuperArgs = (xs: ICheckpointManagerConstructorParams): xs is ConstructorParameters<typeof ContractFactory> =>
+  xs.length > 1;
 
 export class ICheckpointManager__factory extends ContractFactory {
   constructor(...args: ICheckpointManagerConstructorParams) {
@@ -71,14 +68,10 @@ export class ICheckpointManager__factory extends ContractFactory {
     }
   }
 
-  override deploy(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ICheckpointManager> {
+  override deploy(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<ICheckpointManager> {
     return super.deploy(overrides || {}) as Promise<ICheckpointManager>;
   }
-  override getDeployTransaction(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): TransactionRequest {
+  override getDeployTransaction(overrides?: Overrides & { from?: PromiseOrValue<string> }): TransactionRequest {
     return super.getDeployTransaction(overrides || {});
   }
   override attach(address: string): ICheckpointManager {
@@ -93,10 +86,7 @@ export class ICheckpointManager__factory extends ContractFactory {
   static createInterface(): ICheckpointManagerInterface {
     return new utils.Interface(_abi) as ICheckpointManagerInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): ICheckpointManager {
+  static connect(address: string, signerOrProvider: Signer | Provider): ICheckpointManager {
     return new Contract(address, _abi, signerOrProvider) as ICheckpointManager;
   }
 }

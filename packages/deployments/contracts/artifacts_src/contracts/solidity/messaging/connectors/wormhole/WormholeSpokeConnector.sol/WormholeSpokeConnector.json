@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "WormholeSpokeConnector",
-  "sourceName": "contracts/solidity/messaging/connectors/wormhole/WormholeSpokeConnector.sol",
+  "sourceName": "contracts//messaging/connectors/wormhole/WormholeSpokeConnector.sol",
   "abi": [
     {
       "inputs": [

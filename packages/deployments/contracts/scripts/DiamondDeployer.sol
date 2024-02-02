@@ -18,7 +18,7 @@ import {IDiamondCut} from "@contracts/core/connext/interfaces/IDiamondCut.sol";
 
 import {console2 as console} from "forge-std/console2.sol";
 
-import {Connext} from "@contracts/test/utils/Connext.sol";
+import {Connext} from "@contracts/test/solidity/utils/Connext.sol";
 import {Deployer} from "./Deployer.sol";
 import {DiamondHelper} from "./DiamondHelper.sol";
 

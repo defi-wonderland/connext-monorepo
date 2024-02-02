@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IArbitrumRollup,
   IArbitrumRollupInterface,
-} from "../../../../../../../contracts/solidity/messaging/interfaces/ambs/arbitrum/IArbitrumRollup";
+} from "../../../../../../../contracts//messaging/interfaces/ambs/arbitrum/IArbitrumRollup";
 
 const _abi = [
   {
@@ -98,10 +98,7 @@ export class IArbitrumRollup__factory {
   static createInterface(): IArbitrumRollupInterface {
     return new utils.Interface(_abi) as IArbitrumRollupInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IArbitrumRollup {
+  static connect(address: string, signerOrProvider: Signer | Provider): IArbitrumRollup {
     return new Contract(address, _abi, signerOrProvider) as IArbitrumRollup;
   }
 }

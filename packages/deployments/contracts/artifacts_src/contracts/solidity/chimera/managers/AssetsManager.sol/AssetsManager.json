@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "AssetsManager",
-  "sourceName": "contracts/solidity/chimera/managers/AssetsManager.sol",
+  "sourceName": "contracts//chimera/managers/AssetsManager.sol",
   "abi": [
     {
       "inputs": [],

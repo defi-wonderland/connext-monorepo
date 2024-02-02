@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "BridgeFacet",
-  "sourceName": "contracts/solidity/core/connext/facets/BridgeFacet.sol",
+  "sourceName": "contracts//core/connext/facets/BridgeFacet.sol",
   "abi": [
     {
       "inputs": [],

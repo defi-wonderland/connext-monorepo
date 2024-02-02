@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IGnosisHubConnector,
   IGnosisHubConnectorInterface,
-} from "../../../../../../contracts/solidity/chimera/helpers/RelayerProxyHub.sol/IGnosisHubConnector";
+} from "../../../../../../contracts//chimera/helpers/RelayerProxyHub.sol/IGnosisHubConnector";
 
 const _abi = [
   {
@@ -35,10 +35,7 @@ export class IGnosisHubConnector__factory {
   static createInterface(): IGnosisHubConnectorInterface {
     return new utils.Interface(_abi) as IGnosisHubConnectorInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IGnosisHubConnector {
+  static connect(address: string, signerOrProvider: Signer | Provider): IGnosisHubConnector {
     return new Contract(address, _abi, signerOrProvider) as IGnosisHubConnector;
   }
 }

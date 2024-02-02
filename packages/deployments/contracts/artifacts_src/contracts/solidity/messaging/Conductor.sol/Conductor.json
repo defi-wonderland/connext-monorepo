@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "Conductor",
-  "sourceName": "contracts/solidity/messaging/Conductor.sol",
+  "sourceName": "contracts//messaging/Conductor.sol",
   "abi": [
     {
       "inputs": [

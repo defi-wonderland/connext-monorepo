@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  HubConnector,
-  HubConnectorInterface,
-} from "../../../../../contracts/solidity/messaging/connectors/HubConnector";
+import type { HubConnector, HubConnectorInterface } from "../../../../../contracts//messaging/connectors/HubConnector";
 
 const _abi = [
   {
@@ -445,10 +442,7 @@ export class HubConnector__factory {
   static createInterface(): HubConnectorInterface {
     return new utils.Interface(_abi) as HubConnectorInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): HubConnector {
+  static connect(address: string, signerOrProvider: Signer | Provider): HubConnector {
     return new Contract(address, _abi, signerOrProvider) as HubConnector;
   }
 }

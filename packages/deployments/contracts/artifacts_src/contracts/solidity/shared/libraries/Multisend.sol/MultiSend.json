@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "MultiSend",
-  "sourceName": "contracts/solidity/shared/libraries/Multisend.sol",
+  "sourceName": "contracts//shared/libraries/Multisend.sol",
   "abi": [
     {
       "inputs": [],

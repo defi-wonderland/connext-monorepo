@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   FxBaseRootTunnel,
   FxBaseRootTunnelInterface,
-} from "../../../../../../../../contracts/solidity/messaging/connectors/polygon/tunnel/FxBaseRootTunnel.sol/FxBaseRootTunnel";
+} from "../../../../../../../../contracts//messaging/connectors/polygon/tunnel/FxBaseRootTunnel.sol/FxBaseRootTunnel";
 
 const _abi = [
   {
@@ -101,10 +101,7 @@ export class FxBaseRootTunnel__factory {
   static createInterface(): FxBaseRootTunnelInterface {
     return new utils.Interface(_abi) as FxBaseRootTunnelInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): FxBaseRootTunnel {
+  static connect(address: string, signerOrProvider: Signer | Provider): FxBaseRootTunnel {
     return new Contract(address, _abi, signerOrProvider) as FxBaseRootTunnel;
   }
 }

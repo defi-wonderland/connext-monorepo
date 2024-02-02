@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IOptimismHubConnector",
-  "sourceName": "contracts/solidity/chimera/helpers/RelayerProxyHub.sol",
+  "sourceName": "contracts//chimera/helpers/RelayerProxyHub.sol",
   "abi": [
     {
       "inputs": [

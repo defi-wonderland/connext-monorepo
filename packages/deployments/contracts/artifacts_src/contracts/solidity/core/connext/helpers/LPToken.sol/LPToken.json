@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "LPToken",
-  "sourceName": "contracts/solidity/core/connext/helpers/LPToken.sol",
+  "sourceName": "contracts//core/connext/helpers/LPToken.sol",
   "abi": [
     {
       "anonymous": false,

@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  IRootManager,
-  IRootManagerInterface,
-} from "../../../../../contracts/solidity/messaging/interfaces/IRootManager";
+import type { IRootManager, IRootManagerInterface } from "../../../../../contracts//messaging/interfaces/IRootManager";
 
 const _abi = [
   {
@@ -58,10 +55,7 @@ export class IRootManager__factory {
   static createInterface(): IRootManagerInterface {
     return new utils.Interface(_abi) as IRootManagerInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IRootManager {
+  static connect(address: string, signerOrProvider: Signer | Provider): IRootManager {
     return new Contract(address, _abi, signerOrProvider) as IRootManager;
   }
 }

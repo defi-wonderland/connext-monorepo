@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ProposedOwnable",
-  "sourceName": "contracts/solidity/shared/ProposedOwnable.sol",
+  "sourceName": "contracts//shared/ProposedOwnable.sol",
   "abi": [
     {
       "inputs": [],

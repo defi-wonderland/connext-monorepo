@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   OwnerPausableUpgradeable,
   OwnerPausableUpgradeableInterface,
-} from "../../../../../../contracts/solidity/core/connext/helpers/OwnerPausableUpgradeable";
+} from "../../../../../../contracts//core/connext/helpers/OwnerPausableUpgradeable";
 
 const _abi = [
   {
@@ -135,14 +135,7 @@ export class OwnerPausableUpgradeable__factory {
   static createInterface(): OwnerPausableUpgradeableInterface {
     return new utils.Interface(_abi) as OwnerPausableUpgradeableInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): OwnerPausableUpgradeable {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as OwnerPausableUpgradeable;
+  static connect(address: string, signerOrProvider: Signer | Provider): OwnerPausableUpgradeable {
+    return new Contract(address, _abi, signerOrProvider) as OwnerPausableUpgradeable;
   }
 }

@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "DiamondInit",
-  "sourceName": "contracts/solidity/core/connext/facets/upgrade-initializers/DiamondInit.sol",
+  "sourceName": "contracts//core/connext/facets/upgrade-initializers/DiamondInit.sol",
   "abi": [
     {
       "inputs": [],

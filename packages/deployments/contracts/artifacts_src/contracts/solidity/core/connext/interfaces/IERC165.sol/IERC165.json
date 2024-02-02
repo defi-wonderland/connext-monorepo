@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IERC165",
-  "sourceName": "contracts/solidity/core/connext/interfaces/IERC165.sol",
+  "sourceName": "contracts//core/connext/interfaces/IERC165.sol",
   "abi": [
     {
       "inputs": [

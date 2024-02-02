@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  IWrapper,
-  IWrapperInterface,
-} from "../../../../../../contracts/solidity/core/xreceivers/Unwrapper.sol/IWrapper";
+import type { IWrapper, IWrapperInterface } from "../../../../../../contracts//core/xreceivers/Unwrapper.sol/IWrapper";
 
 const _abi = [
   {
@@ -54,10 +51,7 @@ export class IWrapper__factory {
   static createInterface(): IWrapperInterface {
     return new utils.Interface(_abi) as IWrapperInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IWrapper {
+  static connect(address: string, signerOrProvider: Signer | Provider): IWrapper {
     return new Contract(address, _abi, signerOrProvider) as IWrapper;
   }
 }

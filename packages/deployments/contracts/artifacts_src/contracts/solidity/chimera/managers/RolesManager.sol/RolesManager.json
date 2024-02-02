@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "RolesManager",
-  "sourceName": "contracts/solidity/chimera/managers/RolesManager.sol",
+  "sourceName": "contracts//chimera/managers/RolesManager.sol",
   "abi": [
     {
       "inputs": [],

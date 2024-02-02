@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   ProposedOwnableUpgradeable,
   ProposedOwnableUpgradeableInterface,
-} from "../../../../contracts/solidity/shared/ProposedOwnableUpgradeable";
+} from "../../../../contracts//shared/ProposedOwnableUpgradeable";
 
 const _abi = [
   {
@@ -189,14 +189,7 @@ export class ProposedOwnableUpgradeable__factory {
   static createInterface(): ProposedOwnableUpgradeableInterface {
     return new utils.Interface(_abi) as ProposedOwnableUpgradeableInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): ProposedOwnableUpgradeable {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as ProposedOwnableUpgradeable;
+  static connect(address: string, signerOrProvider: Signer | Provider): ProposedOwnableUpgradeable {
+    return new Contract(address, _abi, signerOrProvider) as ProposedOwnableUpgradeable;
   }
 }

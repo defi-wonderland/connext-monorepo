@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ERC20",
-  "sourceName": "contracts/solidity/chimera/helpers/OZERC20.sol",
+  "sourceName": "contracts//chimera/helpers/OZERC20.sol",
   "abi": [
     {
       "inputs": [

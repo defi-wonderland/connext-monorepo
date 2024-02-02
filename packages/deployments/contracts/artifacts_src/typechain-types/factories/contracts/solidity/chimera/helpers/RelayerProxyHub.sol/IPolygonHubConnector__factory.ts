@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IPolygonHubConnector,
   IPolygonHubConnectorInterface,
-} from "../../../../../../contracts/solidity/chimera/helpers/RelayerProxyHub.sol/IPolygonHubConnector";
+} from "../../../../../../contracts//chimera/helpers/RelayerProxyHub.sol/IPolygonHubConnector";
 
 const _abi = [
   {
@@ -30,14 +30,7 @@ export class IPolygonHubConnector__factory {
   static createInterface(): IPolygonHubConnectorInterface {
     return new utils.Interface(_abi) as IPolygonHubConnectorInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IPolygonHubConnector {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as IPolygonHubConnector;
+  static connect(address: string, signerOrProvider: Signer | Provider): IPolygonHubConnector {
+    return new Contract(address, _abi, signerOrProvider) as IPolygonHubConnector;
   }
 }

@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "GnosisHubConnector",
-  "sourceName": "contracts/solidity/messaging/connectors/gnosis/GnosisHubConnector.sol",
+  "sourceName": "contracts//messaging/connectors/gnosis/GnosisHubConnector.sol",
   "abi": [
     {
       "inputs": [

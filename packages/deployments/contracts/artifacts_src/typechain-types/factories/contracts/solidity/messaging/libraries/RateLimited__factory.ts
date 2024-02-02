@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  RateLimited,
-  RateLimitedInterface,
-} from "../../../../../contracts/solidity/messaging/libraries/RateLimited";
+import type { RateLimited, RateLimitedInterface } from "../../../../../contracts//messaging/libraries/RateLimited";
 
 const _abi = [
   {
@@ -67,10 +64,7 @@ export class RateLimited__factory {
   static createInterface(): RateLimitedInterface {
     return new utils.Interface(_abi) as RateLimitedInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): RateLimited {
+  static connect(address: string, signerOrProvider: Signer | Provider): RateLimited {
     return new Contract(address, _abi, signerOrProvider) as RateLimited;
   }
 }

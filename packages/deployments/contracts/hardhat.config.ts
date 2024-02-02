@@ -97,9 +97,9 @@ const config: HardhatUserConfig = {
     settings: {},
   },
   paths: {
-    artifacts: "./artifacts_build",
+    artifacts: "./artifacts",
     sources: "./contracts",
-    tests: "./test/old",
+    tests: "./test/typescript",
   },
   defaultNetwork: "hardhat",
   namedAccounts: {

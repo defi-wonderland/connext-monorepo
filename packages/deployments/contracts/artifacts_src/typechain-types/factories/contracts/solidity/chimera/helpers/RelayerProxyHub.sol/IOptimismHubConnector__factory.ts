@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IOptimismHubConnector,
   IOptimismHubConnectorInterface,
-} from "../../../../../../contracts/solidity/chimera/helpers/RelayerProxyHub.sol/IOptimismHubConnector";
+} from "../../../../../../contracts//chimera/helpers/RelayerProxyHub.sol/IOptimismHubConnector";
 
 const _abi = [
   {
@@ -99,14 +99,7 @@ export class IOptimismHubConnector__factory {
   static createInterface(): IOptimismHubConnectorInterface {
     return new utils.Interface(_abi) as IOptimismHubConnectorInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IOptimismHubConnector {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as IOptimismHubConnector;
+  static connect(address: string, signerOrProvider: Signer | Provider): IOptimismHubConnector {
+    return new Contract(address, _abi, signerOrProvider) as IOptimismHubConnector;
   }
 }

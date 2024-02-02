@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IStableSwap,
   IStableSwapInterface,
-} from "../../../../../../contracts/solidity/core/connext/interfaces/IStableSwap";
+} from "../../../../../../contracts//core/connext/interfaces/IStableSwap";
 
 const _abi = [
   {
@@ -831,10 +831,7 @@ export class IStableSwap__factory {
   static createInterface(): IStableSwapInterface {
     return new utils.Interface(_abi) as IStableSwapInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IStableSwap {
+  static connect(address: string, signerOrProvider: Signer | Provider): IStableSwap {
     return new Contract(address, _abi, signerOrProvider) as IStableSwap;
   }
 }

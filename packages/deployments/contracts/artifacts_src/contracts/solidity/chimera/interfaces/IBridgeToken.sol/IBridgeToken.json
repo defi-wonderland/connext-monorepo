@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IBridgeToken",
-  "sourceName": "contracts/solidity/chimera/interfaces/IBridgeToken.sol",
+  "sourceName": "contracts//chimera/interfaces/IBridgeToken.sol",
   "abi": [
     {
       "anonymous": false,

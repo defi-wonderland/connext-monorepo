@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "WatcherClient",
-  "sourceName": "contracts/solidity/messaging/WatcherClient.sol",
+  "sourceName": "contracts//messaging/WatcherClient.sol",
   "abi": [
     {
       "inputs": [

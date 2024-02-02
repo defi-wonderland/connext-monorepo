@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IPriceOracle",
-  "sourceName": "contracts/solidity/core/connext/interfaces/IPriceOracle.sol",
+  "sourceName": "contracts//core/connext/interfaces/IPriceOracle.sol",
   "abi": [
     {
       "inputs": [

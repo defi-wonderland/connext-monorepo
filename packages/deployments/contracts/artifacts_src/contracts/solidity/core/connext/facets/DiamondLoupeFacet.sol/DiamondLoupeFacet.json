@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "DiamondLoupeFacet",
-  "sourceName": "contracts/solidity/core/connext/facets/DiamondLoupeFacet.sol",
+  "sourceName": "contracts//core/connext/facets/DiamondLoupeFacet.sol",
   "abi": [
     {
       "inputs": [

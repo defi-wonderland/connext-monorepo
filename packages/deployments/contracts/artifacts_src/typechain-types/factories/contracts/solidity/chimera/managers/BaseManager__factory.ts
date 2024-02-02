@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  BaseManager,
-  BaseManagerInterface,
-} from "../../../../../contracts/solidity/chimera/managers/BaseManager";
+import type { BaseManager, BaseManagerInterface } from "../../../../../contracts//chimera/managers/BaseManager";
 
 const _abi = [
   {
@@ -86,10 +83,7 @@ export class BaseManager__factory {
   static createInterface(): BaseManagerInterface {
     return new utils.Interface(_abi) as BaseManagerInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): BaseManager {
+  static connect(address: string, signerOrProvider: Signer | Provider): BaseManager {
     return new Contract(address, _abi, signerOrProvider) as BaseManager;
   }
 }

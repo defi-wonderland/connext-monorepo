@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ERC20",
-  "sourceName": "contracts/solidity/core/connext/helpers/OZERC20.sol",
+  "sourceName": "contracts//core/connext/helpers/OZERC20.sol",
   "abi": [
     {
       "inputs": [

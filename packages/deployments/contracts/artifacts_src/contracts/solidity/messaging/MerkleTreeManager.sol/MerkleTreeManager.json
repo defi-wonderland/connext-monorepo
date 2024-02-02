@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "MerkleTreeManager",
-  "sourceName": "contracts/solidity/messaging/MerkleTreeManager.sol",
+  "sourceName": "contracts//messaging/MerkleTreeManager.sol",
   "abi": [
     {
       "inputs": [],

@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IOptimismPortal",
-  "sourceName": "contracts/solidity/messaging/interfaces/ambs/optimism/IOptimismPortal.sol",
+  "sourceName": "contracts//messaging/interfaces/ambs/optimism/IOptimismPortal.sol",
   "abi": [
     {
       "inputs": [

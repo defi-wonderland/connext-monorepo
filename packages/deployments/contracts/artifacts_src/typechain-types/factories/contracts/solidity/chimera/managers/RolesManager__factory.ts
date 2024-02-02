@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  RolesManager,
-  RolesManagerInterface,
-} from "../../../../../contracts/solidity/chimera/managers/RolesManager";
+import type { RolesManager, RolesManagerInterface } from "../../../../../contracts//chimera/managers/RolesManager";
 
 const _abi = [
   {
@@ -502,10 +499,7 @@ export class RolesManager__factory {
   static createInterface(): RolesManagerInterface {
     return new utils.Interface(_abi) as RolesManagerInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): RolesManager {
+  static connect(address: string, signerOrProvider: Signer | Provider): RolesManager {
     return new Contract(address, _abi, signerOrProvider) as RolesManager;
   }
 }

@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IConnectorManager,
   IConnectorManagerInterface,
-} from "../../../../../contracts/solidity/messaging/interfaces/IConnectorManager";
+} from "../../../../../contracts//messaging/interfaces/IConnectorManager";
 
 const _abi = [
   {
@@ -62,10 +62,7 @@ export class IConnectorManager__factory {
   static createInterface(): IConnectorManagerInterface {
     return new utils.Interface(_abi) as IConnectorManagerInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IConnectorManager {
+  static connect(address: string, signerOrProvider: Signer | Provider): IConnectorManager {
     return new Contract(address, _abi, signerOrProvider) as IConnectorManager;
   }
 }

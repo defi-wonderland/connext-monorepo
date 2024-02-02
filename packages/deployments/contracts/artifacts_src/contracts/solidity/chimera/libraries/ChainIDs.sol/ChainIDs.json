@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "ChainIDs",
-  "sourceName": "contracts/solidity/chimera/libraries/ChainIDs.sol",
+  "sourceName": "contracts//chimera/libraries/ChainIDs.sol",
   "abi": [
     {
       "inputs": [],

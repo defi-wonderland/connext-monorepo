@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "OptimismSpokeConnector",
-  "sourceName": "contracts/solidity/messaging/connectors/optimism/OptimismSpokeConnector.sol",
+  "sourceName": "contracts//messaging/connectors/optimism/OptimismSpokeConnector.sol",
   "abi": [
     {
       "inputs": [

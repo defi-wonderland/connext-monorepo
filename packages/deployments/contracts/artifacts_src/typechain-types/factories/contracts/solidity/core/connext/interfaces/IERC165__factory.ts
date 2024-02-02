@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  IERC165,
-  IERC165Interface,
-} from "../../../../../../contracts/solidity/core/connext/interfaces/IERC165";
+import type { IERC165, IERC165Interface } from "../../../../../../contracts//core/connext/interfaces/IERC165";
 
 const _abi = [
   {
@@ -36,10 +33,7 @@ export class IERC165__factory {
   static createInterface(): IERC165Interface {
     return new utils.Interface(_abi) as IERC165Interface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IERC165 {
+  static connect(address: string, signerOrProvider: Signer | Provider): IERC165 {
     return new Contract(address, _abi, signerOrProvider) as IERC165;
   }
 }

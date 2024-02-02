@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "CreditsManager",
-  "sourceName": "contracts/solidity/chimera/managers/CreditsManager.sol",
+  "sourceName": "contracts//chimera/managers/CreditsManager.sol",
   "abi": [
     {
       "inputs": [],

@@ -7,7 +7,7 @@ import type { PromiseOrValue } from "../../../../../common";
 import type {
   CreditsManager,
   CreditsManagerInterface,
-} from "../../../../../contracts/solidity/chimera/managers/CreditsManager";
+} from "../../../../../contracts//chimera/managers/CreditsManager";
 
 const _abi = [
   {
@@ -206,13 +206,10 @@ const _abi = [
 const _bytecode =
   "0x6080604052348015600f57600080fd5b50607880601d6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80636a42b8f814602d575b600080fd5b60015460405190815260200160405180910390f3fea2646970667358221220e78c0f35eb25694d41c610b37d192f87c4a176f878627acee700d466b1c6828c64736f6c63430008110033";
 
-type CreditsManagerConstructorParams =
-  | [signer?: Signer]
-  | ConstructorParameters<typeof ContractFactory>;
+type CreditsManagerConstructorParams = [signer?: Signer] | ConstructorParameters<typeof ContractFactory>;
 
-const isSuperArgs = (
-  xs: CreditsManagerConstructorParams
-): xs is ConstructorParameters<typeof ContractFactory> => xs.length > 1;
+const isSuperArgs = (xs: CreditsManagerConstructorParams): xs is ConstructorParameters<typeof ContractFactory> =>
+  xs.length > 1;
 
 export class CreditsManager__factory extends ContractFactory {
   constructor(...args: CreditsManagerConstructorParams) {
@@ -223,14 +220,10 @@ export class CreditsManager__factory extends ContractFactory {
     }
   }
 
-  override deploy(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<CreditsManager> {
+  override deploy(overrides?: Overrides & { from?: PromiseOrValue<string> }): Promise<CreditsManager> {
     return super.deploy(overrides || {}) as Promise<CreditsManager>;
   }
-  override getDeployTransaction(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): TransactionRequest {
+  override getDeployTransaction(overrides?: Overrides & { from?: PromiseOrValue<string> }): TransactionRequest {
     return super.getDeployTransaction(overrides || {});
   }
   override attach(address: string): CreditsManager {
@@ -245,10 +238,7 @@ export class CreditsManager__factory extends ContractFactory {
   static createInterface(): CreditsManagerInterface {
     return new utils.Interface(_abi) as CreditsManagerInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): CreditsManager {
+  static connect(address: string, signerOrProvider: Signer | Provider): CreditsManager {
     return new Contract(address, _abi, signerOrProvider) as CreditsManager;
   }
 }

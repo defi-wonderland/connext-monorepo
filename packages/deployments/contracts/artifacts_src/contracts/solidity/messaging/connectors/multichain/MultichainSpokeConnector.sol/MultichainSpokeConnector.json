@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "MultichainSpokeConnector",
-  "sourceName": "contracts/solidity/messaging/connectors/multichain/MultichainSpokeConnector.sol",
+  "sourceName": "contracts//messaging/connectors/multichain/MultichainSpokeConnector.sol",
   "abi": [
     {
       "inputs": [

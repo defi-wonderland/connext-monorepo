@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   BaseOptimism,
   BaseOptimismInterface,
-} from "../../../../../../contracts/solidity/messaging/connectors/optimism/BaseOptimism";
+} from "../../../../../../contracts//messaging/connectors/optimism/BaseOptimism";
 
 const _abi = [
   {
@@ -221,10 +221,7 @@ export class BaseOptimism__factory {
   static createInterface(): BaseOptimismInterface {
     return new utils.Interface(_abi) as BaseOptimismInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): BaseOptimism {
+  static connect(address: string, signerOrProvider: Signer | Provider): BaseOptimism {
     return new Contract(address, _abi, signerOrProvider) as BaseOptimism;
   }
 }

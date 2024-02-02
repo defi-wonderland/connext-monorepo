@@ -4,10 +4,7 @@
 
 import { Contract, Signer, utils } from "ethers";
 import type { Provider } from "@ethersproject/providers";
-import type {
-  LineaAmb,
-  LineaAmbInterface,
-} from "../../../../../../contracts/solidity/messaging/interfaces/ambs/LineaAmb";
+import type { LineaAmb, LineaAmbInterface } from "../../../../../../contracts//messaging/interfaces/ambs/LineaAmb";
 
 const _abi = [
   {
@@ -195,10 +192,7 @@ export class LineaAmb__factory {
   static createInterface(): LineaAmbInterface {
     return new utils.Interface(_abi) as LineaAmbInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): LineaAmb {
+  static connect(address: string, signerOrProvider: Signer | Provider): LineaAmb {
     return new Contract(address, _abi, signerOrProvider) as LineaAmb;
   }
 }

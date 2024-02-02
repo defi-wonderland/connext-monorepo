@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "InboxFacet",
-  "sourceName": "contracts/solidity/core/connext/facets/InboxFacet.sol",
+  "sourceName": "contracts//core/connext/facets/InboxFacet.sol",
   "abi": [
     {
       "inputs": [],

@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IFxMessageProcessor,
   IFxMessageProcessorInterface,
-} from "../../../../../../../../contracts/solidity/messaging/connectors/polygon/tunnel/FxBaseChildTunnel.sol/IFxMessageProcessor";
+} from "../../../../../../../../contracts//messaging/connectors/polygon/tunnel/FxBaseChildTunnel.sol/IFxMessageProcessor";
 
 const _abi = [
   {
@@ -40,10 +40,7 @@ export class IFxMessageProcessor__factory {
   static createInterface(): IFxMessageProcessorInterface {
     return new utils.Interface(_abi) as IFxMessageProcessorInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IFxMessageProcessor {
+  static connect(address: string, signerOrProvider: Signer | Provider): IFxMessageProcessor {
     return new Contract(address, _abi, signerOrProvider) as IFxMessageProcessor;
   }
 }

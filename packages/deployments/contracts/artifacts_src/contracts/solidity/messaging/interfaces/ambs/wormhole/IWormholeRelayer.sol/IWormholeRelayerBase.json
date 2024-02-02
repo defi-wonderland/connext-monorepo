@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IWormholeRelayerBase",
-  "sourceName": "contracts/solidity/messaging/interfaces/ambs/wormhole/IWormholeRelayer.sol",
+  "sourceName": "contracts//messaging/interfaces/ambs/wormhole/IWormholeRelayer.sol",
   "abi": [
     {
       "anonymous": false,

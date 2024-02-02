@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "RoutersManager",
-  "sourceName": "contracts/solidity/chimera/managers/RoutersManager.sol",
+  "sourceName": "contracts//chimera/managers/RoutersManager.sol",
   "abi": [
     {
       "inputs": [],

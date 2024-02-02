@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IHubConnector",
-  "sourceName": "contracts/solidity/messaging/interfaces/IHubConnector.sol",
+  "sourceName": "contracts//messaging/interfaces/IHubConnector.sol",
   "abi": [
     {
       "anonymous": false,

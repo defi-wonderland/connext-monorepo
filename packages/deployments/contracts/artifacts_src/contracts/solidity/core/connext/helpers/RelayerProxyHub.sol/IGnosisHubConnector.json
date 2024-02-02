@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "IGnosisHubConnector",
-  "sourceName": "contracts/solidity/core/connext/helpers/RelayerProxyHub.sol",
+  "sourceName": "contracts//core/connext/helpers/RelayerProxyHub.sol",
   "abi": [
     {
       "inputs": [

@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   DomainIndexer,
   DomainIndexerInterface,
-} from "../../../../../contracts/solidity/messaging/libraries/DomainIndexer";
+} from "../../../../../contracts//messaging/libraries/DomainIndexer";
 
 const _abi = [
   {
@@ -214,10 +214,7 @@ export class DomainIndexer__factory {
   static createInterface(): DomainIndexerInterface {
     return new utils.Interface(_abi) as DomainIndexerInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): DomainIndexer {
+  static connect(address: string, signerOrProvider: Signer | Provider): DomainIndexer {
     return new Contract(address, _abi, signerOrProvider) as DomainIndexer;
   }
 }

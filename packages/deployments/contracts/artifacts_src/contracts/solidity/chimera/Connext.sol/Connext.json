@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "Connext",
-  "sourceName": "contracts/solidity/chimera/Connext.sol",
+  "sourceName": "contracts//chimera/Connext.sol",
   "abi": [
     {
       "inputs": [],

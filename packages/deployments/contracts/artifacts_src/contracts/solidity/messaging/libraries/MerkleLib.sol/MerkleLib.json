@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "MerkleLib",
-  "sourceName": "contracts/solidity/messaging/libraries/MerkleLib.sol",
+  "sourceName": "contracts//messaging/libraries/MerkleLib.sol",
   "abi": [
     {
       "inputs": [],

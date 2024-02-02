@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   SpokeConnector,
   SpokeConnectorInterface,
-} from "../../../../../contracts/solidity/messaging/connectors/SpokeConnector";
+} from "../../../../../contracts//messaging/connectors/SpokeConnector";
 
 const _abi = [
   {
@@ -1603,10 +1603,7 @@ export class SpokeConnector__factory {
   static createInterface(): SpokeConnectorInterface {
     return new utils.Interface(_abi) as SpokeConnectorInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): SpokeConnector {
+  static connect(address: string, signerOrProvider: Signer | Provider): SpokeConnector {
     return new Contract(address, _abi, signerOrProvider) as SpokeConnector;
   }
 }

@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IBridgeToken,
   IBridgeTokenInterface,
-} from "../../../../../../contracts/solidity/core/connext/interfaces/IBridgeToken";
+} from "../../../../../../contracts//core/connext/interfaces/IBridgeToken";
 
 const _abi = [
   {
@@ -293,10 +293,7 @@ export class IBridgeToken__factory {
   static createInterface(): IBridgeTokenInterface {
     return new utils.Interface(_abi) as IBridgeTokenInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IBridgeToken {
+  static connect(address: string, signerOrProvider: Signer | Provider): IBridgeToken {
     return new Contract(address, _abi, signerOrProvider) as IBridgeToken;
   }
 }

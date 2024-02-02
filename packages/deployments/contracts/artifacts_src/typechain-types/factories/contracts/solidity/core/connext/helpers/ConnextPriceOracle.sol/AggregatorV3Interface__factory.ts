@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   AggregatorV3Interface,
   AggregatorV3InterfaceInterface,
-} from "../../../../../../../contracts/solidity/core/connext/helpers/ConnextPriceOracle.sol/AggregatorV3Interface";
+} from "../../../../../../../contracts//core/connext/helpers/ConnextPriceOracle.sol/AggregatorV3Interface";
 
 const _abi = [
   {
@@ -89,14 +89,7 @@ export class AggregatorV3Interface__factory {
   static createInterface(): AggregatorV3InterfaceInterface {
     return new utils.Interface(_abi) as AggregatorV3InterfaceInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): AggregatorV3Interface {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as AggregatorV3Interface;
+  static connect(address: string, signerOrProvider: Signer | Provider): AggregatorV3Interface {
+    return new Contract(address, _abi, signerOrProvider) as AggregatorV3Interface;
   }
 }

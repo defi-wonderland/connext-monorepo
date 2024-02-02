@@ -12,7 +12,7 @@ import {DiamondDeployer} from "./DiamondDeployer.sol";
 
 import {DeployConfig} from "./DeployConfig.s.sol";
 
-import {TestERC20} from "@contracts/test/TestERC20.sol";
+import {TestERC20} from "@contracts/test/solidity/TestERC20.sol";
 import {WatcherManager} from "@contracts/messaging/WatcherManager.sol";
 import {MerkleTreeManager} from "@contracts/messaging/MerkleTreeManager.sol";
 import {RootManager} from "@contracts/messaging/RootManager.sol";

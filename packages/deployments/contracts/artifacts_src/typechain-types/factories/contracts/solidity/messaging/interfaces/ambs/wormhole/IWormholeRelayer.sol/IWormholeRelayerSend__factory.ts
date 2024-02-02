@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IWormholeRelayerSend,
   IWormholeRelayerSendInterface,
-} from "../../../../../../../../contracts/solidity/messaging/interfaces/ambs/wormhole/IWormholeRelayer.sol/IWormholeRelayerSend";
+} from "../../../../../../../../contracts//messaging/interfaces/ambs/wormhole/IWormholeRelayer.sol/IWormholeRelayerSend";
 
 const _abi = [
   {
@@ -967,14 +967,7 @@ export class IWormholeRelayerSend__factory {
   static createInterface(): IWormholeRelayerSendInterface {
     return new utils.Interface(_abi) as IWormholeRelayerSendInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IWormholeRelayerSend {
-    return new Contract(
-      address,
-      _abi,
-      signerOrProvider
-    ) as IWormholeRelayerSend;
+  static connect(address: string, signerOrProvider: Signer | Provider): IWormholeRelayerSend {
+    return new Contract(address, _abi, signerOrProvider) as IWormholeRelayerSend;
   }
 }

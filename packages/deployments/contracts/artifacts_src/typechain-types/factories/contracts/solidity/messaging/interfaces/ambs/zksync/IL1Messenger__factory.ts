@@ -7,7 +7,7 @@ import type { Provider } from "@ethersproject/providers";
 import type {
   IL1Messenger,
   IL1MessengerInterface,
-} from "../../../../../../../contracts/solidity/messaging/interfaces/ambs/zksync/IL1Messenger";
+} from "../../../../../../../contracts//messaging/interfaces/ambs/zksync/IL1Messenger";
 
 const _abi = [
   {
@@ -61,10 +61,7 @@ export class IL1Messenger__factory {
   static createInterface(): IL1MessengerInterface {
     return new utils.Interface(_abi) as IL1MessengerInterface;
   }
-  static connect(
-    address: string,
-    signerOrProvider: Signer | Provider
-  ): IL1Messenger {
+  static connect(address: string, signerOrProvider: Signer | Provider): IL1Messenger {
     return new Contract(address, _abi, signerOrProvider) as IL1Messenger;
   }
 }

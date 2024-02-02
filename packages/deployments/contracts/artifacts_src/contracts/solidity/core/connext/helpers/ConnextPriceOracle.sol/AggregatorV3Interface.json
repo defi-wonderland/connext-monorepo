@@ -1,7 +1,7 @@
 {
   "_format": "hh-sol-artifact-1",
   "contractName": "AggregatorV3Interface",
-  "sourceName": "contracts/solidity/core/connext/helpers/ConnextPriceOracle.sol",
+  "sourceName": "contracts//core/connext/helpers/ConnextPriceOracle.sol",
   "abi": [
     {
       "inputs": [],
