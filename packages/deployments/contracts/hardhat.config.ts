@@ -195,10 +195,10 @@ const config: HardhatUserConfig = {
     privateVerification: false, // if true, contracts will be verified privately, if false, contracts will be verified publicly
   },
   typechain: {
-    outDir: "./artifacts/typechain-types",
+    outDir: "./artifacts_src/typechain-types",
   },
   abiExporter: {
-    path: "./artifacts/abi",
+    path: "./artifacts_src/abi",
     runOnCompile: true,
     clear: true,
     spacing: 2,

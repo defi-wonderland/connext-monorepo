@@ -19,8 +19,8 @@
     "./deployments.json",
     "./devnet.deployments.json",
     "./local.deployments.json",
-    "./artifacts/typechain-types",
-    "./artifacts/abi/**/*.json"
+    "./artifacts_src/typechain-types",
+    "./artifacts_src/abi/**/*.json"
   ],
   "exclude": [
     "contracts/solidity/test/core/**/*.t.sol", 

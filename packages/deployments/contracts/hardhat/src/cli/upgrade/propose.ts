@@ -12,7 +12,7 @@ import { getProposedFacetCuts } from "../../../deployHelpers/getProposedFacetCut
 import { Env, getDeploymentName } from "../../utils";
 import { hardhatNetworks, SUPPORTED_CHAINS } from "../../config";
 import { delay } from "../../domain";
-import { DiamondCutFacet__factory } from "../../../../artifacts/typechain-types";
+import { DiamondCutFacet__factory } from "../../../../artifacts_src/typechain-types";
 
 import { FORK_BLOCKS, getDeployments } from "./helpers";
 
