@@ -22,7 +22,7 @@ import {TokenId} from './libraries/TokenId.sol';
 
 import {IXReceiver} from './interfaces/IXReceiver.sol';
 
-import {IConnext} from './interfaces/IConnext.sol';
+import {IConnextCore } from './interfaces/IConnextCore.sol';
 import {AssetsManager} from './managers/AssetsManager.sol';
 import {ProtocolManager} from './managers/ProtocolManager.sol';
 import {RolesManager} from './managers/RolesManager.sol';
@@ -30,7 +30,7 @@ import {RoutersManager} from './managers/RoutersManager.sol';
 import {CreditsManager} from './managers/CreditsManager.sol';
 
 // Core contract
-contract Connext is IConnext, ProtocolManager, RolesManager, AssetsManager, RoutersManager, CreditsManager {
+contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManager, RoutersManager, CreditsManager {
   // ============ Libraries ============
 
   using TypedMemView for bytes;

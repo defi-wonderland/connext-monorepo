@@ -5,7 +5,7 @@ import {IERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
 import {ExecuteArgs, TokenId, DestinationTransferStatus, TransferInfo} from '../libraries/LibConnextStorage.sol';
 
-interface IConnext {
+interface IConnextCore {
   // // TokenFacet
   // function canonicalToAdopted(bytes32 _key) external view returns (address);
 

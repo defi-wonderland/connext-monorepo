@@ -8,7 +8,7 @@ import {ReentrancyGuard} from '@openzeppelin/contracts/security/ReentrancyGuard.
 import {GelatoRelayFeeCollector} from '@gelatonetwork/relay-context/contracts/GelatoRelayFeeCollector.sol';
 
 import {ProposedOwnable} from '../../shared/ProposedOwnable.sol';
-import {IConnext, ExecuteArgs} from '../interfaces/IConnext.sol';
+import {IConnextCore, ExecuteArgs} from '../interfaces/IConnextCore.sol';
 
 interface ISpokeConnector {
   struct Proof {
@@ -54,7 +54,7 @@ contract RelayerProxy is ProposedOwnable, ReentrancyGuard, GelatoRelayFeeCollect
   address public gelatoRelayer;
   address public feeCollector;
   IKeep3rV2 public keep3r;
-  IConnext public connext;
+  IConnextCore public connext;
   ISpokeConnector public spokeConnector;
   uint32 public domain;
 
@@ -509,7 +509,7 @@ contract RelayerProxy is ProposedOwnable, ReentrancyGuard, GelatoRelayFeeCollect
 
   function _setConnext(address _connext) internal {
     emit ConnextChanged(_connext, address(connext));
-    connext = IConnext(_connext);
+    connext = IConnextCore(_connext);
   }
 
   function _setSpokeConnector(address _spokeConnector) internal {
