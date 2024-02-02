@@ -19,13 +19,13 @@
     "./deployments.json",
     "./devnet.deployments.json",
     "./local.deployments.json",
-    "./artifacts_src/typechain-types",
-    "./artifacts_src/abi/**/*.json"
+    "./artifacts/typechain-types",
+    "./artifacts/abi/**/*.json"
   ],
   "exclude": [
-    "contracts/solidity/test/core/**/*.t.sol", 
-    "contracts/solidity/test/fork/**/*.t.sol", 
-    "contracts/solidity/integration/core/**/*.t.sol", 
+    "contracts/solidity/test/core/**/*.t.sol",
+    "contracts/solidity/test/fork/**/*.t.sol",
+    "contracts/solidity/integration/core/**/*.t.sol",
     "contracts/solidity/test/unit/**/*.t.sol",
     "contracts/solidity/test/shared/**/*.t.sol",
     "contracts/solidity/test/messaging/**/*.t.sol",

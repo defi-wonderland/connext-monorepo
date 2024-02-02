@@ -21,7 +21,7 @@ import {
   SwapUtils,
   AmplificationUtils,
   TestStableSwap,
-} from "../../../artifacts_src/typechain-types";
+} from "../../../artifacts/typechain-types";
 import chai from "chai";
 
 chai.use(solidity);

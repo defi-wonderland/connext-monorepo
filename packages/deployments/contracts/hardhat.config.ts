@@ -97,7 +97,7 @@ const config: HardhatUserConfig = {
     settings: {},
   },
   paths: {
-    artifacts: "./artifacts",
+    artifacts: "./artifacts_build",
     sources: "./contracts",
     tests: "./test/typescript",
   },
@@ -195,10 +195,10 @@ const config: HardhatUserConfig = {
     privateVerification: false, // if true, contracts will be verified privately, if false, contracts will be verified publicly
   },
   typechain: {
-    outDir: "./artifacts_src/typechain-types",
+    outDir: "./artifacts_build/typechain-types",
   },
   abiExporter: {
-    path: "./artifacts_src/abi",
+    path: "./artifacts/abi",
     runOnCompile: true,
     clear: true,
     spacing: 2,
