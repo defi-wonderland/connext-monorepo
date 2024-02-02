@@ -12,7 +12,7 @@ import {
   Wallet,
 } from "ethers/lib/ethers";
 
-import { abi as Erc20Abi } from "../artifacts/contracts/test/TestERC20.sol/TestERC20.json";
+import { abi as Erc20Abi } from "../../artifacts/contracts/test/TestERC20.sol/TestERC20.json";
 import {
   ProposedOwnableUpgradeable,
   UpgradeBeaconProxy,
@@ -22,7 +22,7 @@ import {
   BridgeFacet,
   ProposedOwnableFacet,
   IERC20,
-} from "../artifacts/typechain-types";
+} from "../../../artifacts/typechain-types";
 import { Artifact } from "hardhat/types";
 
 export const MAX_FEE_PER_GAS = BigNumber.from("975000000");

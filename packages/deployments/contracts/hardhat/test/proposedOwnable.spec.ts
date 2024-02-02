@@ -5,7 +5,7 @@ use(solidity);
 
 import { constants, Wallet } from "ethers";
 
-import { ProposedOwnableUpgradeable, TestProposedOwnable } from "../artifacts/typechain-types";
+import { ProposedOwnableUpgradeable, TestProposedOwnable } from "../../../artifacts/typechain-types";
 import {
   deployBeaconProxy,
   proposeNewOwnerOnContract,

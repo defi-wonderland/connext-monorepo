@@ -22,7 +22,15 @@
     "./artifacts/typechain-types",
     "./artifacts/abi/**/*.json"
   ],
-  "exclude": ["contracts/solidity/test/**/*.t.sol"],
+  "exclude": [
+    "contracts/solidity/test/core/**/*.t.sol", 
+    "contracts/solidity/test/fork/**/*.t.sol", 
+    "contracts/solidity/integration/core/**/*.t.sol", 
+    "contracts/solidity/test/unit/**/*.t.sol",
+    "contracts/solidity/test/shared/**/*.t.sol",
+    "contracts/solidity/test/messaging/**/*.t.sol",
+    "contracts/solidity/test/utils/**/*.t.sol"
+  ],
   "references": [
     {
       "path": "../../utils/tsconfig.build.json"

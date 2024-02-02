@@ -14,7 +14,14 @@ import {
 import { solidity } from "ethereum-waffle";
 import { ethers, waffle } from "hardhat";
 
-import { TestERC20, LPToken, StableSwap, SwapUtils, AmplificationUtils, TestStableSwap } from "../artifacts/typechain-types";
+import {
+  TestERC20,
+  LPToken,
+  StableSwap,
+  SwapUtils,
+  AmplificationUtils,
+  TestStableSwap,
+} from "../../artifacts/typechain-types";
 import chai from "chai";
 
 chai.use(solidity);
