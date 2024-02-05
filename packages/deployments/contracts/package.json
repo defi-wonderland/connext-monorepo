@@ -45,7 +45,7 @@
     "prepublish": "yarn build",
     "purge": "yarn clean && rimraf ./node_modules ./cache ",
     "size": "hardhat size-contracts",
-    "test": "forge test",
+    "test": "yarn forge test --no-match-path '*/fork/**.sol'",
     "test:chimera": "forge test --match-path 'test/unit/chimera/**.sol' && forge test --match-path 'test/integration/chimera/**.sol'",
     "test:fork": "yarn forge test --match-path '*/fork/**.sol'",
     "test:upgrade": "ts-node ./src/cli/upgrade/main.ts",
