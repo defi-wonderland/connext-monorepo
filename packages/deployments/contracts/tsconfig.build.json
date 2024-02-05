@@ -2,28 +2,35 @@
   "extends": "../../../config/tsconfig.node.json",
   "compilerOptions": {
     "outDir": "dist",
-    "typeRoots": ["./typechain_types", "./node_modules/@types"],
+    "typeRoots": ["./artifacts/typechain_types", "./node_modules/@types"],
     "rootDir": ".",
     "composite": true,
     "tsBuildInfoFile": "./tsconfig.tsBuildInfo"
   },
   "include": [
     "hardhat.config.ts",
-    "./scripts",
-    "./deploy",
-    "./deployHelpers",
-    "./deployConfig",
-    "./typechain_types",
-    "tasks/**/*.ts",
-    "src/**/*.ts",
-    "./artifacts",
+    "./hardhat/scripts",
+    "./hardhat/deploy",
+    "./hardhat/deployHelpers",
+    "./hardhat/deployConfig",
+    "./hardhat/tasks/**/*.ts",
+    "./hardhat/src/**/*.ts",
+    "./hardhat/src/init/*.ts",
     "./deployments.json",
     "./devnet.deployments.json",
     "./local.deployments.json",
-    "./abi/**/*.json",
-    "src/init/*.ts"
+    "./artifacts/typechain-types",
+    "./artifacts/abi/**/*.json"
   ],
-  "exclude": ["test/**/*.ts"],
+  "exclude": [
+    "contracts/solidity/test/core/**/*.t.sol",
+    "contracts/solidity/test/fork/**/*.t.sol",
+    "contracts/solidity/integration/core/**/*.t.sol",
+    "contracts/solidity/test/unit/**/*.t.sol",
+    "contracts/solidity/test/shared/**/*.t.sol",
+    "contracts/solidity/test/messaging/**/*.t.sol",
+    "contracts/solidity/test/utils/**/*.t.sol"
+  ],
   "references": [
     {
       "path": "../../utils/tsconfig.build.json"

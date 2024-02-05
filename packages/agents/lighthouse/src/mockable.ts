@@ -11,7 +11,7 @@ import { LineaSDK as _LineaSDK } from "@consensys/linea-sdk";
 import {
   RollupUserLogic__factory as _RollupUserLogic__factory,
   Outbox__factory as _Outbox__factory,
-} from "@connext/smart-contracts";
+} from "@connext/smart-contracts/dist/hardhat/src";
 import { Contract, ContractInterface, ethers, providers, utils } from "ethers";
 import * as zk from "zksync-web3";
 

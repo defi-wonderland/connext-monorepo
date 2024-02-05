@@ -1,24 +1,24 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.17;
 
-import {DiamondCutFacet} from "../contracts/core/connext/facets/DiamondCutFacet.sol";
-import {DiamondLoupeFacet} from "../contracts/core/connext/facets/DiamondLoupeFacet.sol";
-import {DiamondInit, IConnectorManager} from "../contracts/core/connext/facets/upgrade-initializers/DiamondInit.sol";
-import {TokenFacet} from "../contracts/core/connext/facets/TokenFacet.sol";
-import {BridgeFacet} from "../contracts/core/connext/facets/BridgeFacet.sol";
-import {InboxFacet} from "../contracts/core/connext/facets/InboxFacet.sol";
-import {ProposedOwnableFacet} from "../contracts/core/connext/facets/ProposedOwnableFacet.sol";
-import {RelayerFacet} from "../contracts/core/connext/facets/RelayerFacet.sol";
-import {RoutersFacet} from "../contracts/core/connext/facets/RoutersFacet.sol";
-import {StableSwapFacet} from "../contracts/core/connext/facets/StableSwapFacet.sol";
-import {SwapAdminFacet} from "../contracts/core/connext/facets/SwapAdminFacet.sol";
-import {PortalFacet} from "../contracts/core/connext/facets/PortalFacet.sol";
-import {TransferInfo} from "../contracts/core/connext/libraries/LibConnextStorage.sol";
-import {IDiamondCut} from "../contracts/core/connext/interfaces/IDiamondCut.sol";
+import {DiamondCutFacet} from "@contracts/core/connext/facets/DiamondCutFacet.sol";
+import {DiamondLoupeFacet} from "@contracts/core/connext/facets/DiamondLoupeFacet.sol";
+import {DiamondInit, IConnectorManager} from "@contracts/core/connext/facets/upgrade-initializers/DiamondInit.sol";
+import {TokenFacet} from "@contracts/core/connext/facets/TokenFacet.sol";
+import {BridgeFacet} from "@contracts/core/connext/facets/BridgeFacet.sol";
+import {InboxFacet} from "@contracts/core/connext/facets/InboxFacet.sol";
+import {ProposedOwnableFacet} from "@contracts/core/connext/facets/ProposedOwnableFacet.sol";
+import {RelayerFacet} from "@contracts/core/connext/facets/RelayerFacet.sol";
+import {RoutersFacet} from "@contracts/core/connext/facets/RoutersFacet.sol";
+import {StableSwapFacet} from "@contracts/core/connext/facets/StableSwapFacet.sol";
+import {SwapAdminFacet} from "@contracts/core/connext/facets/SwapAdminFacet.sol";
+import {PortalFacet} from "@contracts/core/connext/facets/PortalFacet.sol";
+import {TransferInfo} from "@contracts/core/connext/libraries/LibConnextStorage.sol";
+import {IDiamondCut} from "@contracts/core/connext/interfaces/IDiamondCut.sol";
 
 import {console2 as console} from "forge-std/console2.sol";
 
-import {Connext} from "../contracts_forge/utils/Connext.sol";
+import {Connext} from "@contracts/test/solidity/utils/Connext.sol";
 import {Deployer} from "./Deployer.sol";
 import {DiamondHelper} from "./DiamondHelper.sol";
 

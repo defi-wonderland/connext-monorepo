@@ -1,5 +1,5 @@
 import { createLoggingContext, Logger } from "@connext/nxtp-utils";
-import { ConnextInterface } from "@connext/smart-contracts";
+import { ConnextInterface } from "@connext/smart-contracts/hardhat/src";
 import { TransactionService } from "@connext/nxtp-txservice";
 
 export const addSequencer = async (

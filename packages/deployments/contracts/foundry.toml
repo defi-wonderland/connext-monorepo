@@ -2,6 +2,7 @@
 src = 'contracts_forge'
 out = 'artifacts_forge'
 script = 'scripts'
+test = 'contracts/test/solidity'
 libs = ["node_modules", "lib"]
 block_timestamp = 1648744712
 solc_version = '0.8.17'
@@ -40,3 +41,12 @@ allow_paths = ["../../node_modules", "./**"]
 97 = "https://data-seed-prebsc-1-s1.binance.org:8545/"
 
 100 = "https://rpc.gnosischain.com/"
+
+[fmt]
+line_length = 120
+tab_width = 2
+bracket_spacing = false
+int_types = 'long'
+quote_style = 'single'
+number_underscore = 'thousands'
+multiline_func_header = 'params_first'

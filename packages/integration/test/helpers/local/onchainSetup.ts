@@ -14,21 +14,21 @@ import { logger } from "./logger";
  * We use these imports to retrieve the deployment addresses dynamically at runtime, so the PARAMETERS config does not need to be hardcoded.
  */
 // Local Mainnet deployment imports: chain-id: 31337
-import Connext_DiamondProxy_Mainnet from "@connext/smart-contracts/deployments/local-mainnet/Connext_DiamondProxy.json";
-import TestERC20_Mainnet from "@connext/smart-contracts/deployments/local-mainnet/TestERC20.json";
-import SpokeConnector_Mainnet from "@connext/smart-contracts/deployments/local-mainnet/MainnetSpokeConnector.json";
-import RootManager_Mainnet from "@connext/smart-contracts/deployments/local-mainnet/RootManager.json";
-import HubConnector_Optimism from "@connext/smart-contracts/deployments/local-mainnet/OptimismHubConnector.json";
-import HubConnector_Arbitrum from "@connext/smart-contracts/deployments/local-mainnet/ArbitrumHubConnector.json";
+import Connext_DiamondProxy_Mainnet from "@connext/smart-contracts/hardhat/deployments/local-mainnet/Connext_DiamondProxy.json";
+import TestERC20_Mainnet from "@connext/smart-contracts/hardhat/deployments/local-mainnet/TestERC20.json";
+import SpokeConnector_Mainnet from "@connext/smart-contracts/hardhat/deployments/local-mainnet/MainnetSpokeConnector.json";
+import RootManager_Mainnet from "@connext/smart-contracts/hardhat/deployments/local-mainnet/RootManager.json";
+import HubConnector_Optimism from "@connext/smart-contracts/hardhat/deployments/local-mainnet/OptimismHubConnector.json";
+import HubConnector_Arbitrum from "@connext/smart-contracts/hardhat/deployments/local-mainnet/ArbitrumHubConnector.json";
 // Local Optimism deployment imports: chain id: 31338
-import Connext_DiamondProxy_Optimism from "@connext/smart-contracts/deployments/local-optimism/Connext_DiamondProxy.json";
-import TestERC20_Optimism from "@connext/smart-contracts/deployments/local-optimism/TestERC20.json";
-import SpokeConnector_Optimism from "@connext/smart-contracts/deployments/local-optimism/OptimismSpokeConnector.json";
+import Connext_DiamondProxy_Optimism from "@connext/smart-contracts/hardhat/deployments/local-optimism/Connext_DiamondProxy.json";
+import TestERC20_Optimism from "@connext/smart-contracts/hardhat/deployments/local-optimism/TestERC20.json";
+import SpokeConnector_Optimism from "@connext/smart-contracts/hardhat/deployments/local-optimism/OptimismSpokeConnector.json";
 // Local Arbitrum deployment imports: chain-id: 31339
-import Connext_DiamondProxy_Arbitrum from "@connext/smart-contracts/deployments/local-arbitrum/Connext_DiamondProxy.json";
-import TestERC20_Arbitrum from "@connext/smart-contracts/deployments/local-arbitrum/TestERC20.json";
-import SpokeConnector_Arbitrum from "@connext/smart-contracts/deployments/local-arbitrum/ArbitrumSpokeConnector.json";
-import { canonizeId } from "@connext/smart-contracts";
+import Connext_DiamondProxy_Arbitrum from "@connext/smart-contracts/hardhat/deployments/local-arbitrum/Connext_DiamondProxy.json";
+import TestERC20_Arbitrum from "@connext/smart-contracts/hardhat/deployments/local-arbitrum/TestERC20.json";
+import SpokeConnector_Arbitrum from "@connext/smart-contracts/hardhat/deployments/local-arbitrum/ArbitrumSpokeConnector.json";
+import { canonizeId } from "@connext/smart-contracts/hardhat/src";
 import { Contract, providers, utils } from "ethers";
 import { addLiquidity } from "./addLiquidity";
 

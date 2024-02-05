@@ -1,0 +1,80 @@
+{
+  "_format": "hh-sol-artifact-1",
+  "contractName": "BaseManager",
+  "sourceName": "contracts//chimera/managers/BaseManager.sol",
+  "abi": [
+    {
+      "inputs": [],
+      "name": "BaseManager__delayElapsed_delayNotElapsed",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "BaseManager__getConfig_notRegistered",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "BaseManager__handleIncomingAsset_feeOnTransferNotSupported",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "BaseManager__handleIncomingAsset_nativeAssetNotSupported",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "BaseManager__handleOutgoingAsset_notNative",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "BaseManager__nonReentrant_reentrantCall",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "BaseManager__nonXCallReentrant_reentrantCall",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "enum Role",
+          "name": "_role",
+          "type": "uint8"
+        }
+      ],
+      "name": "BaseManager__onlyOwnerOrRole_notOwnerOrRole",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "BaseManager__onlyOwner_notOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "BaseManager__whenNotPaused_paused",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "delay",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "linkReferences": {},
+  "deployedLinkReferences": {}
+}
