@@ -22,7 +22,7 @@ import {TokenId} from './libraries/TokenId.sol';
 
 import {IXReceiver} from './interfaces/IXReceiver.sol';
 
-import {IConnextCore } from './interfaces/IConnextCore.sol';
+import {IConnextCore} from './interfaces/IConnextCore.sol';
 import {AssetsManager} from './managers/AssetsManager.sol';
 import {ProtocolManager} from './managers/ProtocolManager.sol';
 import {RolesManager} from './managers/RolesManager.sol';

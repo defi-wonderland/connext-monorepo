@@ -34,10 +34,10 @@
     "hardhat": "hardhat",
     "initialize": "ts-node ./src/cli/init/main.ts",
     "lint": "eslint ./src --ext .ts --env node && yarn lint:sol",
-    "lint-w:check": "yarn lint-w:sol-tests && yarn lint-w:sol-logic && forge fmt './contracts/solidity/chimera' --check",
-    "lint-w:sol-logic": "solhint -c .solhint-w.json './contracts/solidity/chimera/**/*.sol'",
-    "lint-w:sol-tests": "solhint -c .solhint.tests.json 'solidity/test/unit/**/*.sol' 'solidity/test/integration/**/*.sol'",
-    "lint:fix": "sort-package-json && forge fmt './contracts/solidity/chimera' && yarn lint-w:sol-tests --fix && yarn lint-w:sol-logic --fix",
+    "lint-w:check": "yarn lint-w:sol-tests && yarn lint-w:sol-logic && forge fmt './contracts/chimera' --check",
+    "lint-w:sol-logic": "solhint -c .solhint-w.json './contracts/chimera/**/*.sol'",
+    "lint-w:sol-tests": "solhint -c .solhint.tests.json 'contracts/test/solidity/unit/**/*.sol' 'contracts/test/solidity/integration/**/*.sol'",
+    "lint:fix": "sort-package-json && forge fmt './contracts/chimera' && yarn lint-w:sol-tests --fix && yarn lint-w:sol-logic --fix",
     "lint:sol": "solhint --config ./.solhint.json \"contracts/**/*.sol\"",
     "local:init": "ts-node ./src/localnet/localInit.ts",
     "ownership": "ts-node ./src/cli/ownership/main.ts",
@@ -55,7 +55,7 @@
   },
   "lint-staged": {
     "*.{js,css,md,ts,sol}": "forge fmt",
-    "*.sol": "solhint -c .solhint-w.json --fix  './contracts/solidity/chimera/**/*.sol' && solhint --fix -c .solhint.tests.json 'solidity/test/unit/**/*.sol'",
+    "*.sol": "solhint -c .solhint-w.json --fix  './contracts/chimera/**/*.sol' && solhint --fix -c .solhint.tests.json 'solidity/test/unit/**/*.sol'",
     "package.json": "sort-package-json"
   },
   "dependencies": {
