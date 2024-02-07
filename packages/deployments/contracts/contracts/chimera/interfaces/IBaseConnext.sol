@@ -4,12 +4,14 @@ pragma solidity 0.8.17;
 interface IBaseConnext {
   // ============= Enums =============
 
-  /// @notice Enum representing address role
-  // Returns uint
-  // None     - 0
-  // Router   - 1
-  // Watcher  - 2
-  // Admin    - 3
+  /**
+   * @notice Enum representing address role
+   * @param None        - 0
+   * @param RouterAdmin - 1
+   * @param Watcher     - 2
+   * @param Admin       - 3
+   * @return uint8 - Index of value in enum
+   */
   enum Role {
     None,
     RouterAdmin,
@@ -19,34 +21,45 @@ interface IBaseConnext {
 
   /**
    * @notice Enum representing status of destination transfer
-   * @dev Status is only assigned on the destination domain, will always be "none" for the
+   * @dev Status is only assigned on the destination domain, will always be `None` for the
    * origin domains
-   * @return uint - Index of value in enum
+   * @param None       - 0
+   * @param Reconciled - 1
+   * @param Executed   - 2
+   * @param Completed  - 3 - executed + reconciled
+   * @return uint8 - Index of value in enum
    */
   enum DestinationTransferStatus {
-    None, // 0
-    Reconciled, // 1
-    Executed, // 2
-    Completed // 3 - executed + reconciled
+    None,
+    Reconciled,
+    Executed,
+    Completed
   }
 
-  // WARNING: do NOT re-write the numbers / order
-  // of message types in an upgrade;
-  // will cause in-flight messages to be mis-interpreted
-  // The Types enum it defines the types of `views` that we use in BridgeMessage. A view
-  // points to a specific part of the memory and can slice bytes out of it. When we give a `type` to a view,
-  // we define the structure of the data it points to, so that we can do easy runtime assertions without
-  // having to fetch the whole data from memory and check for ourselves. In BridgeMessage.sol
-  // the types of `data` we can have are defined in this enum and may belong to different taxonomies.
-  // For example, a `Message` includes a `TokenId` and an Action (a `Transfer`).
-  // The Message is a different TYPE of data than a TokenId or Transfer, as TokenId and Transfer live inside
-  // the message. For that reason, we define them as different data types and we add them to the same enum
-  // for ease of use.
+  /**
+   * @notice Enum representing types of `views` that we use in BridgeMessage. A view
+   * points to a specific part of the memory and can slice bytes out of it. When we give a `type` to a view,
+   * we define the structure of the data it points to, so that we can do easy runtime assertions without
+   * having to fetch the whole data from memory and check for ourselves. In BridgeMessage.sol
+   * the types of `data` we can have are defined in this enum and may belong to different taxonomies.
+   * For example, a `Message` includes a `TokenId` and an Action (a `Transfer`).
+   * The Message is a different TYPE of data than a TokenId or Transfer, as TokenId and Transfer live inside
+   * the message. For that reason, we define them as different data types and we add them to the same enum
+   * for ease of use.
+   * @dev WARNING: do NOT re-write the numbers / order
+   * of message types in an upgrade;
+   * will cause in-flight messages to be mis-interpreted
+   * @param Invalid  - 0
+   * @param TokenId  - 1
+   * @param Message  - 2
+   * @param Transfer - 3
+   * @return uint8 - Index of value in enum
+   */
   enum Types {
-    Invalid, // 0
-    TokenId, // 1
-    Message, // 2
-    Transfer // 3
+    Invalid,
+    TokenId,
+    Message,
+    Transfer
   }
 
   // ============= Structs =============
@@ -54,7 +67,7 @@ interface IBaseConnext {
   /**
    * @notice These are the parameters that will remain constant between the
    * two chains. They are supplied on `xcall` and should be asserted on `execute`
-   * @property to - The account that receives funds, in the event of a crosschain call,
+   * @dev The account that receives funds, in the event of a crosschain call,
    * will receive funds if the call fails.
    *
    * @param originDomain - The originating domain (i.e. where `xcall` is called)
@@ -89,7 +102,7 @@ interface IBaseConnext {
   }
 
   /**
-   * @notice
+   * @notice These are the parameters supplied on `execute`
    * @param params - The TransferInfo. These are consistent across sending and receiving chains.
    * @param routers - The routers who you are sending the funds on behalf of.
    * @param routerSignatures - Signatures belonging to the routers indicating permission to use funds
@@ -108,11 +121,11 @@ interface IBaseConnext {
 
   /**
    * @notice Contains configs for each router
-   * @param approved Whether the router is allowlisted, settable by admin
-   * @param portalApproved Whether the router is allowlisted for portals, settable by admin
-   * @param routerOwners The address that can update the `recipient`
-   * @param proposedRouterOwners Owner candidates
-   * @param proposedRouterTimestamp When owner candidate was proposed (there is a delay to acceptance)
+   * @param approved - Whether the router is allowlisted, settable by admin
+   * @param portalApproved - Whether the router is allowlisted for portals, settable by admin
+   * @param routerOwners - The address that can update the `recipient`
+   * @param proposedRouterOwners - Owner candidates
+   * @param proposedRouterTimestamp - When owner candidate was proposed (there is a delay to acceptance)
    */
   struct RouterConfig {
     bool approved;
@@ -132,15 +145,15 @@ interface IBaseConnext {
    * If the decimals are updated in a future token upgrade, the transfers should fail. If that happens, the
    * asset and swaps must be removed, and then they can be readded
    *
-   * @param representation Address of minted asset on this domain. If the token is of local origin (meaning it was
+   * @param representation - Address of minted asset on this domain. If the token is of local origin (meaning it was
    * originally deployed on this chain), this MUST map to address(0).
-   * @param representationDecimals Decimals of minted asset on this domain
-   * @param adopted Address of adopted asset on this domain
-   * @param adoptedDecimals Decimals of adopted asset on this domain
-   * @param adoptedToLocalExternalPools Holds the AMMs for swapping in and out of local assets
-   * @param approval Allowed assets
-   * @param cap Liquidity caps of whitelisted assets. If 0, no cap is enforced.
-   * @param custodied Custodied balance by address
+   * @param representationDecimals - Decimals of minted asset on this domain
+   * @param adopted - Address of adopted asset on this domain
+   * @param adoptedDecimals - Decimals of adopted asset on this domain
+   * @param adoptedToLocalExternalPools - Holds the AMMs for swapping in and out of local assets
+   * @param approval - Allowed assets
+   * @param cap - Liquidity caps of whitelisted assets. If 0, no cap is enforced.
+   * @param custodied - Custodied balance by address
    */
   struct TokenConfig {
     address representation;
@@ -153,9 +166,11 @@ interface IBaseConnext {
     uint256 custodied;
   }
 
-  // Tokens are identified by a TokenId:
-  // domain - 4 byte chain ID of the chain from which the token originates
-  // id - 32 byte identifier of the token address on the origin chain, in that chain's address format
+  /**
+   * @notice Tokens are identified by a TokenId:
+   * @param domain - 4 byte chain ID of the chain from which the token originates
+   * @param id - 32 byte identifier of the token address on the origin chain, in that chain's address format
+   */
   struct TokenId {
     uint32 domain;
     bytes32 id;
