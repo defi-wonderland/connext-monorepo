@@ -2,36 +2,14 @@
 pragma solidity 0.8.17;
 
 // ============ External Imports ============
-import {TypedMemView} from '../../shared/libraries/TypedMemView.sol';
-import {TokenId} from './TokenId.sol';
+import {TypedMemView} from "../../shared/libraries/TypedMemView.sol";
+import {TokenId} from "./TokenId.sol";
 
 library BridgeMessage {
   // ============ Libraries ============
 
   using TypedMemView for bytes;
   using TypedMemView for bytes29;
-
-  // ============ Enums ============
-
-  // WARNING: do NOT re-write the numbers / order
-  // of message types in an upgrade;
-  // will cause in-flight messages to be mis-interpreted
-  // The Types enum it defines the types of `views` that we use in BridgeMessage. A view
-  // points to a specific part of the memory and can slice bytes out of it. When we give a `type` to a view,
-  // we define the structure of the data it points to, so that we can do easy runtime assertions without
-  // having to fetch the whole data from memory and check for ourselves. In BridgeMessage.sol
-  // the types of `data` we can have are defined in this enum and may belong to different taxonomies.
-  // For example, a `Message` includes a `TokenId` and an Action (a `Transfer`).
-  // The Message is a different TYPE of data than a TokenId or Transfer, as TokenId and Transfer live inside
-  // the message. For that reason, we define them as different data types and we add them to the same enum
-  // for ease of use.
-  enum Types {
-    Invalid, // 0
-    TokenId, // 1
-    Message, // 2
-    Transfer // 3
-
-  }
 
   // ============ Constants ============
 
@@ -82,7 +60,7 @@ library BridgeMessage {
     bytes29 _tokenId,
     bytes29 _action
   ) internal view typeAssert(_tokenId, Types.TokenId) returns (bytes memory) {
-    require(isValidAction(_action), '!action');
+    require(isValidAction(_action), "!action");
     bytes29[] memory _views = new bytes29[](2);
     _views[0] = _tokenId;
     _views[1] = _action;
