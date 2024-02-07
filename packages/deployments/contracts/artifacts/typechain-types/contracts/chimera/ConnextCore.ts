@@ -108,39 +108,41 @@ export type TokenIdStructOutput = [number, string] & {
 
 export interface ConnextCoreInterface extends utils.Interface {
   functions: {
-    "LIQUIDITY_FEE_DENOMINATOR()": FunctionFragment;
     "acceptProposedOwner()": FunctionFragment;
     "acceptProposedRouterOwner(address)": FunctionFragment;
+    "acceptanceDelay()": FunctionFragment;
     "addRelayer(address)": FunctionFragment;
     "addRouterLiquidity(uint256,address)": FunctionFragment;
     "addRouterLiquidityFor(uint256,address,address)": FunctionFragment;
     "addSequencer(address)": FunctionFragment;
     "approveRouter(address)": FunctionFragment;
-    "approvedAssets(bytes32)": FunctionFragment;
-    "approvedAssets((uint32,bytes32))": FunctionFragment;
+    "approvedRelayers(address)": FunctionFragment;
+    "approvedSequencers(address)": FunctionFragment;
+    "assetCanonicalIds(address)": FunctionFragment;
+    "assetIdToTickerHash(address)": FunctionFragment;
     "assignRole(address,uint8)": FunctionFragment;
     "bumpTransfer(bytes32)": FunctionFragment;
     "bumpTransfer(bytes32,address,uint256)": FunctionFragment;
-    "delay()": FunctionFragment;
+    "domain()": FunctionFragment;
     "enrollRemoteRouter(uint32,bytes32)": FunctionFragment;
     "execute(((uint32,uint32,uint32,address,address,bool,bytes,uint256,address,uint256,uint256,uint256,bytes32),address[],bytes[],address,bytes))": FunctionFragment;
     "forceReceiveLocal((uint32,uint32,uint32,address,address,bool,bytes,uint256,address,uint256,uint256,uint256,bytes32))": FunctionFragment;
-    "getCustodiedAmount(bytes32)": FunctionFragment;
-    "getProposedRouterOwner(address)": FunctionFragment;
-    "getProposedRouterOwnerTimestamp(address)": FunctionFragment;
-    "getRouterApproval(address)": FunctionFragment;
-    "getRouterOwner(address)": FunctionFragment;
-    "getRouterRecipient(address)": FunctionFragment;
     "handle(uint32,uint32,bytes32,bytes)": FunctionFragment;
     "initializeRouter(address,address)": FunctionFragment;
+    "initialized()": FunctionFragment;
+    "maxRoutersPerTransfer()": FunctionFragment;
+    "nextAssetToTickerHash(address)": FunctionFragment;
+    "nonce()": FunctionFragment;
+    "owner()": FunctionFragment;
     "pause()": FunctionFragment;
-    "paused()": FunctionFragment;
     "proposeNewOwner(address)": FunctionFragment;
     "proposeRouterAllowlistRemoval()": FunctionFragment;
     "proposeRouterOwner(address,address)": FunctionFragment;
     "proposed()": FunctionFragment;
-    "proposedTimestamp()": FunctionFragment;
-    "queryRole(address)": FunctionFragment;
+    "proposedOwnershipTimestamp()": FunctionFragment;
+    "receiveLocalOverride(bytes32)": FunctionFragment;
+    "relayerFeeVault()": FunctionFragment;
+    "remotes(uint32)": FunctionFragment;
     "removeAssetId((uint32,bytes32),address,address)": FunctionFragment;
     "removeAssetId(bytes32,address,address)": FunctionFragment;
     "removeRelayer(address)": FunctionFragment;
@@ -149,19 +151,31 @@ export interface ConnextCoreInterface extends utils.Interface {
     "removeRouterLiquidityFor((uint32,bytes32),uint256,address,address)": FunctionFragment;
     "removeSequencer(address)": FunctionFragment;
     "revokeRole(address)": FunctionFragment;
+    "roles(address)": FunctionFragment;
+    "routedTransfers(bytes32,uint256)": FunctionFragment;
     "routerAllowlistRemoved()": FunctionFragment;
     "routerAllowlistTimestamp()": FunctionFragment;
-    "setLiquidityFeeNumerator(uint256)": FunctionFragment;
+    "routerBalances(address,address)": FunctionFragment;
+    "routerConfigs(address)": FunctionFragment;
+    "routerCredits(address,address)": FunctionFragment;
     "setMaxRoutersPerTransfer(uint256)": FunctionFragment;
     "setRelayerFeeVault(address)": FunctionFragment;
     "setRouterRecipient(address,address)": FunctionFragment;
     "setXAppConnectionManager(address)": FunctionFragment;
+    "settlementStrategies(bytes32,bytes)": FunctionFragment;
     "setupAsset((uint32,bytes32),uint8,string,string,address,address,uint256)": FunctionFragment;
     "setupAssetWithDeployedRepresentation((uint32,bytes32),address,address,address)": FunctionFragment;
+    "supportedAssetDomains(bytes32,uint32)": FunctionFragment;
+    "tickerHashToAssetId(bytes32)": FunctionFragment;
+    "tickerHashToNextAsset(bytes32)": FunctionFragment;
+    "tokenConfigs(bytes32)": FunctionFragment;
+    "transferStatus(bytes32)": FunctionFragment;
     "unapproveRouter(address)": FunctionFragment;
+    "unclaimedAssets(address)": FunctionFragment;
     "unpause()": FunctionFragment;
     "updateDetails((uint32,bytes32),string,string)": FunctionFragment;
     "updateLiquidityCap((uint32,bytes32),uint256)": FunctionFragment;
+    "xAppConnectionManager()": FunctionFragment;
     "xcall(uint32,address,address,address,uint256,uint256,bytes)": FunctionFragment;
     "xcall(uint32,address,address,address,uint256,uint256,bytes,uint256)": FunctionFragment;
     "xcallIntoLocal(uint32,address,address,address,uint256,uint256,bytes,uint256)": FunctionFragment;
@@ -170,39 +184,41 @@ export interface ConnextCoreInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "LIQUIDITY_FEE_DENOMINATOR"
       | "acceptProposedOwner"
       | "acceptProposedRouterOwner"
+      | "acceptanceDelay"
       | "addRelayer"
       | "addRouterLiquidity"
       | "addRouterLiquidityFor"
       | "addSequencer"
       | "approveRouter"
-      | "approvedAssets(bytes32)"
-      | "approvedAssets((uint32,bytes32))"
+      | "approvedRelayers"
+      | "approvedSequencers"
+      | "assetCanonicalIds"
+      | "assetIdToTickerHash"
       | "assignRole"
       | "bumpTransfer(bytes32)"
       | "bumpTransfer(bytes32,address,uint256)"
-      | "delay"
+      | "domain"
       | "enrollRemoteRouter"
       | "execute"
       | "forceReceiveLocal"
-      | "getCustodiedAmount"
-      | "getProposedRouterOwner"
-      | "getProposedRouterOwnerTimestamp"
-      | "getRouterApproval"
-      | "getRouterOwner"
-      | "getRouterRecipient"
       | "handle"
       | "initializeRouter"
+      | "initialized"
+      | "maxRoutersPerTransfer"
+      | "nextAssetToTickerHash"
+      | "nonce"
+      | "owner"
       | "pause"
-      | "paused"
       | "proposeNewOwner"
       | "proposeRouterAllowlistRemoval"
       | "proposeRouterOwner"
       | "proposed"
-      | "proposedTimestamp"
-      | "queryRole"
+      | "proposedOwnershipTimestamp"
+      | "receiveLocalOverride"
+      | "relayerFeeVault"
+      | "remotes"
       | "removeAssetId((uint32,bytes32),address,address)"
       | "removeAssetId(bytes32,address,address)"
       | "removeRelayer"
@@ -211,19 +227,31 @@ export interface ConnextCoreInterface extends utils.Interface {
       | "removeRouterLiquidityFor"
       | "removeSequencer"
       | "revokeRole"
+      | "roles"
+      | "routedTransfers"
       | "routerAllowlistRemoved"
       | "routerAllowlistTimestamp"
-      | "setLiquidityFeeNumerator"
+      | "routerBalances"
+      | "routerConfigs"
+      | "routerCredits"
       | "setMaxRoutersPerTransfer"
       | "setRelayerFeeVault"
       | "setRouterRecipient"
       | "setXAppConnectionManager"
+      | "settlementStrategies"
       | "setupAsset"
       | "setupAssetWithDeployedRepresentation"
+      | "supportedAssetDomains"
+      | "tickerHashToAssetId"
+      | "tickerHashToNextAsset"
+      | "tokenConfigs"
+      | "transferStatus"
       | "unapproveRouter"
+      | "unclaimedAssets"
       | "unpause"
       | "updateDetails"
       | "updateLiquidityCap"
+      | "xAppConnectionManager"
       | "xcall(uint32,address,address,address,uint256,uint256,bytes)"
       | "xcall(uint32,address,address,address,uint256,uint256,bytes,uint256)"
       | "xcallIntoLocal(uint32,address,address,address,uint256,uint256,bytes,uint256)"
@@ -231,16 +259,16 @@ export interface ConnextCoreInterface extends utils.Interface {
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "LIQUIDITY_FEE_DENOMINATOR",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
     functionFragment: "acceptProposedOwner",
     values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "acceptProposedRouterOwner",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "acceptanceDelay",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "addRelayer",
@@ -267,12 +295,20 @@ export interface ConnextCoreInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "approvedAssets(bytes32)",
-    values: [PromiseOrValue<BytesLike>]
+    functionFragment: "approvedRelayers",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "approvedAssets((uint32,bytes32))",
-    values: [TokenIdStruct]
+    functionFragment: "approvedSequencers",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "assetCanonicalIds",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "assetIdToTickerHash",
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "assignRole",
@@ -290,7 +326,7 @@ export interface ConnextCoreInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>
     ]
   ): string;
-  encodeFunctionData(functionFragment: "delay", values?: undefined): string;
+  encodeFunctionData(functionFragment: "domain", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "enrollRemoteRouter",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BytesLike>]
@@ -302,30 +338,6 @@ export interface ConnextCoreInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "forceReceiveLocal",
     values: [TransferInfoStruct]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getCustodiedAmount",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getProposedRouterOwner",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getProposedRouterOwnerTimestamp",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getRouterApproval",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getRouterOwner",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "getRouterRecipient",
-    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "handle",
@@ -340,8 +352,21 @@ export interface ConnextCoreInterface extends utils.Interface {
     functionFragment: "initializeRouter",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "initialized",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "maxRoutersPerTransfer",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "nextAssetToTickerHash",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(functionFragment: "nonce", values?: undefined): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(functionFragment: "pause", values?: undefined): string;
-  encodeFunctionData(functionFragment: "paused", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "proposeNewOwner",
     values: [PromiseOrValue<string>]
@@ -356,12 +381,20 @@ export interface ConnextCoreInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "proposed", values?: undefined): string;
   encodeFunctionData(
-    functionFragment: "proposedTimestamp",
+    functionFragment: "proposedOwnershipTimestamp",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "queryRole",
-    values: [PromiseOrValue<string>]
+    functionFragment: "receiveLocalOverride",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "relayerFeeVault",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "remotes",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "removeAssetId((uint32,bytes32),address,address)",
@@ -409,6 +442,14 @@ export interface ConnextCoreInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
+    functionFragment: "roles",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "routedTransfers",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "routerAllowlistRemoved",
     values?: undefined
   ): string;
@@ -417,8 +458,16 @@ export interface ConnextCoreInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "setLiquidityFeeNumerator",
-    values: [PromiseOrValue<BigNumberish>]
+    functionFragment: "routerBalances",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "routerConfigs",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "routerCredits",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "setMaxRoutersPerTransfer",
@@ -435,6 +484,10 @@ export interface ConnextCoreInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "setXAppConnectionManager",
     values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "settlementStrategies",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "setupAsset",
@@ -458,7 +511,31 @@ export interface ConnextCoreInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
+    functionFragment: "supportedAssetDomains",
+    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tickerHashToAssetId",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tickerHashToNextAsset",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenConfigs",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferStatus",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "unapproveRouter",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "unclaimedAssets",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
@@ -469,6 +546,10 @@ export interface ConnextCoreInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "updateLiquidityCap",
     values: [TokenIdStruct, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "xAppConnectionManager",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "xcall(uint32,address,address,address,uint256,uint256,bytes)",
@@ -522,15 +603,15 @@ export interface ConnextCoreInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(
-    functionFragment: "LIQUIDITY_FEE_DENOMINATOR",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "acceptProposedOwner",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "acceptProposedRouterOwner",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "acceptanceDelay",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "addRelayer", data: BytesLike): Result;
@@ -551,11 +632,19 @@ export interface ConnextCoreInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "approvedAssets(bytes32)",
+    functionFragment: "approvedRelayers",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "approvedAssets((uint32,bytes32))",
+    functionFragment: "approvedSequencers",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "assetCanonicalIds",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "assetIdToTickerHash",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "assignRole", data: BytesLike): Result;
@@ -567,7 +656,7 @@ export interface ConnextCoreInterface extends utils.Interface {
     functionFragment: "bumpTransfer(bytes32,address,uint256)",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "delay", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "domain", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "enrollRemoteRouter",
     data: BytesLike
@@ -577,37 +666,26 @@ export interface ConnextCoreInterface extends utils.Interface {
     functionFragment: "forceReceiveLocal",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "getCustodiedAmount",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getProposedRouterOwner",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getProposedRouterOwnerTimestamp",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getRouterApproval",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getRouterOwner",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "getRouterRecipient",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "handle", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "initializeRouter",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "initialized",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "maxRoutersPerTransfer",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "nextAssetToTickerHash",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "nonce", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "paused", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "proposeNewOwner",
     data: BytesLike
@@ -622,10 +700,18 @@ export interface ConnextCoreInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "proposed", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "proposedTimestamp",
+    functionFragment: "proposedOwnershipTimestamp",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "queryRole", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "receiveLocalOverride",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "relayerFeeVault",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "remotes", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "removeAssetId((uint32,bytes32),address,address)",
     data: BytesLike
@@ -655,6 +741,11 @@ export interface ConnextCoreInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "roles", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "routedTransfers",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "routerAllowlistRemoved",
     data: BytesLike
@@ -664,7 +755,15 @@ export interface ConnextCoreInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setLiquidityFeeNumerator",
+    functionFragment: "routerBalances",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "routerConfigs",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "routerCredits",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -683,13 +782,41 @@ export interface ConnextCoreInterface extends utils.Interface {
     functionFragment: "setXAppConnectionManager",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "settlementStrategies",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "setupAsset", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setupAssetWithDeployedRepresentation",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "supportedAssetDomains",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "tickerHashToAssetId",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "tickerHashToNextAsset",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenConfigs",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferStatus",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "unapproveRouter",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "unclaimedAssets",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
@@ -699,6 +826,10 @@ export interface ConnextCoreInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "updateLiquidityCap",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "xAppConnectionManager",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -726,7 +857,6 @@ export interface ConnextCoreInterface extends utils.Interface {
     "ExternalCalldataExecuted(bytes32,bool,bytes)": EventFragment;
     "ForceReceiveLocal(bytes32)": EventFragment;
     "LiquidityCapUpdated(bytes32,bytes32,uint32,uint256,address)": EventFragment;
-    "LiquidityFeeNumeratorUpdated(uint256,address)": EventFragment;
     "MaxRoutersPerTransferUpdated(uint256,address)": EventFragment;
     "OwnershipProposed(address)": EventFragment;
     "Paused()": EventFragment;
@@ -764,9 +894,6 @@ export interface ConnextCoreInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ExternalCalldataExecuted"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "ForceReceiveLocal"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "LiquidityCapUpdated"): EventFragment;
-  getEvent(
-    nameOrSignatureOrTopic: "LiquidityFeeNumeratorUpdated"
-  ): EventFragment;
   getEvent(
     nameOrSignatureOrTopic: "MaxRoutersPerTransferUpdated"
   ): EventFragment;
@@ -894,18 +1021,6 @@ export type LiquidityCapUpdatedEvent = TypedEvent<
 
 export type LiquidityCapUpdatedEventFilter =
   TypedEventFilter<LiquidityCapUpdatedEvent>;
-
-export interface LiquidityFeeNumeratorUpdatedEventObject {
-  liquidityFeeNumerator: BigNumber;
-  caller: string;
-}
-export type LiquidityFeeNumeratorUpdatedEvent = TypedEvent<
-  [BigNumber, string],
-  LiquidityFeeNumeratorUpdatedEventObject
->;
-
-export type LiquidityFeeNumeratorUpdatedEventFilter =
-  TypedEventFilter<LiquidityFeeNumeratorUpdatedEvent>;
 
 export interface MaxRoutersPerTransferUpdatedEventObject {
   maxRoutersPerTransfer: BigNumber;
@@ -1277,8 +1392,6 @@ export interface ConnextCore extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    LIQUIDITY_FEE_DENOMINATOR(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     acceptProposedOwner(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -1287,6 +1400,8 @@ export interface ConnextCore extends BaseContract {
       _router: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    acceptanceDelay(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     addRelayer(
       _relayer: PromiseOrValue<string>,
@@ -1316,15 +1431,25 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "approvedAssets(bytes32)"(
-      _key: PromiseOrValue<BytesLike>,
+    approvedRelayers(
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    "approvedAssets((uint32,bytes32))"(
-      _canonical: TokenIdStruct,
+    approvedSequencers(
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
+
+    assetCanonicalIds(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    assetIdToTickerHash(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     assignRole(
       _account: PromiseOrValue<string>,
@@ -1344,7 +1469,7 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    delay(overrides?: CallOverrides): Promise<[BigNumber]>;
+    domain(overrides?: CallOverrides): Promise<[number]>;
 
     enrollRemoteRouter(
       _domain: PromiseOrValue<BigNumberish>,
@@ -1362,36 +1487,6 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    getCustodiedAmount(
-      _key: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    getProposedRouterOwner(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    getProposedRouterOwnerTimestamp(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    getRouterApproval(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    getRouterOwner(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    getRouterRecipient(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
     handle(
       _origin: PromiseOrValue<BigNumberish>,
       _nonce: PromiseOrValue<BigNumberish>,
@@ -1406,11 +1501,22 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    initialized(overrides?: CallOverrides): Promise<[boolean]>;
+
+    maxRoutersPerTransfer(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    nextAssetToTickerHash(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    nonce(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    owner(overrides?: CallOverrides): Promise<[string]>;
+
     pause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    paused(overrides?: CallOverrides): Promise<[boolean]>;
 
     proposeNewOwner(
       newlyProposed: PromiseOrValue<string>,
@@ -1429,12 +1535,19 @@ export interface ConnextCore extends BaseContract {
 
     proposed(overrides?: CallOverrides): Promise<[string]>;
 
-    proposedTimestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
+    proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    queryRole(
-      _role: PromiseOrValue<string>,
+    receiveLocalOverride(
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<[number]>;
+    ): Promise<[boolean]>;
+
+    relayerFeeVault(overrides?: CallOverrides): Promise<[string]>;
+
+    remotes(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     "removeAssetId((uint32,bytes32),address,address)"(
       _canonical: TokenIdStruct,
@@ -1484,14 +1597,46 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    roles(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
+    routedTransfers(
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     routerAllowlistRemoved(overrides?: CallOverrides): Promise<[boolean]>;
 
     routerAllowlistTimestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    setLiquidityFeeNumerator(
-      _numerator: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
+    routerBalances(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    routerConfigs(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, boolean, string, string, string, BigNumber] & {
+        approved: boolean;
+        portalApproved: boolean;
+        owner: string;
+        recipient: string;
+        proposed: string;
+        proposedTimestamp: BigNumber;
+      }
+    >;
+
+    routerCredits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     setMaxRoutersPerTransfer(
       _newMaxRouters: PromiseOrValue<BigNumberish>,
@@ -1514,6 +1659,12 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    settlementStrategies(
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     setupAsset(
       _canonical: TokenIdStruct,
       _canonicalDecimals: PromiseOrValue<BigNumberish>,
@@ -1533,10 +1684,61 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    supportedAssetDomains(
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    tickerHashToAssetId(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    tickerHashToNextAsset(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    tokenConfigs(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        string,
+        number,
+        string,
+        number,
+        string,
+        boolean,
+        BigNumber,
+        BigNumber
+      ] & {
+        representation: string;
+        representationDecimals: number;
+        adopted: string;
+        adoptedDecimals: number;
+        adoptedToLocalExternalPools: string;
+        approval: boolean;
+        cap: BigNumber;
+        custodied: BigNumber;
+      }
+    >;
+
+    transferStatus(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[number]>;
+
     unapproveRouter(
       _router: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    unclaimedAssets(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     unpause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1554,6 +1756,8 @@ export interface ConnextCore extends BaseContract {
       _updated: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    xAppConnectionManager(overrides?: CallOverrides): Promise<[string]>;
 
     "xcall(uint32,address,address,address,uint256,uint256,bytes)"(
       _destination: PromiseOrValue<BigNumberish>,
@@ -1602,8 +1806,6 @@ export interface ConnextCore extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
-  LIQUIDITY_FEE_DENOMINATOR(overrides?: CallOverrides): Promise<BigNumber>;
-
   acceptProposedOwner(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -1612,6 +1814,8 @@ export interface ConnextCore extends BaseContract {
     _router: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
   addRelayer(
     _relayer: PromiseOrValue<string>,
@@ -1641,15 +1845,25 @@ export interface ConnextCore extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "approvedAssets(bytes32)"(
-    _key: PromiseOrValue<BytesLike>,
+  approvedRelayers(
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  "approvedAssets((uint32,bytes32))"(
-    _canonical: TokenIdStruct,
+  approvedSequencers(
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
+
+  assetCanonicalIds(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  assetIdToTickerHash(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   assignRole(
     _account: PromiseOrValue<string>,
@@ -1669,7 +1883,7 @@ export interface ConnextCore extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  delay(overrides?: CallOverrides): Promise<BigNumber>;
+  domain(overrides?: CallOverrides): Promise<number>;
 
   enrollRemoteRouter(
     _domain: PromiseOrValue<BigNumberish>,
@@ -1687,36 +1901,6 @@ export interface ConnextCore extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  getCustodiedAmount(
-    _key: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getProposedRouterOwner(
-    _router: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  getProposedRouterOwnerTimestamp(
-    _router: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  getRouterApproval(
-    _router: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  getRouterOwner(
-    _router: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  getRouterRecipient(
-    _router: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
   handle(
     _origin: PromiseOrValue<BigNumberish>,
     _nonce: PromiseOrValue<BigNumberish>,
@@ -1731,11 +1915,22 @@ export interface ConnextCore extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  initialized(overrides?: CallOverrides): Promise<boolean>;
+
+  maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
+
+  nextAssetToTickerHash(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  nonce(overrides?: CallOverrides): Promise<BigNumber>;
+
+  owner(overrides?: CallOverrides): Promise<string>;
+
   pause(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
-
-  paused(overrides?: CallOverrides): Promise<boolean>;
 
   proposeNewOwner(
     newlyProposed: PromiseOrValue<string>,
@@ -1754,12 +1949,19 @@ export interface ConnextCore extends BaseContract {
 
   proposed(overrides?: CallOverrides): Promise<string>;
 
-  proposedTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
+  proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-  queryRole(
-    _role: PromiseOrValue<string>,
+  receiveLocalOverride(
+    arg0: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
-  ): Promise<number>;
+  ): Promise<boolean>;
+
+  relayerFeeVault(overrides?: CallOverrides): Promise<string>;
+
+  remotes(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   "removeAssetId((uint32,bytes32),address,address)"(
     _canonical: TokenIdStruct,
@@ -1809,14 +2011,46 @@ export interface ConnextCore extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  roles(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
+  routedTransfers(
+    arg0: PromiseOrValue<BytesLike>,
+    arg1: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   routerAllowlistRemoved(overrides?: CallOverrides): Promise<boolean>;
 
   routerAllowlistTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-  setLiquidityFeeNumerator(
-    _numerator: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
+  routerBalances(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  routerConfigs(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<
+    [boolean, boolean, string, string, string, BigNumber] & {
+      approved: boolean;
+      portalApproved: boolean;
+      owner: string;
+      recipient: string;
+      proposed: string;
+      proposedTimestamp: BigNumber;
+    }
+  >;
+
+  routerCredits(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   setMaxRoutersPerTransfer(
     _newMaxRouters: PromiseOrValue<BigNumberish>,
@@ -1839,6 +2073,12 @@ export interface ConnextCore extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  settlementStrategies(
+    arg0: PromiseOrValue<BytesLike>,
+    arg1: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   setupAsset(
     _canonical: TokenIdStruct,
     _canonicalDecimals: PromiseOrValue<BigNumberish>,
@@ -1858,10 +2098,52 @@ export interface ConnextCore extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  supportedAssetDomains(
+    arg0: PromiseOrValue<BytesLike>,
+    arg1: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  tickerHashToAssetId(
+    arg0: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  tickerHashToNextAsset(
+    arg0: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  tokenConfigs(
+    arg0: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<
+    [string, number, string, number, string, boolean, BigNumber, BigNumber] & {
+      representation: string;
+      representationDecimals: number;
+      adopted: string;
+      adoptedDecimals: number;
+      adoptedToLocalExternalPools: string;
+      approval: boolean;
+      cap: BigNumber;
+      custodied: BigNumber;
+    }
+  >;
+
+  transferStatus(
+    arg0: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<number>;
+
   unapproveRouter(
     _router: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  unclaimedAssets(
+    arg0: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   unpause(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1879,6 +2161,8 @@ export interface ConnextCore extends BaseContract {
     _updated: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  xAppConnectionManager(overrides?: CallOverrides): Promise<string>;
 
   "xcall(uint32,address,address,address,uint256,uint256,bytes)"(
     _destination: PromiseOrValue<BigNumberish>,
@@ -1927,14 +2211,14 @@ export interface ConnextCore extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
-    LIQUIDITY_FEE_DENOMINATOR(overrides?: CallOverrides): Promise<BigNumber>;
-
     acceptProposedOwner(overrides?: CallOverrides): Promise<void>;
 
     acceptProposedRouterOwner(
       _router: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
     addRelayer(
       _relayer: PromiseOrValue<string>,
@@ -1964,15 +2248,25 @@ export interface ConnextCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "approvedAssets(bytes32)"(
-      _key: PromiseOrValue<BytesLike>,
+    approvedRelayers(
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    "approvedAssets((uint32,bytes32))"(
-      _canonical: TokenIdStruct,
+    approvedSequencers(
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    assetCanonicalIds(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    assetIdToTickerHash(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     assignRole(
       _account: PromiseOrValue<string>,
@@ -1992,7 +2286,7 @@ export interface ConnextCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    delay(overrides?: CallOverrides): Promise<BigNumber>;
+    domain(overrides?: CallOverrides): Promise<number>;
 
     enrollRemoteRouter(
       _domain: PromiseOrValue<BigNumberish>,
@@ -2010,36 +2304,6 @@ export interface ConnextCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    getCustodiedAmount(
-      _key: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getProposedRouterOwner(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    getProposedRouterOwnerTimestamp(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getRouterApproval(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    getRouterOwner(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    getRouterRecipient(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
     handle(
       _origin: PromiseOrValue<BigNumberish>,
       _nonce: PromiseOrValue<BigNumberish>,
@@ -2054,9 +2318,20 @@ export interface ConnextCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    pause(overrides?: CallOverrides): Promise<void>;
+    initialized(overrides?: CallOverrides): Promise<boolean>;
 
-    paused(overrides?: CallOverrides): Promise<boolean>;
+    maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
+
+    nextAssetToTickerHash(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    nonce(overrides?: CallOverrides): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<string>;
+
+    pause(overrides?: CallOverrides): Promise<void>;
 
     proposeNewOwner(
       newlyProposed: PromiseOrValue<string>,
@@ -2073,12 +2348,19 @@ export interface ConnextCore extends BaseContract {
 
     proposed(overrides?: CallOverrides): Promise<string>;
 
-    proposedTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
+    proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-    queryRole(
-      _role: PromiseOrValue<string>,
+    receiveLocalOverride(
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<number>;
+    ): Promise<boolean>;
+
+    relayerFeeVault(overrides?: CallOverrides): Promise<string>;
+
+    remotes(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     "removeAssetId((uint32,bytes32),address,address)"(
       _canonical: TokenIdStruct,
@@ -2126,14 +2408,46 @@ export interface ConnextCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    roles(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
+    routedTransfers(
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     routerAllowlistRemoved(overrides?: CallOverrides): Promise<boolean>;
 
     routerAllowlistTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setLiquidityFeeNumerator(
-      _numerator: PromiseOrValue<BigNumberish>,
+    routerBalances(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<void>;
+    ): Promise<BigNumber>;
+
+    routerConfigs(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<
+      [boolean, boolean, string, string, string, BigNumber] & {
+        approved: boolean;
+        portalApproved: boolean;
+        owner: string;
+        recipient: string;
+        proposed: string;
+        proposedTimestamp: BigNumber;
+      }
+    >;
+
+    routerCredits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     setMaxRoutersPerTransfer(
       _newMaxRouters: PromiseOrValue<BigNumberish>,
@@ -2156,6 +2470,12 @@ export interface ConnextCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    settlementStrategies(
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     setupAsset(
       _canonical: TokenIdStruct,
       _canonicalDecimals: PromiseOrValue<BigNumberish>,
@@ -2175,10 +2495,61 @@ export interface ConnextCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    supportedAssetDomains(
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    tickerHashToAssetId(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    tickerHashToNextAsset(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    tokenConfigs(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<
+      [
+        string,
+        number,
+        string,
+        number,
+        string,
+        boolean,
+        BigNumber,
+        BigNumber
+      ] & {
+        representation: string;
+        representationDecimals: number;
+        adopted: string;
+        adoptedDecimals: number;
+        adoptedToLocalExternalPools: string;
+        approval: boolean;
+        cap: BigNumber;
+        custodied: BigNumber;
+      }
+    >;
+
+    transferStatus(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<number>;
+
     unapproveRouter(
       _router: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    unclaimedAssets(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     unpause(overrides?: CallOverrides): Promise<void>;
 
@@ -2194,6 +2565,8 @@ export interface ConnextCore extends BaseContract {
       _updated: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    xAppConnectionManager(overrides?: CallOverrides): Promise<string>;
 
     "xcall(uint32,address,address,address,uint256,uint256,bytes)"(
       _destination: PromiseOrValue<BigNumberish>,
@@ -2326,15 +2699,6 @@ export interface ConnextCore extends BaseContract {
       cap?: null,
       caller?: null
     ): LiquidityCapUpdatedEventFilter;
-
-    "LiquidityFeeNumeratorUpdated(uint256,address)"(
-      liquidityFeeNumerator?: null,
-      caller?: null
-    ): LiquidityFeeNumeratorUpdatedEventFilter;
-    LiquidityFeeNumeratorUpdated(
-      liquidityFeeNumerator?: null,
-      caller?: null
-    ): LiquidityFeeNumeratorUpdatedEventFilter;
 
     "MaxRoutersPerTransferUpdated(uint256,address)"(
       maxRoutersPerTransfer?: null,
@@ -2615,8 +2979,6 @@ export interface ConnextCore extends BaseContract {
   };
 
   estimateGas: {
-    LIQUIDITY_FEE_DENOMINATOR(overrides?: CallOverrides): Promise<BigNumber>;
-
     acceptProposedOwner(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -2625,6 +2987,8 @@ export interface ConnextCore extends BaseContract {
       _router: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
     addRelayer(
       _relayer: PromiseOrValue<string>,
@@ -2654,13 +3018,23 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "approvedAssets(bytes32)"(
-      _key: PromiseOrValue<BytesLike>,
+    approvedRelayers(
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "approvedAssets((uint32,bytes32))"(
-      _canonical: TokenIdStruct,
+    approvedSequencers(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    assetCanonicalIds(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    assetIdToTickerHash(
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -2682,7 +3056,7 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    delay(overrides?: CallOverrides): Promise<BigNumber>;
+    domain(overrides?: CallOverrides): Promise<BigNumber>;
 
     enrollRemoteRouter(
       _domain: PromiseOrValue<BigNumberish>,
@@ -2700,36 +3074,6 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    getCustodiedAmount(
-      _key: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getProposedRouterOwner(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getProposedRouterOwnerTimestamp(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getRouterApproval(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getRouterOwner(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    getRouterRecipient(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     handle(
       _origin: PromiseOrValue<BigNumberish>,
       _nonce: PromiseOrValue<BigNumberish>,
@@ -2744,11 +3088,22 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    initialized(overrides?: CallOverrides): Promise<BigNumber>;
+
+    maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
+
+    nextAssetToTickerHash(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    nonce(overrides?: CallOverrides): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
     pause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
-
-    paused(overrides?: CallOverrides): Promise<BigNumber>;
 
     proposeNewOwner(
       newlyProposed: PromiseOrValue<string>,
@@ -2767,10 +3122,17 @@ export interface ConnextCore extends BaseContract {
 
     proposed(overrides?: CallOverrides): Promise<BigNumber>;
 
-    proposedTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
+    proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-    queryRole(
-      _role: PromiseOrValue<string>,
+    receiveLocalOverride(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    relayerFeeVault(overrides?: CallOverrides): Promise<BigNumber>;
+
+    remotes(
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -2822,13 +3184,36 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    roles(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    routedTransfers(
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     routerAllowlistRemoved(overrides?: CallOverrides): Promise<BigNumber>;
 
     routerAllowlistTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-    setLiquidityFeeNumerator(
-      _numerator: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    routerBalances(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    routerConfigs(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    routerCredits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     setMaxRoutersPerTransfer(
@@ -2852,6 +3237,12 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    settlementStrategies(
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     setupAsset(
       _canonical: TokenIdStruct,
       _canonicalDecimals: PromiseOrValue<BigNumberish>,
@@ -2871,9 +3262,40 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    supportedAssetDomains(
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tickerHashToAssetId(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tickerHashToNextAsset(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    tokenConfigs(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    transferStatus(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     unapproveRouter(
       _router: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    unclaimedAssets(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     unpause(
@@ -2892,6 +3314,8 @@ export interface ConnextCore extends BaseContract {
       _updated: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    xAppConnectionManager(overrides?: CallOverrides): Promise<BigNumber>;
 
     "xcall(uint32,address,address,address,uint256,uint256,bytes)"(
       _destination: PromiseOrValue<BigNumberish>,
@@ -2941,10 +3365,6 @@ export interface ConnextCore extends BaseContract {
   };
 
   populateTransaction: {
-    LIQUIDITY_FEE_DENOMINATOR(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     acceptProposedOwner(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
@@ -2953,6 +3373,8 @@ export interface ConnextCore extends BaseContract {
       _router: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
+
+    acceptanceDelay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     addRelayer(
       _relayer: PromiseOrValue<string>,
@@ -2982,13 +3404,23 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "approvedAssets(bytes32)"(
-      _key: PromiseOrValue<BytesLike>,
+    approvedRelayers(
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "approvedAssets((uint32,bytes32))"(
-      _canonical: TokenIdStruct,
+    approvedSequencers(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    assetCanonicalIds(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    assetIdToTickerHash(
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -3010,7 +3442,7 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    delay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    domain(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     enrollRemoteRouter(
       _domain: PromiseOrValue<BigNumberish>,
@@ -3028,36 +3460,6 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    getCustodiedAmount(
-      _key: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getProposedRouterOwner(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getProposedRouterOwnerTimestamp(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getRouterApproval(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getRouterOwner(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    getRouterRecipient(
-      _router: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     handle(
       _origin: PromiseOrValue<BigNumberish>,
       _nonce: PromiseOrValue<BigNumberish>,
@@ -3072,11 +3474,24 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    initialized(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    maxRoutersPerTransfer(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    nextAssetToTickerHash(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    nonce(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     pause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
-
-    paused(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     proposeNewOwner(
       newlyProposed: PromiseOrValue<string>,
@@ -3095,10 +3510,19 @@ export interface ConnextCore extends BaseContract {
 
     proposed(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
-    proposedTimestamp(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    proposedOwnershipTimestamp(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    queryRole(
-      _role: PromiseOrValue<string>,
+    receiveLocalOverride(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    relayerFeeVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    remotes(
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -3150,6 +3574,17 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    roles(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    routedTransfers(
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     routerAllowlistRemoved(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -3158,9 +3593,21 @@ export interface ConnextCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    setLiquidityFeeNumerator(
-      _numerator: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    routerBalances(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    routerConfigs(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    routerCredits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     setMaxRoutersPerTransfer(
@@ -3184,6 +3631,12 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    settlementStrategies(
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     setupAsset(
       _canonical: TokenIdStruct,
       _canonicalDecimals: PromiseOrValue<BigNumberish>,
@@ -3203,9 +3656,40 @@ export interface ConnextCore extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    supportedAssetDomains(
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tickerHashToAssetId(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tickerHashToNextAsset(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenConfigs(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    transferStatus(
+      arg0: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     unapproveRouter(
       _router: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    unclaimedAssets(
+      arg0: PromiseOrValue<string>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     unpause(
@@ -3223,6 +3707,10 @@ export interface ConnextCore extends BaseContract {
       _canonical: TokenIdStruct,
       _updated: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    xAppConnectionManager(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "xcall(uint32,address,address,address,uint256,uint256,bytes)"(

@@ -10,7 +10,6 @@
   "function FUTURE_TIME_BUFFER() view returns (uint256)",
   "function GOVERNANCE_DELAY() view returns (uint256)",
   "function INITIAL_AAVE_REFERRAL_CODE() view returns (uint16)",
-  "function INITIAL_LIQUIDITY_FEE_NUMERATOR() view returns (uint256)",
   "function INITIAL_MAX_ROUTERS() view returns (uint256)",
   "function MAXIMUM_POOLED_TOKENS() view returns (uint256)",
   "function MAX_A() view returns (uint256)",

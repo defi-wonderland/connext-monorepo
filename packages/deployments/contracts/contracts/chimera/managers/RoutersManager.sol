@@ -114,52 +114,52 @@ abstract contract RoutersManager is BaseManager {
 
   // ============ Getters ==============
 
-  function LIQUIDITY_FEE_DENOMINATOR() public pure returns (uint256) {
-    return Constants.BPS_FEE_DENOMINATOR;
-  }
+  // function LIQUIDITY_FEE_DENOMINATOR() public pure returns (uint256) {
+  //   return Constants.BPS_FEE_DENOMINATOR;
+  // }
 
-  /**
-   * @notice Returns the approved router for the given router address
-   * @param _router The relevant router address
-   */
-  function getRouterApproval(address _router) public view returns (bool) {
-    return routerConfigs[_router].approved;
-  }
+  // /**
+  //  * @notice Returns the approved router for the given router address
+  //  * @param _router The relevant router address
+  //  */
+  // function getRouterApproval(address _router) public view returns (bool) {
+  //   return routerConfigs[_router].approved;
+  // }
 
-  /**
-   * @notice Returns the recipient for the specified router
-   * @dev The recipient (if set) receives all funds when router liquidity is removed
-   * @param _router The relevant router address
-   */
-  function getRouterRecipient(address _router) public view returns (address) {
-    return routerConfigs[_router].recipient;
-  }
+  // /**
+  //  * @notice Returns the recipient for the specified router
+  //  * @dev The recipient (if set) receives all funds when router liquidity is removed
+  //  * @param _router The relevant router address
+  //  */
+  // function getRouterRecipient(address _router) public view returns (address) {
+  //   return routerConfigs[_router].recipient;
+  // }
 
-  /**
-   * @notice Returns the router owner if it is set, or the router itself if not
-   * @param _router The relevant router address
-   */
-  function getRouterOwner(address _router) public view returns (address) {
-    return routerConfigs[_router].owner;
-  }
+  // /**
+  //  * @notice Returns the router owner if it is set, or the router itself if not
+  //  * @param _router The relevant router address
+  //  */
+  // function getRouterOwner(address _router) public view returns (address) {
+  //   return routerConfigs[_router].owner;
+  // }
 
-  /**
-   * @notice Returns the currently proposed router owner
-   * @dev All routers must wait for the delay timeout before accepting a new owner
-   * @param _router The relevant router address
-   */
-  function getProposedRouterOwner(address _router) public view returns (address) {
-    return routerConfigs[_router].proposed;
-  }
+  // /**
+  //  * @notice Returns the currently proposed router owner
+  //  * @dev All routers must wait for the delay timeout before accepting a new owner
+  //  * @param _router The relevant router address
+  //  */
+  // function getProposedRouterOwner(address _router) public view returns (address) {
+  //   return routerConfigs[_router].proposed;
+  // }
 
-  /**
-   * @notice Returns the currently proposed router owner timestamp
-   * @dev All routers must wait for the delay timeout before accepting a new owner
-   * @param _router The relevant router address
-   */
-  function getProposedRouterOwnerTimestamp(address _router) public view returns (uint256) {
-    return routerConfigs[_router].proposedTimestamp;
-  }
+  // /**
+  //  * @notice Returns the currently proposed router owner timestamp
+  //  * @dev All routers must wait for the delay timeout before accepting a new owner
+  //  * @param _router The relevant router address
+  //  */
+  // function getProposedRouterOwnerTimestamp(address _router) public view returns (uint256) {
+  //   return routerConfigs[_router].proposedTimestamp;
+  // }
 
   // ============ Admin methods ==============
 
@@ -414,42 +414,43 @@ abstract contract RoutersManager is BaseManager {
    * @param _router - The router you are adding liquidity on behalf of
    */
   function _addLiquidityForRouter(uint256 _amount, address _local, address _router) internal {
-    // Sanity check: router is sensible.
-    if (_router == address(0)) revert RoutersManager__addLiquidityForRouter_routerEmpty();
+    // TODO: implement
+    // // Sanity check: router is sensible.
+    // if (_router == address(0)) revert RoutersManager__addLiquidityForRouter_routerEmpty();
 
-    // Sanity check: nonzero amounts.
-    if (_amount == 0) revert RoutersManager__addLiquidityForRouter_amountIsZero();
+    // // Sanity check: nonzero amounts.
+    // if (_amount == 0) revert RoutersManager__addLiquidityForRouter_amountIsZero();
 
-    // Get the canonical asset ID from the representation.
-    // NOTE: not using `_getApprovedCanonicalId` because candidate can *only* be local
+    // // Get the canonical asset ID from the representation.
+    // // NOTE: not using `_getApprovedCanonicalId` because candidate can *only* be local
 
-    uint32 canonicalDomain = representationToCanonical[_local].domain;
-    bytes32 canonicalId = representationToCanonical[_local].id;
+    // uint32 canonicalDomain = representationToCanonical[_local].domain;
+    // bytes32 canonicalId = representationToCanonical[_local].id;
 
-    if (canonicalDomain == 0 && canonicalId == bytes32(0)) {
-      // Assume you are on the canonical domain, which does not update the above mapping
-      // If this is an incorrect assumption, the approval should fail
-      canonicalDomain = domain;
-      canonicalId = TypeCasts.addressToBytes32(_local);
-    }
-    bytes32 key = calculateCanonicalHash(canonicalId, canonicalDomain);
-    if (!tokenConfigs[key].approval) {
-      revert RoutersManager__getApprovedCanonicalId_notAllowlisted();
-    }
+    // if (canonicalDomain == 0 && canonicalId == bytes32(0)) {
+    //   // Assume you are on the canonical domain, which does not update the above mapping
+    //   // If this is an incorrect assumption, the approval should fail
+    //   canonicalDomain = domain;
+    //   canonicalId = TypeCasts.addressToBytes32(_local);
+    // }
+    // bytes32 key = calculateCanonicalHash(canonicalId, canonicalDomain);
+    // if (!tokenConfigs[key].approval) {
+    //   revert RoutersManager__getApprovedCanonicalId_notAllowlisted();
+    // }
 
-    // Sanity check: router is approved.
-    if (!_isRouterAllowlistRemoved() && !getRouterApproval(_router)) {
-      revert RoutersManager__addLiquidityForRouter_badRouter();
-    }
+    // // Sanity check: router is approved.
+    // if (!_isRouterAllowlistRemoved() && !getRouterApproval(_router)) {
+    //   revert RoutersManager__addLiquidityForRouter_badRouter();
+    // }
 
-    // Transfer funds to contract.
-    _handleIncomingAsset(_local, _amount);
+    // // Transfer funds to contract.
+    // _handleIncomingAsset(_local, _amount);
 
-    // Update the router balances. Happens after pulling funds to account for
-    // the fee on transfer tokens.
-    routerBalances[_router][_local] += _amount;
+    // // Update the router balances. Happens after pulling funds to account for
+    // // the fee on transfer tokens.
+    // routerBalances[_router][_local] += _amount;
 
-    emit RouterLiquidityAdded({router: _router, local: _local, key: key, amount: _amount, caller: msg.sender});
+    // emit RouterLiquidityAdded({router: _router, local: _local, key: key, amount: _amount, caller: msg.sender});
   }
 
   /**
@@ -466,7 +467,7 @@ abstract contract RoutersManager is BaseManager {
     address _router
   ) internal {
     // Transfer to specified recipient IF recipient not set.
-    address recipient = getRouterRecipient(_router);
+    address recipient = routerConfigs[_router].recipient;
     recipient = recipient == address(0) ? _to : recipient;
 
     // Sanity check: to is sensible.
@@ -511,6 +512,6 @@ abstract contract RoutersManager is BaseManager {
    * @notice Indicates if the router allowlist has been removed
    */
   function _isRouterAllowlistRemoved() internal view returns (bool) {
-    return owner == address(0) || _routerAllowlistRemoved;
+    return owner == address(0) || routerAllowlistRemoved;
   }
 }

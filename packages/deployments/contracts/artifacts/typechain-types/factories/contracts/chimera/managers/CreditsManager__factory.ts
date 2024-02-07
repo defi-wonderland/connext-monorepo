@@ -190,7 +190,7 @@ const _abi = [
   },
   {
     inputs: [],
-    name: "delay",
+    name: "acceptanceDelay",
     outputs: [
       {
         internalType: "uint256",
@@ -201,10 +201,599 @@ const _abi = [
     stateMutability: "view",
     type: "function",
   },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "approvedRelayers",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "approvedSequencers",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "assetCanonicalIds",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "assetIdToTickerHash",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "domain",
+    outputs: [
+      {
+        internalType: "uint32",
+        name: "",
+        type: "uint32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "initialized",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "maxRoutersPerTransfer",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "nextAssetToTickerHash",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "nonce",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "proposed",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "proposedOwnershipTimestamp",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    name: "receiveLocalOverride",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "relayerFeeVault",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint32",
+        name: "",
+        type: "uint32",
+      },
+    ],
+    name: "remotes",
+    outputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "roles",
+    outputs: [
+      {
+        internalType: "enum Role",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "routedTransfers",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "routerAllowlistRemoved",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "routerAllowlistTimestamp",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "routerBalances",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "routerConfigs",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "approved",
+        type: "bool",
+      },
+      {
+        internalType: "bool",
+        name: "portalApproved",
+        type: "bool",
+      },
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "recipient",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "proposed",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "proposedTimestamp",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "routerCredits",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+      {
+        internalType: "bytes",
+        name: "",
+        type: "bytes",
+      },
+    ],
+    name: "settlementStrategies",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+      {
+        internalType: "uint32",
+        name: "",
+        type: "uint32",
+      },
+    ],
+    name: "supportedAssetDomains",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    name: "tickerHashToAssetId",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    name: "tickerHashToNextAsset",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    name: "tokenConfigs",
+    outputs: [
+      {
+        internalType: "address",
+        name: "representation",
+        type: "address",
+      },
+      {
+        internalType: "uint8",
+        name: "representationDecimals",
+        type: "uint8",
+      },
+      {
+        internalType: "address",
+        name: "adopted",
+        type: "address",
+      },
+      {
+        internalType: "uint8",
+        name: "adoptedDecimals",
+        type: "uint8",
+      },
+      {
+        internalType: "address",
+        name: "adoptedToLocalExternalPools",
+        type: "address",
+      },
+      {
+        internalType: "bool",
+        name: "approval",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "cap",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "custodied",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "",
+        type: "bytes32",
+      },
+    ],
+    name: "transferStatus",
+    outputs: [
+      {
+        internalType: "enum DestinationTransferStatus",
+        name: "",
+        type: "uint8",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "unclaimedAssets",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "xAppConnectionManager",
+    outputs: [
+      {
+        internalType: "contract IConnectorManager",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
 ] as const;
 
 const _bytecode =
-  "0x6080604052348015600f57600080fd5b50607880601d6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80636a42b8f814602d575b600080fd5b60015460405190815260200160405180910390f3fea26469706673582212200998abf594194c4b7414ebe9fd8a86c517fcd7abb894268e7eba83f82a9d881064736f6c63430008110033";
+  "0x608060405234801561001057600080fd5b50610925806100206000396000f3fe608060405234801561001057600080fd5b50600436106101e55760003560e01c80638cba8b6a1161010f578063bb9111cf116100a2578063cac5082111610071578063cac5082114610598578063d1851c92146105c1578063d9bd722a146105d4578063f75a8bd01461068657600080fd5b8063bb9111cf14610524578063be8fc70014610547578063bfd7903014610550578063c2fb26a61461057357600080fd5b80639bf6d875116100de5780639bf6d87514610437578063ab1611fa14610440578063affed0e014610485578063b788eb9b1461048e57600080fd5b80638cba8b6a146103a15780638da5cb5b146103c457806391c142b8146103dc578063993746421461040757600080fd5b806341258b5c116101875780636be55785116101565780636be55785146103415780637708a6281461034e57806383bbb80614610361578063854ad1371461038157600080fd5b806341258b5c146102da578063543b4df61461030557806355a4a88e1461030e57806365bc85821461032e57600080fd5b8063158ef93e116101c3578063158ef93e14610246578063159e041f146102635780632c60e38d146102865780633339df96146102c757600080fd5b806305534b68146101ea578063087af8e61461021d578063122329371461023d575b600080fd5b61020a6101f8366004610708565b600a6020526000908152604090205481565b6040519081526020015b60405180910390f35b61020a61022b366004610708565b600b6020526000908152604090205481565b61020a60195481565b6000546102539060ff1681565b6040519015158152602001610214565b610253610271366004610708565b601f6020526000908152604090205460ff1681565b6102af61029436600461072a565b6009602052600090815260409020546001600160a01b031681565b6040516001600160a01b039091168152602001610214565b6020546102af906001600160a01b031681565b61020a6102e8366004610743565b600f60209081526000928352604080842090915290825290205481565b61020a60175481565b61020a61031c366004610708565b60056020526000908152604090205481565b6002546102af906001600160a01b031681565b6018546102539060ff1681565b6102af61035c366004610776565b6106b4565b61020a61036f3660046107ac565b60156020526000908152604090205481565b61020a61038f366004610708565b60106020526000908152604090205481565b6102536103af366004610708565b60126020526000908152604090205460ff1681565b6000546102af9061010090046001600160a01b031681565b61020a6103ea366004610743565b601160209081526000928352604080842090915290825290205481565b61042a610415366004610708565b601a6020526000908152604090205460ff1681565b60405161021491906107e8565b61020a60135481565b6102af61044e366004610811565b600760209081526000928352604090922081518083018401805192815290840192909301919091209152546001600160a01b031681565b61020a60035481565b6104e661049c366004610708565b601b60205260009081526040902080546001820154600283015460039093015460ff808416946101008504909116936001600160a01b036201000090910481169381169291169086565b60408051961515875294151560208701526001600160a01b0393841694860194909452908216606085015216608083015260a082015260c001610214565b61025361053236600461072a565b60146020526000908152604090205460ff1681565b61020a60015481565b61042a61055e36600461072a565b600d6020526000908152604090205460ff1681565b6004546105839063ffffffff1681565b60405163ffffffff9091168152602001610214565b6102af6105a636600461072a565b6008602052600090815260409020546001600160a01b031681565b6016546102af906001600160a01b031681565b6106366105e236600461072a565b600c60205260009081526040902080546001820154600283015460038401546004909401546001600160a01b038085169560ff600160a01b9687900481169686841696819004821695938416949304169188565b604080516001600160a01b03998a16815260ff9889166020820152968916908701529590931660608501529416608083015292151560a082015260c081019290925260e082015261010001610214565b6102536106943660046108cc565b600660209081526000928352604080842090915290825290205460ff1681565b600e60205281600052604060002081815481106106d057600080fd5b6000918252602090912001546001600160a01b03169150829050565b80356001600160a01b038116811461070357600080fd5b919050565b60006020828403121561071a57600080fd5b610723826106ec565b9392505050565b60006020828403121561073c57600080fd5b5035919050565b6000806040838503121561075657600080fd5b61075f836106ec565b915061076d602084016106ec565b90509250929050565b6000806040838503121561078957600080fd5b50508035926020909101359150565b803563ffffffff8116811461070357600080fd5b6000602082840312156107be57600080fd5b61072382610798565b600481106107e557634e487b7160e01b600052602160045260246000fd5b50565b602081016107f5836107c7565b91905290565b634e487b7160e01b600052604160045260246000fd5b6000806040838503121561082457600080fd5b82359150602083013567ffffffffffffffff8082111561084357600080fd5b818501915085601f83011261085757600080fd5b813581811115610869576108696107fb565b604051601f8201601f19908116603f01168101908382118183101715610891576108916107fb565b816040528281528860208487010111156108aa57600080fd5b8260208601602083013760006020848301015280955050505050509250929050565b600080604083850312156108df57600080fd5b8235915061076d6020840161079856fea2646970667358221220d70950c5c9f7cd101cfaf3e28c367289b7ac6bb09ed8b5ce8bad931d6270bcc664736f6c63430008110033";
 
 type CreditsManagerConstructorParams =
   | [signer?: Signer]

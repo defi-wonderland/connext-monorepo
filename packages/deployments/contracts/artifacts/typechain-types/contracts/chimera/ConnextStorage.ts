@@ -7,17 +7,11 @@ import type {
   BigNumberish,
   BytesLike,
   CallOverrides,
-  ContractTransaction,
-  Overrides,
   PopulatedTransaction,
   Signer,
   utils,
 } from "ethers";
-import type {
-  FunctionFragment,
-  Result,
-  EventFragment,
-} from "@ethersproject/abi";
+import type { FunctionFragment, Result } from "@ethersproject/abi";
 import type { Listener, Provider } from "@ethersproject/providers";
 import type {
   TypedEventFilter,
@@ -25,11 +19,10 @@ import type {
   TypedListener,
   OnEvent,
   PromiseOrValue,
-} from "../../../common";
+} from "../../common";
 
-export interface ProtocolManagerInterface extends utils.Interface {
+export interface ConnextStorageInterface extends utils.Interface {
   functions: {
-    "acceptProposedOwner()": FunctionFragment;
     "acceptanceDelay()": FunctionFragment;
     "approvedRelayers(address)": FunctionFragment;
     "approvedSequencers(address)": FunctionFragment;
@@ -41,8 +34,6 @@ export interface ProtocolManagerInterface extends utils.Interface {
     "nextAssetToTickerHash(address)": FunctionFragment;
     "nonce()": FunctionFragment;
     "owner()": FunctionFragment;
-    "pause()": FunctionFragment;
-    "proposeNewOwner(address)": FunctionFragment;
     "proposed()": FunctionFragment;
     "proposedOwnershipTimestamp()": FunctionFragment;
     "receiveLocalOverride(bytes32)": FunctionFragment;
@@ -55,9 +46,6 @@ export interface ProtocolManagerInterface extends utils.Interface {
     "routerBalances(address,address)": FunctionFragment;
     "routerConfigs(address)": FunctionFragment;
     "routerCredits(address,address)": FunctionFragment;
-    "setMaxRoutersPerTransfer(uint256)": FunctionFragment;
-    "setRelayerFeeVault(address)": FunctionFragment;
-    "setXAppConnectionManager(address)": FunctionFragment;
     "settlementStrategies(bytes32,bytes)": FunctionFragment;
     "supportedAssetDomains(bytes32,uint32)": FunctionFragment;
     "tickerHashToAssetId(bytes32)": FunctionFragment;
@@ -65,13 +53,11 @@ export interface ProtocolManagerInterface extends utils.Interface {
     "tokenConfigs(bytes32)": FunctionFragment;
     "transferStatus(bytes32)": FunctionFragment;
     "unclaimedAssets(address)": FunctionFragment;
-    "unpause()": FunctionFragment;
     "xAppConnectionManager()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "acceptProposedOwner"
       | "acceptanceDelay"
       | "approvedRelayers"
       | "approvedSequencers"
@@ -83,8 +69,6 @@ export interface ProtocolManagerInterface extends utils.Interface {
       | "nextAssetToTickerHash"
       | "nonce"
       | "owner"
-      | "pause"
-      | "proposeNewOwner"
       | "proposed"
       | "proposedOwnershipTimestamp"
       | "receiveLocalOverride"
@@ -97,9 +81,6 @@ export interface ProtocolManagerInterface extends utils.Interface {
       | "routerBalances"
       | "routerConfigs"
       | "routerCredits"
-      | "setMaxRoutersPerTransfer"
-      | "setRelayerFeeVault"
-      | "setXAppConnectionManager"
       | "settlementStrategies"
       | "supportedAssetDomains"
       | "tickerHashToAssetId"
@@ -107,14 +88,9 @@ export interface ProtocolManagerInterface extends utils.Interface {
       | "tokenConfigs"
       | "transferStatus"
       | "unclaimedAssets"
-      | "unpause"
       | "xAppConnectionManager"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "acceptProposedOwner",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "acceptanceDelay",
     values?: undefined
@@ -150,11 +126,6 @@ export interface ProtocolManagerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "nonce", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "proposeNewOwner",
-    values: [PromiseOrValue<string>]
-  ): string;
   encodeFunctionData(functionFragment: "proposed", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "proposedOwnershipTimestamp",
@@ -201,18 +172,6 @@ export interface ProtocolManagerInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "setMaxRoutersPerTransfer",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setRelayerFeeVault",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "setXAppConnectionManager",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "settlementStrategies",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
@@ -240,16 +199,11 @@ export interface ProtocolManagerInterface extends utils.Interface {
     functionFragment: "unclaimedAssets",
     values: [PromiseOrValue<string>]
   ): string;
-  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "xAppConnectionManager",
     values?: undefined
   ): string;
 
-  decodeFunctionResult(
-    functionFragment: "acceptProposedOwner",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "acceptanceDelay",
     data: BytesLike
@@ -285,11 +239,6 @@ export interface ProtocolManagerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "nonce", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "proposeNewOwner",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "proposed", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "proposedOwnershipTimestamp",
@@ -330,18 +279,6 @@ export interface ProtocolManagerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "setMaxRoutersPerTransfer",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setRelayerFeeVault",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "setXAppConnectionManager",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "settlementStrategies",
     data: BytesLike
   ): Result;
@@ -369,95 +306,20 @@ export interface ProtocolManagerInterface extends utils.Interface {
     functionFragment: "unclaimedAssets",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "xAppConnectionManager",
     data: BytesLike
   ): Result;
 
-  events: {
-    "MaxRoutersPerTransferUpdated(uint256,address)": EventFragment;
-    "OwnershipProposed(address)": EventFragment;
-    "Paused()": EventFragment;
-    "RelayerFeeVaultUpdated(address,address,address)": EventFragment;
-    "Unpaused()": EventFragment;
-    "XAppConnectionManagerSet(address,address)": EventFragment;
-  };
-
-  getEvent(
-    nameOrSignatureOrTopic: "MaxRoutersPerTransferUpdated"
-  ): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OwnershipProposed"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Paused"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "RelayerFeeVaultUpdated"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "XAppConnectionManagerSet"): EventFragment;
+  events: {};
 }
 
-export interface MaxRoutersPerTransferUpdatedEventObject {
-  maxRoutersPerTransfer: BigNumber;
-  caller: string;
-}
-export type MaxRoutersPerTransferUpdatedEvent = TypedEvent<
-  [BigNumber, string],
-  MaxRoutersPerTransferUpdatedEventObject
->;
-
-export type MaxRoutersPerTransferUpdatedEventFilter =
-  TypedEventFilter<MaxRoutersPerTransferUpdatedEvent>;
-
-export interface OwnershipProposedEventObject {
-  proposedOwner: string;
-}
-export type OwnershipProposedEvent = TypedEvent<
-  [string],
-  OwnershipProposedEventObject
->;
-
-export type OwnershipProposedEventFilter =
-  TypedEventFilter<OwnershipProposedEvent>;
-
-export interface PausedEventObject {}
-export type PausedEvent = TypedEvent<[], PausedEventObject>;
-
-export type PausedEventFilter = TypedEventFilter<PausedEvent>;
-
-export interface RelayerFeeVaultUpdatedEventObject {
-  oldVault: string;
-  newVault: string;
-  caller: string;
-}
-export type RelayerFeeVaultUpdatedEvent = TypedEvent<
-  [string, string, string],
-  RelayerFeeVaultUpdatedEventObject
->;
-
-export type RelayerFeeVaultUpdatedEventFilter =
-  TypedEventFilter<RelayerFeeVaultUpdatedEvent>;
-
-export interface UnpausedEventObject {}
-export type UnpausedEvent = TypedEvent<[], UnpausedEventObject>;
-
-export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>;
-
-export interface XAppConnectionManagerSetEventObject {
-  updated: string;
-  caller: string;
-}
-export type XAppConnectionManagerSetEvent = TypedEvent<
-  [string, string],
-  XAppConnectionManagerSetEventObject
->;
-
-export type XAppConnectionManagerSetEventFilter =
-  TypedEventFilter<XAppConnectionManagerSetEvent>;
-
-export interface ProtocolManager extends BaseContract {
+export interface ConnextStorage extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
 
-  interface: ProtocolManagerInterface;
+  interface: ConnextStorageInterface;
 
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
@@ -479,10 +341,6 @@ export interface ProtocolManager extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    acceptProposedOwner(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     acceptanceDelay(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     approvedRelayers(
@@ -519,15 +377,6 @@ export interface ProtocolManager extends BaseContract {
     nonce(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     owner(overrides?: CallOverrides): Promise<[string]>;
-
-    pause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    proposeNewOwner(
-      newlyProposed: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
 
     proposed(overrides?: CallOverrides): Promise<[string]>;
 
@@ -586,21 +435,6 @@ export interface ProtocolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    setMaxRoutersPerTransfer(
-      _newMaxRouters: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    setRelayerFeeVault(
-      _relayerFeeVault: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
-    setXAppConnectionManager(
-      _xAppConnectionManager: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     settlementStrategies(
       arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BytesLike>,
@@ -658,16 +492,8 @@ export interface ProtocolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
-    unpause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<ContractTransaction>;
-
     xAppConnectionManager(overrides?: CallOverrides): Promise<[string]>;
   };
-
-  acceptProposedOwner(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
 
   acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -705,15 +531,6 @@ export interface ProtocolManager extends BaseContract {
   nonce(overrides?: CallOverrides): Promise<BigNumber>;
 
   owner(overrides?: CallOverrides): Promise<string>;
-
-  pause(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  proposeNewOwner(
-    newlyProposed: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
 
   proposed(overrides?: CallOverrides): Promise<string>;
 
@@ -772,21 +589,6 @@ export interface ProtocolManager extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  setMaxRoutersPerTransfer(
-    _newMaxRouters: PromiseOrValue<BigNumberish>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  setRelayerFeeVault(
-    _relayerFeeVault: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
-  setXAppConnectionManager(
-    _xAppConnectionManager: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   settlementStrategies(
     arg0: PromiseOrValue<BytesLike>,
     arg1: PromiseOrValue<BytesLike>,
@@ -835,15 +637,9 @@ export interface ProtocolManager extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  unpause(
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
-  ): Promise<ContractTransaction>;
-
   xAppConnectionManager(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
-    acceptProposedOwner(overrides?: CallOverrides): Promise<void>;
-
     acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
     approvedRelayers(
@@ -880,13 +676,6 @@ export interface ProtocolManager extends BaseContract {
     nonce(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<string>;
-
-    pause(overrides?: CallOverrides): Promise<void>;
-
-    proposeNewOwner(
-      newlyProposed: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
 
     proposed(overrides?: CallOverrides): Promise<string>;
 
@@ -945,21 +734,6 @@ export interface ProtocolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    setMaxRoutersPerTransfer(
-      _newMaxRouters: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setRelayerFeeVault(
-      _relayerFeeVault: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
-    setXAppConnectionManager(
-      _xAppConnectionManager: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<void>;
-
     settlementStrategies(
       arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BytesLike>,
@@ -1017,60 +791,12 @@ export interface ProtocolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    unpause(overrides?: CallOverrides): Promise<void>;
-
     xAppConnectionManager(overrides?: CallOverrides): Promise<string>;
   };
 
-  filters: {
-    "MaxRoutersPerTransferUpdated(uint256,address)"(
-      maxRoutersPerTransfer?: null,
-      caller?: null
-    ): MaxRoutersPerTransferUpdatedEventFilter;
-    MaxRoutersPerTransferUpdated(
-      maxRoutersPerTransfer?: null,
-      caller?: null
-    ): MaxRoutersPerTransferUpdatedEventFilter;
-
-    "OwnershipProposed(address)"(
-      proposedOwner?: PromiseOrValue<string> | null
-    ): OwnershipProposedEventFilter;
-    OwnershipProposed(
-      proposedOwner?: PromiseOrValue<string> | null
-    ): OwnershipProposedEventFilter;
-
-    "Paused()"(): PausedEventFilter;
-    Paused(): PausedEventFilter;
-
-    "RelayerFeeVaultUpdated(address,address,address)"(
-      oldVault?: null,
-      newVault?: null,
-      caller?: null
-    ): RelayerFeeVaultUpdatedEventFilter;
-    RelayerFeeVaultUpdated(
-      oldVault?: null,
-      newVault?: null,
-      caller?: null
-    ): RelayerFeeVaultUpdatedEventFilter;
-
-    "Unpaused()"(): UnpausedEventFilter;
-    Unpaused(): UnpausedEventFilter;
-
-    "XAppConnectionManagerSet(address,address)"(
-      updated?: null,
-      caller?: null
-    ): XAppConnectionManagerSetEventFilter;
-    XAppConnectionManagerSet(
-      updated?: null,
-      caller?: null
-    ): XAppConnectionManagerSetEventFilter;
-  };
+  filters: {};
 
   estimateGas: {
-    acceptProposedOwner(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
     approvedRelayers(
@@ -1107,15 +833,6 @@ export interface ProtocolManager extends BaseContract {
     nonce(overrides?: CallOverrides): Promise<BigNumber>;
 
     owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    pause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    proposeNewOwner(
-      newlyProposed: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
 
     proposed(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1165,21 +882,6 @@ export interface ProtocolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    setMaxRoutersPerTransfer(
-      _newMaxRouters: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    setRelayerFeeVault(
-      _relayerFeeVault: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    setXAppConnectionManager(
-      _xAppConnectionManager: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     settlementStrategies(
       arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BytesLike>,
@@ -1217,18 +919,10 @@ export interface ProtocolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    unpause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
     xAppConnectionManager(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    acceptProposedOwner(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     acceptanceDelay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     approvedRelayers(
@@ -1267,15 +961,6 @@ export interface ProtocolManager extends BaseContract {
     nonce(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    pause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    proposeNewOwner(
-      newlyProposed: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
 
     proposed(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -1331,21 +1016,6 @@ export interface ProtocolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    setMaxRoutersPerTransfer(
-      _newMaxRouters: PromiseOrValue<BigNumberish>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setRelayerFeeVault(
-      _relayerFeeVault: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    setXAppConnectionManager(
-      _xAppConnectionManager: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
     settlementStrategies(
       arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BytesLike>,
@@ -1381,10 +1051,6 @@ export interface ProtocolManager extends BaseContract {
     unclaimedAssets(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    unpause(
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     xAppConnectionManager(

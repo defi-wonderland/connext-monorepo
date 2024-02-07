@@ -7,7 +7,7 @@ library Constants {
   /**
    * @notice Sets the initial lp fee at 5 bps
    */
-  uint256 public constant INITIAL_LIQUIDITY_FEE_NUMERATOR = 9995;
+  //uint256 public constant INITIAL_LIQUIDITY_FEE_NUMERATOR = 9995;
 
   /**
    * @notice Sets the initial max routers per transfer

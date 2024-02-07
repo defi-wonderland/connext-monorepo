@@ -69,28 +69,28 @@ abstract contract RolesManager is BaseManager {
    */
   event RemoteAdded(uint32 domain, address remote, address caller);
 
-  /**
-   * @notice Returns if the router allowlist is removed.
-   */
-  function routerAllowlistRemoved() public view returns (bool) {
-    return _routerAllowlistRemoved;
-  }
+  // /**
+  //  * @notice Returns if the router allowlist is removed.
+  //  */
+  // function routerAllowlistRemoved() public view returns (bool) {
+  //   return routerAllowlistRemoved;
+  // }
 
-  /**
-   * @notice Returns the timestamp when router allowlist was last proposed to be removed
-   */
-  function routerAllowlistTimestamp() public view returns (uint256) {
-    return _routerAllowlistTimestamp;
-  }
+  // /**
+  //  * @notice Returns the timestamp when router allowlist was last proposed to be removed
+  //  */
+  // function routerAllowlistTimestamp() public view returns (uint256) {
+  //   return routerAllowlistTimestamp;
+  // }
 
-  /**
-   * @notice Returns the Role of the address
-   * @dev returns uint value of representing enum value of Role
-   * @param _role The address for which Role need to be queried
-   */
-  function queryRole(address _role) public view returns (Role) {
-    return roles[_role];
-  }
+  // /**
+  //  * @notice Returns the Role of the address
+  //  * @dev returns uint value of representing enum value of Role
+  //  * @param _role The address for which Role need to be queried
+  //  */
+  // function queryRole(address _role) public view returns (Role) {
+  //   return roles[_role];
+  // }
 
   // ============ External ============
 
@@ -101,7 +101,7 @@ abstract contract RolesManager is BaseManager {
   function proposeRouterAllowlistRemoval() public onlyOwnerOrRole(Role.Admin) {
     // Use contract as source of truth
     // Will fail if all ownership is renounced by modifier
-    if (_routerAllowlistRemoved) revert RolesManager__proposeRouterAllowlistRemoval_noOwnershipChange();
+    if (routerAllowlistRemoved) revert RolesManager__proposeRouterAllowlistRemoval_noOwnershipChange();
 
     // Begin delay, emit event
     _setRouterAllowlistTimestamp();
@@ -111,13 +111,13 @@ abstract contract RolesManager is BaseManager {
    * @notice Indicates if the ownership of the asset allowlist has
    * been renounced
    */
-  function removeRouterAllowlist() public onlyOwnerOrRole(Role.Admin) delayElapsed(_routerAllowlistTimestamp) {
+  function removeRouterAllowlist() public onlyOwnerOrRole(Role.Admin) delayElapsed(routerAllowlistTimestamp) {
     // Contract as sounce of truth
     // Will fail if all ownership is renounced by modifier
-    if (_routerAllowlistRemoved) revert RolesManager__removeRouterAllowlist_noOwnershipChange();
+    if (routerAllowlistRemoved) revert RolesManager__removeRouterAllowlist_noOwnershipChange();
 
     // Ensure there has been a proposal cycle started
-    if (_routerAllowlistTimestamp == 0) revert RolesManager__removeRouterAllowlist_noProposal();
+    if (routerAllowlistTimestamp == 0) revert RolesManager__removeRouterAllowlist_noProposal();
 
     // Set renounced, emit event, reset timestamp to 0
     _setRouterAllowlistRemoved(true);
@@ -215,13 +215,13 @@ abstract contract RolesManager is BaseManager {
 
   ////// INTERNAL //////
   function _setRouterAllowlistTimestamp() private {
-    _routerAllowlistTimestamp = block.timestamp;
+    routerAllowlistTimestamp = block.timestamp;
     emit RouterAllowlistRemovalProposed(block.timestamp);
   }
 
   function _setRouterAllowlistRemoved(bool value) private {
-    _routerAllowlistRemoved = value;
-    delete _routerAllowlistTimestamp;
+    routerAllowlistRemoved = value;
+    delete routerAllowlistTimestamp;
     emit RouterAllowlistRemoved(value);
   }
 }
