@@ -2,8 +2,8 @@
 pragma solidity 0.8.17;
 
 // ============ External Imports ============
-import {TypedMemView} from "../../shared/libraries/TypedMemView.sol";
-import {TokenId} from "./TokenId.sol";
+import {TypedMemView} from '../../shared/libraries/TypedMemView.sol';
+import {TokenId} from './TokenId.sol';
 
 library BridgeMessage {
   // ============ Libraries ============
@@ -60,7 +60,7 @@ library BridgeMessage {
     bytes29 _tokenId,
     bytes29 _action
   ) internal view typeAssert(_tokenId, Types.TokenId) returns (bytes memory) {
-    require(isValidAction(_action), "!action");
+    require(isValidAction(_action), '!action');
     bytes29[] memory _views = new bytes29[](2);
     _views[0] = _tokenId;
     _views[1] = _action;
