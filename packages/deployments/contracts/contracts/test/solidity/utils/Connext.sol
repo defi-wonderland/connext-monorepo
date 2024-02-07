@@ -57,10 +57,9 @@ contract Connext {
     }
   }
 
-/*
   function isInitialized() public view returns (bool) {
     return s.initialized;
   }
-*/
+
   receive() external payable {}
 }
