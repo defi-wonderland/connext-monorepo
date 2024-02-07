@@ -4,7 +4,7 @@ import {
   AdminSpokeConnectorInterface,
   AdminHubConnectorInterface,
   RootManagerInterface,
-} from "@connext/smart-contracts/hardhat/src";
+} from "@connext/smart-contracts";
 import { BigNumber, Signer, providers } from "ethers";
 import { PARAMETERS } from "../../constants/local";
 
