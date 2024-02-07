@@ -122,14 +122,12 @@ interface IBaseConnext {
   /**
    * @notice Contains configs for each router
    * @param approved - Whether the router is allowlisted, settable by admin
-   * @param portalApproved - Whether the router is allowlisted for portals, settable by admin
    * @param routerOwners - The address that can update the `recipient`
    * @param proposedRouterOwners - Owner candidates
    * @param proposedRouterTimestamp - When owner candidate was proposed (there is a delay to acceptance)
    */
   struct RouterConfig {
     bool approved;
-    bool portalApproved; // TODO: remove
     address owner;
     address recipient;
     address proposed;
@@ -143,27 +141,21 @@ interface IBaseConnext {
    * either be representation or adopted address passed in).
    *
    * If the decimals are updated in a future token upgrade, the transfers should fail. If that happens, the
-   * asset and swaps must be removed, and then they can be readded
+   * asset must be removed, and then they can be readded
    *
    * @param representation - Address of minted asset on this domain. If the token is of local origin (meaning it was
    * originally deployed on this chain), this MUST map to address(0).
    * @param representationDecimals - Decimals of minted asset on this domain
    * @param adopted - Address of adopted asset on this domain
    * @param adoptedDecimals - Decimals of adopted asset on this domain
-   * @param adoptedToLocalExternalPools - Holds the AMMs for swapping in and out of local assets
    * @param approval - Allowed assets
-   * @param cap - Liquidity caps of whitelisted assets. If 0, no cap is enforced.
-   * @param custodied - Custodied balance by address
    */
   struct TokenConfig {
     address representation;
     uint8 representationDecimals;
     address adopted;
     uint8 adoptedDecimals;
-    address adoptedToLocalExternalPools; // TODO: remove
     bool approval;
-    uint256 cap;
-    uint256 custodied;
   }
 
   /**
