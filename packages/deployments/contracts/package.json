@@ -4,11 +4,11 @@
   "description": "",
   "license": "ISC",
   "author": "Connext",
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "main": "dist/hardhat/src/index.js",
+  "types": "dist/hardhat/src/index.d.ts",
   "files": [
     "dist/**/*",
-    "!dist/src/cli/**/*",
+    "!dist/hardhat/src/cli/**/*",
     "!deploy/**/*",
     "!tasks/**/*",
     "artifacts",
@@ -16,7 +16,7 @@
     "local.deployments.json",
     "devnet.deployments.json",
     "contracts",
-    "abi"
+    "artifacts/abi"
   ],
   "scripts": {
     "allowlist": "ts-node ./hardhat/src/allowlist.ts",
@@ -35,8 +35,8 @@
     "initialize": "ts-node ./hardhat/src/cli/init/main.ts",
     "lint": "eslint ./hardhat/src --ext .ts --env node && yarn lint:sol",
     "lint-w:check": "yarn lint-w:sol-tests && yarn lint-w:sol-logic && forge fmt './contracts/chimera' --check",
-    "lint-w:sol-logic": "solhint -c .solhint-w.json './contracts/chimera/**/*.sol'",
-    "lint-w:sol-tests": "solhint -c .solhint.tests.json './contracts/test/solidity/unit/**/*.sol' './contracts/test/solidity/integration/**/*.sol'",
+    "lint-w:sol-logic": "solhint -c ./.solhint-w.json './contracts/chimera/**/*.sol'",
+    "lint-w:sol-tests": "solhint -c ./.solhint.tests.json './contracts/test/solidity/chimera/**/*.sol'",
     "lint:fix": "sort-package-json && forge fmt './contracts/chimera' && yarn lint-w:sol-tests --fix && yarn lint-w:sol-logic --fix",
     "lint:sol": "solhint --config ./.solhint.json 'contracts/**/*.sol'",
     "local:init": "ts-node ./hardhat/src/localnet/localInit.ts",
@@ -46,16 +46,16 @@
     "purge": "yarn clean && rimraf ./node_modules ./cache ",
     "size": "hardhat size-contracts",
     "test": "yarn forge test --no-match-path '*/fork/**.sol'",
-    "test:chimera": "forge test --match-path './contracts/test/unit/**.sol' && forge test --match-path './contracts/test/integration/**.sol'",
+    "test:chimera": "forge test --match-path './contracts/test/solidity/chimera/**/*.sol'",
     "test:fork": "yarn forge test --match-path '*/fork/**.sol'",
     "test:upgrade": "ts-node ./hardhat/src/cli/upgrade/main.ts",
-    "tsp": "yarn run tsp:root \"$@\" --cwd $(pwd)",
+    "tsp": "yarn run tsp:root '$@' --cwd $(pwd)",
     "verify": "yarn test && yarn clean && yarn build && yarn lint --max-warnings 0",
     "version": "yarn version"
   },
   "lint-staged": {
     "*.{js,css,md,ts,sol}": "forge fmt",
-    "*.sol": "solhint -c .solhint-w.json --fix  './contracts/chimera/**/*.sol' && solhint --fix -c .solhint.tests.json './contracts/test/solidity/unit/**/*.sol' './contracts/test/solidity/integration/**/*.sol'",
+    "*.sol": "solhint -c .solhint-w.json --fix  './contracts/chimera/**/*.sol' && solhint --fix -c .solhint.tests.json './contracts/test/solidity/chimera/**/*.sol'",
     "package.json": "sort-package-json"
   },
   "dependencies": {
