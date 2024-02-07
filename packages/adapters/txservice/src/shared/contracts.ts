@@ -14,7 +14,7 @@ import {
   RootManager as TRootManager,
   MultiSend as TMultisend,
   Unwrapper as TUnwrapper,
-} from "@connext/smart-contracts/dist/hardhat/src";
+} from "@connext/smart-contracts";
 import RootManagerAbi from "@connext/smart-contracts/artifacts/abi/contracts/messaging/RootManager.sol/RootManager.json";
 import PriceOracleAbi from "@connext/smart-contracts/artifacts/abi/contracts/core/connext/helpers/ConnextPriceOracle.sol/ConnextPriceOracle.json";
 import ConnextAbi from "@connext/smart-contracts/artifacts/abi/hardhat-diamond-abi/HardhatDiamondABI.sol/Connext.json";

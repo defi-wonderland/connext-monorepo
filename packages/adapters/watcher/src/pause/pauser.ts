@@ -1,4 +1,4 @@
-import { ConnextInterface } from "@connext/smart-contracts/dist/hardhat/src";
+import { ConnextInterface } from "@connext/smart-contracts";
 import { createMethodContext, domainToChainId, jsonifyError, RequestContext } from "@connext/nxtp-utils";
 import { constants, utils } from "ethers";
 

@@ -28,7 +28,7 @@ import SpokeConnector_Optimism from "@connext/smart-contracts/hardhat/deployment
 import Connext_DiamondProxy_Arbitrum from "@connext/smart-contracts/hardhat/deployments/local-arbitrum/Connext_DiamondProxy.json";
 import TestERC20_Arbitrum from "@connext/smart-contracts/hardhat/deployments/local-arbitrum/TestERC20.json";
 import SpokeConnector_Arbitrum from "@connext/smart-contracts/hardhat/deployments/local-arbitrum/ArbitrumSpokeConnector.json";
-import { canonizeId } from "@connext/smart-contracts/hardhat/src";
+import { canonizeId } from "@connext/smart-contracts";
 import { Contract, providers, utils } from "ethers";
 import { addLiquidity } from "./addLiquidity";
 
