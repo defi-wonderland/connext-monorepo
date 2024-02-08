@@ -60,7 +60,11 @@ contract LPToken is ERC20Upgradeable, OwnableUpgradeable {
    * minting and burning. This ensures that Swap.updateUserWithdrawFees are called everytime.
    * This assumes the owner is set to a Swap contract's address.
    */
-  function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual override(ERC20Upgradeable) {
+  function _beforeTokenTransfer(
+    address from,
+    address to,
+    uint256 amount
+  ) internal virtual override(ERC20Upgradeable) {
     super._beforeTokenTransfer(from, to, amount);
     require(to != address(this), "LPToken: cannot send to itself");
   }

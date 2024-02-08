@@ -19,17 +19,29 @@ contract DiamondCutFacet is IDiamondCut {
   /// @param _init The address of the contract or facet to execute _calldata
   /// @param _calldata A function call, including function selector and arguments
   ///                  _calldata is executed with delegatecall on _init
-  function diamondCut(FacetCut[] calldata _diamondCut, address _init, bytes calldata _calldata) external override {
+  function diamondCut(
+    FacetCut[] calldata _diamondCut,
+    address _init,
+    bytes calldata _calldata
+  ) external override {
     LibDiamond.enforceIsContractOwner();
     LibDiamond.diamondCut(_diamondCut, _init, _calldata);
   }
 
-  function proposeDiamondCut(FacetCut[] calldata _diamondCut, address _init, bytes calldata _calldata) external {
+  function proposeDiamondCut(
+    FacetCut[] calldata _diamondCut,
+    address _init,
+    bytes calldata _calldata
+  ) external {
     LibDiamond.enforceIsContractOwner();
     LibDiamond.proposeDiamondCut(_diamondCut, _init, _calldata);
   }
 
-  function rescindDiamondCut(FacetCut[] calldata _diamondCut, address _init, bytes calldata _calldata) external {
+  function rescindDiamondCut(
+    FacetCut[] calldata _diamondCut,
+    address _init,
+    bytes calldata _calldata
+  ) external {
     LibDiamond.enforceIsContractOwner();
     LibDiamond.rescindDiamondCut(_diamondCut, _init, _calldata);
   }

@@ -45,7 +45,11 @@ abstract contract GnosisBase is GasCap {
   /**
    * @dev Asserts the sender of a cross domain message
    */
-  function _verifySender(address _amb, address _expected, uint256 _sourceChain) internal view returns (bool) {
+  function _verifySender(
+    address _amb,
+    address _expected,
+    uint256 _sourceChain
+  ) internal view returns (bool) {
     require(msg.sender == _amb, "!bridge");
     require(_sourceChain == MIRROR_CHAIN_ID, "!source");
     return GnosisAmb(_amb).messageSender() == _expected;

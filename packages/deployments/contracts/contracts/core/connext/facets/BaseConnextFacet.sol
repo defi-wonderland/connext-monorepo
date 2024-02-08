@@ -159,7 +159,11 @@ contract BaseConnextFacet {
     return (uint64(_origin) << 32) | _nonce;
   }
 
-  function _getLocalAsset(bytes32 _key, bytes32 _id, uint32 _domain) internal view returns (address) {
+  function _getLocalAsset(
+    bytes32 _key,
+    bytes32 _id,
+    uint32 _domain
+  ) internal view returns (address) {
     return AssetLogic.getLocalAsset(_key, _id, _domain, s);
   }
 

@@ -195,7 +195,7 @@ contract SwapAdminFacet is BaseConnextFacet {
       if (decimals[i] > Constants.POOL_PRECISION_DECIMALS)
         revert SwapAdminFacet__initializeSwap_tokenDecimalsExceedMax();
 
-      precisionMultipliers[i] = 10 ** uint256(Constants.POOL_PRECISION_DECIMALS - decimals[i]);
+      precisionMultipliers[i] = 10**uint256(Constants.POOL_PRECISION_DECIMALS - decimals[i]);
       // NOTE: safe to cast to uint8 as the numPooledTokens is that type and the loop ceiling
       s.tokenIndexes[_key][address(_pooledTokens[i])] = uint8(i);
 
@@ -330,7 +330,11 @@ contract SwapAdminFacet is BaseConnextFacet {
    * @param futureA the new A to ramp towards
    * @param futureTime timestamp when the new A should be reached
    */
-  function rampA(bytes32 key, uint256 futureA, uint256 futureTime) external onlyOwnerOrAdmin {
+  function rampA(
+    bytes32 key,
+    uint256 futureA,
+    uint256 futureTime
+  ) external onlyOwnerOrAdmin {
     s.swapStorages[key].rampA(futureA, futureTime);
     emit RampAStarted(key, futureA, futureTime, msg.sender);
   }

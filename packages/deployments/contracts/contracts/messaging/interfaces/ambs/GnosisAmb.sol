@@ -21,9 +21,17 @@ interface GnosisAmb {
 
   function failedMessageSender(bytes32 _messageId) external view returns (address);
 
-  function requireToPassMessage(address _contract, bytes memory _data, uint256 _gas) external returns (bytes32);
+  function requireToPassMessage(
+    address _contract,
+    bytes memory _data,
+    uint256 _gas
+  ) external returns (bytes32);
 
-  function requireToConfirmMessage(address _contract, bytes memory _data, uint256 _gas) external returns (bytes32);
+  function requireToConfirmMessage(
+    address _contract,
+    bytes memory _data,
+    uint256 _gas
+  ) external returns (bytes32);
 
   function requireToGetInformation(bytes32 _requestSelector, bytes memory _data) external returns (bytes32);
 

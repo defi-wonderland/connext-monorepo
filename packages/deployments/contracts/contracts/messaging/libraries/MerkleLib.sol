@@ -14,7 +14,7 @@ library MerkleLib {
   // ============ Constants =============
 
   uint256 internal constant TREE_DEPTH = 32;
-  uint256 internal constant MAX_LEAVES = 2 ** TREE_DEPTH - 1;
+  uint256 internal constant MAX_LEAVES = 2**TREE_DEPTH - 1;
 
   /**
    * @dev Z_i represent the hash values at different heights for a binary tree with leaf values equal to `0`.

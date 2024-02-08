@@ -221,7 +221,11 @@ contract ArbitrumHubConnector is HubConnector {
     emit MessageProcessed(abi.encode(_data), msg.sender);
   }
 
-  function _validateSendRoot(uint64 _nodeNum, bytes32 _sendRoot, bytes32 _blockHash) internal view {
+  function _validateSendRoot(
+    uint64 _nodeNum,
+    bytes32 _sendRoot,
+    bytes32 _blockHash
+  ) internal view {
     // Get the confirm data to ensure the node has been put on L1 with
     // the given block hash and send root
     bytes32 confirmData = _confirmHash(_blockHash, _sendRoot);
@@ -269,7 +273,12 @@ contract ArbitrumHubConnector is HubConnector {
   }
 
   // modified from: https://github.com/OffchainLabs/nitro/blob/fbaa96d6d6246b427629be176499e1d5c5013d89/contracts/src/bridge/Outbox.sol#L219-L235
-  function _recordOutputAsSpent(bytes32[] memory _proof, uint256 _index, bytes32 _item, bytes32 _sendRoot) internal {
+  function _recordOutputAsSpent(
+    bytes32[] memory _proof,
+    uint256 _index,
+    bytes32 _item,
+    bytes32 _sendRoot
+  ) internal {
     require(_proof.length < 256, "proof length");
     require((_index >> _proof.length) == 0, "!minimal proof");
 

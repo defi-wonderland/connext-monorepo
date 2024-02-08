@@ -172,7 +172,15 @@ library SwapUtils {
     uint8 tokenIndex,
     uint256 tokenAmount,
     uint256 totalSupply
-  ) internal view returns (uint256, uint256, uint256) {
+  )
+    internal
+    view
+    returns (
+      uint256,
+      uint256,
+      uint256
+    )
+  {
     // Get the current D, then solve the stableswap invariant
     // y_i for D - tokenAmount
     uint256[] memory xp = _xp(self);
@@ -232,7 +240,12 @@ library SwapUtils {
    * @param d the stableswap invariant
    * @return the price of the token, in the same precision as in xp
    */
-  function getYD(uint256 a, uint8 tokenIndex, uint256[] memory xp, uint256 d) internal pure returns (uint256) {
+  function getYD(
+    uint256 a,
+    uint8 tokenIndex,
+    uint256[] memory xp,
+    uint256 d
+  ) internal pure returns (uint256) {
     uint256 numTokens = xp.length;
     require(tokenIndex < numTokens, "Token not found");
 
@@ -344,10 +357,11 @@ library SwapUtils {
    *
    * @return an array of amounts "scaled" to the pool's precision
    */
-  function _xp(
-    uint256[] memory balances,
-    uint256[] memory precisionMultipliers
-  ) internal pure returns (uint256[] memory) {
+  function _xp(uint256[] memory balances, uint256[] memory precisionMultipliers)
+    internal
+    pure
+    returns (uint256[] memory)
+  {
     uint256 numTokens = balances.length;
     require(numTokens == precisionMultipliers.length, "mismatch multipliers");
     uint256[] memory xp = new uint256[](numTokens);
@@ -381,7 +395,7 @@ library SwapUtils {
     LPToken lpToken = self.lpToken;
     uint256 supply = lpToken.totalSupply();
     if (supply != 0) {
-      return (d * (10 ** uint256(Constants.POOL_PRECISION_DECIMALS))) / supply;
+      return (d * (10**uint256(Constants.POOL_PRECISION_DECIMALS))) / supply;
     }
     return 0;
   }
@@ -847,7 +861,11 @@ library SwapUtils {
    * allowed addresses. If the pool is not in the guarded launch phase, this parameter will be ignored.
    * @return amount of LP token user received
    */
-  function addLiquidity(Swap storage self, uint256[] memory amounts, uint256 minToMint) internal returns (uint256) {
+  function addLiquidity(
+    Swap storage self,
+    uint256[] memory amounts,
+    uint256 minToMint
+  ) internal returns (uint256) {
     require(!self.disabled, "disabled pool");
 
     uint256 numTokens = self.pooledTokens.length;

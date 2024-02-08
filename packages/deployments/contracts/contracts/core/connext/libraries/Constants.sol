@@ -141,7 +141,7 @@ library Constants {
    * @dev stored here to keep easily in sync between `SwapUtils` and `SwapUtilsExternal`
    */
   uint256 public constant A_PRECISION = 100;
-  uint256 public constant MAX_A = 10 ** 6;
+  uint256 public constant MAX_A = 10**6;
   uint256 public constant MAX_A_CHANGE = 2;
   uint256 public constant MIN_RAMP_TIME = 14 days;
   uint256 public constant MIN_RAMP_DELAY = 1 days;

@@ -1728,7 +1728,9 @@
         "blockNumber": 157906667,
         "transactionHash": "0xf0db99de0fd55d910dd8938fd464ad70768cbba8d8f5701b1cf3b8f2727a5c19",
         "address": "0x5f0F58c8939565C0C553303849Bc5Bf7c530e816",
-        "topics": ["0x138b2e0015ac8e1842fbb73cdefea5574fd42dd33df05e84271a7adc811d6b3d"],
+        "topics": [
+          "0x138b2e0015ac8e1842fbb73cdefea5574fd42dd33df05e84271a7adc811d6b3d"
+        ],
         "data": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000941a6c7455f24e593aac9a7c73f849d36d3efc93",
         "logIndex": 15,
         "blockHash": "0xe886242b67f3cde5fd0b85e376cd96db3f0af12d6cd6493dcdb9907e31d2e370"
@@ -1738,7 +1740,9 @@
         "blockNumber": 157906667,
         "transactionHash": "0xf0db99de0fd55d910dd8938fd464ad70768cbba8d8f5701b1cf3b8f2727a5c19",
         "address": "0x5f0F58c8939565C0C553303849Bc5Bf7c530e816",
-        "topics": ["0xc77bec288fc88f168427f2f7da682eadb26cac89d8d591af6e443da98dff2bbc"],
+        "topics": [
+          "0xc77bec288fc88f168427f2f7da682eadb26cac89d8d591af6e443da98dff2bbc"
+        ],
         "data": "0x000000000000000000000000000000000000000000000000000000000000000000000000000000000000000083096c7455f24e593aac9a7c73f849d36d3eeb82",
         "logIndex": 16,
         "blockHash": "0xe886242b67f3cde5fd0b85e376cd96db3f0af12d6cd6493dcdb9907e31d2e370"
@@ -1762,7 +1766,9 @@
         "blockNumber": 157906667,
         "transactionHash": "0xf0db99de0fd55d910dd8938fd464ad70768cbba8d8f5701b1cf3b8f2727a5c19",
         "address": "0x5f0F58c8939565C0C553303849Bc5Bf7c530e816",
-        "topics": ["0x138b2e0015ac8e1842fbb73cdefea5574fd42dd33df05e84271a7adc811d6b3d"],
+        "topics": [
+          "0x138b2e0015ac8e1842fbb73cdefea5574fd42dd33df05e84271a7adc811d6b3d"
+        ],
         "data": "0x000000000000000000000000941a6c7455f24e593aac9a7c73f849d36d3efc93000000000000000000000000941a6c7455f24e593aac9a7c73f849d36d3efc93",
         "logIndex": 18,
         "blockHash": "0xe886242b67f3cde5fd0b85e376cd96db3f0af12d6cd6493dcdb9907e31d2e370"

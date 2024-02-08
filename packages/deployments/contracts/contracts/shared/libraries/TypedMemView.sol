@@ -221,7 +221,11 @@ library TypedMemView {
    * @param _len      The length
    * @return          newView - The new view with the specified type, location and length
    */
-  function unsafeBuildUnchecked(uint256 _type, uint256 _loc, uint256 _len) private pure returns (bytes29 newView) {
+  function unsafeBuildUnchecked(
+    uint256 _type,
+    uint256 _loc,
+    uint256 _len
+  ) private pure returns (bytes29 newView) {
     uint256 _uint96Bits = 96;
     uint256 _emptyBits = 24;
 
@@ -248,7 +252,11 @@ library TypedMemView {
    * @param _len      The length
    * @return          newView - The new view with the specified type, location and length
    */
-  function build(uint256 _type, uint256 _loc, uint256 _len) internal pure returns (bytes29 newView) {
+  function build(
+    uint256 _type,
+    uint256 _loc,
+    uint256 _len
+  ) internal pure returns (bytes29 newView) {
     uint256 _end = _loc + _len;
     assembly {
       // solhint-disable-previous-line no-inline-assembly
@@ -359,7 +367,12 @@ library TypedMemView {
    * @param newType   The new type
    * @return          bytes29 - The new view
    */
-  function slice(bytes29 memView, uint256 _index, uint256 _len, uint40 newType) internal pure returns (bytes29) {
+  function slice(
+    bytes29 memView,
+    uint256 _index,
+    uint256 _len,
+    uint40 newType
+  ) internal pure returns (bytes29) {
     uint256 _loc = loc(memView);
 
     // Ensure it doesn't overrun the view
@@ -378,7 +391,11 @@ library TypedMemView {
    * @param newType   The new type
    * @return          bytes29 - The new view
    */
-  function prefix(bytes29 memView, uint256 _len, uint40 newType) internal pure returns (bytes29) {
+  function prefix(
+    bytes29 memView,
+    uint256 _len,
+    uint40 newType
+  ) internal pure returns (bytes29) {
     return slice(memView, 0, _len, newType);
   }
 
@@ -389,7 +406,11 @@ library TypedMemView {
    * @param newType   The new type
    * @return          bytes29 - The new view
    */
-  function postfix(bytes29 memView, uint256 _len, uint40 newType) internal pure returns (bytes29) {
+  function postfix(
+    bytes29 memView,
+    uint256 _len,
+    uint40 newType
+  ) internal pure returns (bytes29) {
     return slice(memView, uint256(len(memView)) - _len, _len, newType);
   }
 
@@ -403,7 +424,11 @@ library TypedMemView {
    * @param _bytes    The bytes
    * @return          result - The 32 byte result
    */
-  function index(bytes29 memView, uint256 _index, uint8 _bytes) internal pure returns (bytes32 result) {
+  function index(
+    bytes29 memView,
+    uint256 _index,
+    uint8 _bytes
+  ) internal pure returns (bytes32 result) {
     if (_bytes == 0) {
       return bytes32(0);
     }
@@ -433,7 +458,11 @@ library TypedMemView {
    * @param _bytes    The bytes
    * @return          result - The unsigned integer
    */
-  function indexUint(bytes29 memView, uint256 _index, uint8 _bytes) internal pure returns (uint256 result) {
+  function indexUint(
+    bytes29 memView,
+    uint256 _index,
+    uint8 _bytes
+  ) internal pure returns (uint256 result) {
     return uint256(index(memView, _index, _bytes)) >> ((32 - _bytes) * 8);
   }
 
@@ -444,7 +473,11 @@ library TypedMemView {
    * @param _bytes    The bytes
    * @return          result - The unsigned integer
    */
-  function indexLEUint(bytes29 memView, uint256 _index, uint8 _bytes) internal pure returns (uint256 result) {
+  function indexLEUint(
+    bytes29 memView,
+    uint256 _index,
+    uint8 _bytes
+  ) internal pure returns (uint256 result) {
     return reverseUint256(uint256(index(memView, _index, _bytes)));
   }
 

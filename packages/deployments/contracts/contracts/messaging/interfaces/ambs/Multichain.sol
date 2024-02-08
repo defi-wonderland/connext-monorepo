@@ -14,9 +14,20 @@ interface Multichain {
     uint256 _flags
   ) external payable;
 
-  function context() external view returns (address from, uint256 fromChainID, uint256 nonce);
+  function context()
+    external
+    view
+    returns (
+      address from,
+      uint256 fromChainID,
+      uint256 nonce
+    );
 
   function executor() external view returns (address executor);
 
-  function calcSrcFees(string calldata _appID, uint256 _toChainID, uint256 _dataLength) external view returns (uint256);
+  function calcSrcFees(
+    string calldata _appID,
+    uint256 _toChainID,
+    uint256 _dataLength
+  ) external view returns (uint256);
 }

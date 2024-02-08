@@ -96,7 +96,7 @@ contract StableSwap is IStableSwap, OwnerPausableUpgradeable, ReentrancyGuardUpg
       }
       require(address(_pooledTokens[i]) != address(0), "The 0 address isn't an ERC-20");
       require(decimals[i] < Constants.POOL_PRECISION_DECIMALS + 1, "Token decimals exceeds max");
-      precisionMultipliers[i] = 10 ** uint256(Constants.POOL_PRECISION_DECIMALS - decimals[i]);
+      precisionMultipliers[i] = 10**uint256(Constants.POOL_PRECISION_DECIMALS - decimals[i]);
       tokenIndexes[address(_pooledTokens[i])] = uint8(i);
 
       unchecked {
@@ -302,10 +302,12 @@ contract StableSwap is IStableSwap, OwnerPausableUpgradeable, ReentrancyGuardUpg
    * @return availableTokenAmount calculated amount of underlying token
    * available to withdraw
    */
-  function calculateRemoveLiquidityOneToken(
-    uint256 tokenAmount,
-    uint8 tokenIndex
-  ) external view override returns (uint256 availableTokenAmount) {
+  function calculateRemoveLiquidityOneToken(uint256 tokenAmount, uint8 tokenIndex)
+    external
+    view
+    override
+    returns (uint256 availableTokenAmount)
+  {
     return swapStorage.calculateWithdrawOneToken(tokenAmount, tokenIndex);
   }
 

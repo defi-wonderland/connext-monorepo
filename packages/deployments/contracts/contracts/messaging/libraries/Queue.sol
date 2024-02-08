@@ -60,7 +60,11 @@ library QueueLib {
    * @param max The maximum number of elements we are allowed to dequeue in this call.
    * @return item Dequeued element IFF delay period has been surpassed; otherwise, empty bytes32.
    **/
-  function dequeueVerified(Queue storage queue, uint256 delay, uint128 max) internal returns (bytes32[] memory) {
+  function dequeueVerified(
+    Queue storage queue,
+    uint256 delay,
+    uint128 max
+  ) internal returns (bytes32[] memory) {
     uint128 first = queue.first;
     uint128 last = queue.last;
 

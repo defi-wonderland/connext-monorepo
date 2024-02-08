@@ -204,7 +204,12 @@ contract PortalFacet is BaseConnextFacet {
    * @param _fee Amount of fees to repay
    * @param _transferId Corresponding transfer id for the fees
    */
-  function _backLoan(address _asset, uint256 _backing, uint256 _fee, bytes32 _transferId) internal {
+  function _backLoan(
+    address _asset,
+    uint256 _backing,
+    uint256 _fee,
+    bytes32 _transferId
+  ) internal {
     // reduce debt
     s.portalDebt[_transferId] -= _backing;
     s.portalFeeDebt[_transferId] -= _fee;
