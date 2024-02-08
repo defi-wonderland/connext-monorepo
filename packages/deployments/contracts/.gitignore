@@ -2,12 +2,12 @@ artifacts_build
 cache
 artifacts_forge
 coverage.json
-deployments/*/solcInputs
+hardhat/deployments/*/solcInputs
 .openzeppelin/unknown-31337.json
 init.json
 artifacts-zk
 cache-zk
-deployments/*_fork
-deployments/devnet-*
+hardhat/deployments/*_fork
+hardhat/deployments/devnet-*
 broadcast
 artifacts/build-info/
