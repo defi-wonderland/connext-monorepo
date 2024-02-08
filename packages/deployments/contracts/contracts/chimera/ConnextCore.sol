@@ -10,15 +10,7 @@ import {ExcessivelySafeCall} from '../shared/libraries/ExcessivelySafeCall.sol';
 import {TypedMemView} from '../shared/libraries/TypedMemView.sol';
 import {TypeCasts} from '../shared/libraries/TypeCasts.sol';
 
-import {
-  ExecuteArgs,
-  TransferInfo,
-  DestinationTransferStatus,
-  TokenConfig,
-  AssetTransfer
-} from './libraries/LibConnextStorage.sol';
 import {Constants} from './libraries/Constants.sol';
-import {TokenId} from './libraries/TokenId.sol';
 
 import {IXReceiver} from './interfaces/IXReceiver.sol';
 

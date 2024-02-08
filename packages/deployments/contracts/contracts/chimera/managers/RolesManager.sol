@@ -2,7 +2,6 @@
 pragma solidity 0.8.17;
 
 import {BaseManager} from './BaseManager.sol';
-import {Role} from '../libraries/LibConnextStorage.sol';
 import {TypeCasts} from '../../shared/libraries/TypeCasts.sol';
 
 abstract contract RolesManager is BaseManager {

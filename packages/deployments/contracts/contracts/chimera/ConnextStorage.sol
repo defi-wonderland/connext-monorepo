@@ -2,7 +2,7 @@
 pragma solidity 0.8.17;
 
 import {IConnectorManager} from '../messaging/interfaces/IConnectorManager.sol';
-import {TokenId, TokenConfig, DestinationTransferStatus, Role, RouterConfig} from './libraries/LibConnextStorage.sol';
+import {BaseConnext} from './BaseConnext.sol';
 
 /**
  * @notice THIS FILE DEFINES OUR STORAGE LAYOUT AND ID GENERATION SCHEMA. IT CAN ONLY BE MODIFIED FREELY FOR FRESH
@@ -11,7 +11,7 @@ import {TokenId, TokenConfig, DestinationTransferStatus, Role, RouterConfig} fro
  *
  * BE VERY CAREFUL MODIFYING THE VALUES IN THIS FILE!
  */
-abstract contract ConnextStorage {
+abstract contract ConnextStorage is BaseConnext {
   //
   // 0
   bool initialized;

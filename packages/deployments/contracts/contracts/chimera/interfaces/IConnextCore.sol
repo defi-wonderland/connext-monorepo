@@ -3,9 +3,9 @@ pragma solidity 0.8.17;
 
 import {IERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
-import {ExecuteArgs, TokenId, DestinationTransferStatus, TransferInfo} from '../libraries/LibConnextStorage.sol';
+import {IBaseConnext} from './IBaseConnext.sol';
 
-interface IConnextCore {
+interface IConnextCore is IBaseConnext {
   // // TokenFacet
   // function canonicalToAdopted(bytes32 _key) external view returns (address);
 

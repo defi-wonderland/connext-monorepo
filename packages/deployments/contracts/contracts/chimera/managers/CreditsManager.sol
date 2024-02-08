@@ -2,11 +2,8 @@
 pragma solidity 0.8.17;
 
 import {BaseManager} from './BaseManager.sol';
-import {BridgeMessage} from '../libraries/BridgeMessage.sol';
 import {IOutbox} from '../../messaging/interfaces/IOutbox.sol';
 import {IBridgeToken} from '../interfaces/IBridgeToken.sol';
-
-import {TransferInfo, TokenId} from '../libraries/LibConnextStorage.sol';
 
 contract CreditsManager is BaseManager {
   // ============ Events ============
@@ -69,7 +66,7 @@ contract CreditsManager is BaseManager {
 
     bytes memory _messageBody =
     // solhint-disable-next-line func-named-parameters
-     abi.encodePacked(_canonical.domain, _canonical.id, BridgeMessage.Types.Transfer, bridgedAmt, _transferId);
+     abi.encodePacked(_canonical.domain, _canonical.id, Types.Transfer, bridgedAmt, _transferId);
 
     // Send message to destination chain bridge router.
     // return message hash and unhashed body

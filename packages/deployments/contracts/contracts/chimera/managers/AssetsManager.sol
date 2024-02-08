@@ -8,7 +8,6 @@ import {TypedMemView} from '../../shared/libraries/TypedMemView.sol';
 
 import {BridgeMessage} from '../libraries/BridgeMessage.sol';
 
-import {Role, TokenId, TokenConfig, DestinationTransferStatus} from '../libraries/LibConnextStorage.sol';
 import {BaseManager} from './BaseManager.sol';
 import {BridgeToken} from '../helpers/BridgeToken.sol';
 import {IBridgeToken} from '../interfaces/IBridgeToken.sol';
@@ -26,7 +25,6 @@ abstract contract AssetsManager is BaseManager {
   error AssetsManager__addAssetId_badBurn();
   error AssetsManager__removeAssetId_notAdded();
   error AssetsManager__removeAssetId_invalidParams();
-  error AssetsManager__removeAssetId_remainsCustodied();
   error AssetsManager__updateDetails_localNotFound();
   error AssetsManager__updateDetails_onlyRemote();
   error AssetsManager__updateDetails_notApproved();
@@ -35,7 +33,6 @@ abstract contract AssetsManager is BaseManager {
   error AssetsManager__setupAsset_invalidCanonicalConfiguration();
   error AssetsManager__setupAssetWithDeployedRepresentation_invalidRepresentation();
   error AssetsManager__setupAssetWithDeployedRepresentation_onCanonicalDomain();
-  error AssetsManager__setLiquidityCap_notCanonicalDomain();
   error AssetsManager__onlyReplica_notReplica();
   error AssetsManager__onlyRemoteRouter_notRemote();
   error AssetsManager__handle_notTransfer();
@@ -51,18 +48,6 @@ abstract contract AssetsManager is BaseManager {
    * @param representation the address of the newly locally deployed representation contract
    */
   event TokenDeployed(uint32 indexed domain, bytes32 indexed id, address indexed representation);
-
-  /**
-   * @notice Emitted when a liquidity cap is updated
-   * @param key - The key in the mapping (hash of canonical id and domain)
-   * @param canonicalId - The canonical identifier of the token the local <> adopted AMM is for
-   * @param domain - The domain of the canonical token for the local <> adopted amm
-   * @param cap - The newly enforced liquidity cap (if it is 0, no cap is enforced)
-   * @param caller - The account that called the function
-   */
-  event LiquidityCapUpdated(
-    bytes32 indexed key, bytes32 indexed canonicalId, uint32 indexed domain, uint256 cap, address caller
-  );
 
   /**
    * @notice Emitted when a new asset is added
@@ -138,10 +123,6 @@ abstract contract AssetsManager is BaseManager {
     return approvedAssets(calculateCanonicalHash(_canonical.id, _canonical.domain));
   }
 
-  function getCustodiedAmount(bytes32 _key) public view returns (uint256) {
-    return tokenConfigs[_key].custodied;
-  }
-
   // ============ Admin functions ============
 
   /**
@@ -149,17 +130,13 @@ abstract contract AssetsManager is BaseManager {
    *
    * @dev When allowlisting the canonical asset, all representational assets would be
    * allowlisted as well. In the event you have a different adopted asset (i.e. PoS USDC
-   * on polygon), you should *not* allowlist the adopted asset. The stable swap pool
-   * address used should allow you to swap between the local <> adopted asset.
+   * on polygon), you should *not* allowlist the adopted asset.
    *
    * If a representation has been deployed at any point, `setupAssetWithDeployedRepresentation`
    * should be used instead.
    *
    * The following can only be added on *REMOTE* domains:
    * - `_adoptedAssetId`
-   * - `_stableSwapPool`
-   *
-   * Whereas the `_cap` can only be added on the canonical domain
    *
    * @param _canonical - The canonical asset to add by id and domain. All representations
    * will be allowlisted as well
@@ -169,16 +146,13 @@ abstract contract AssetsManager is BaseManager {
    * @param _representationSymbol - The symbol used for the deployed asset
    * @param _adoptedAssetId - The used asset id for this domain (e.g. PoS USDC for
    * polygon)
-   * @param _stableSwapPool - The address of the local stableswap pool, if it exist
    */
   function setupAsset(
     TokenId calldata _canonical,
     uint8 _canonicalDecimals,
     string memory _representationName,
     string memory _representationSymbol,
-    address _adoptedAssetId,
-    address _stableSwapPool,
-    uint256 _cap
+    address _adoptedAssetId
   ) external onlyOwnerOrRole(Role.Admin) returns (address _local) {
     // Calculate the canonical key.
     bytes32 key = calculateCanonicalHash(_canonical.id, _canonical.domain);
@@ -190,8 +164,7 @@ abstract contract AssetsManager is BaseManager {
 
       // Sanity check: ensure adopted asset ID == canonical address (or empty).
       // This could reflect a user error or miscalculation and lead to unexpected behavior.
-      // NOTE: Since we're on canonical domain, there should be no stableswap pool provided.
-      if ((_adoptedAssetId != address(0) && _adoptedAssetId != _local) || _stableSwapPool != address(0)) {
+      if (_adoptedAssetId != address(0) && _adoptedAssetId != _local) {
         revert AssetsManager__setupAsset_invalidCanonicalConfiguration();
       }
 
@@ -199,7 +172,7 @@ abstract contract AssetsManager is BaseManager {
       // canonical asset in this case) instead for both adopted and local.
 
       // TODO: Fix stack too deep in the line below
-      //_enrollAdoptedAndLocalAssets(true, _canonicalDecimals, address(0), _local, address(0), _canonical, _cap, key);
+      //_enrollAdoptedAndLocalAssets(true, _canonicalDecimals, address(0), _local, _canonical, key);
     } else {
       // Cannot already have an assigned representation.
       // NOTE: *If* it does, it can still be replaced with `setupAssetWithDeployedRepresentation`
@@ -224,9 +197,7 @@ abstract contract AssetsManager is BaseManager {
         _canonicalDecimals,
         _adoptedAssetId,
         _local,
-        _stableSwapPool,
         _canonical,
-        0,
         key
       );*/
     }
@@ -256,13 +227,11 @@ abstract contract AssetsManager is BaseManager {
    * @param _representation - The address of the representative asset
    * @param _adoptedAssetId - The used asset id for this domain (e.g. PoS USDC for
    * polygon)
-   * @param _stableSwapPool - The address of the local stableswap pool, if it exist
    */
   function setupAssetWithDeployedRepresentation(
     TokenId calldata _canonical,
     address _representation,
-    address _adoptedAssetId,
-    address _stableSwapPool
+    address _adoptedAssetId
   ) external onlyOwnerOrRole(Role.Admin) returns (address) {
     if (_representation == address(0)) {
       revert AssetsManager__setupAssetWithDeployedRepresentation_invalidRepresentation();
@@ -280,22 +249,11 @@ abstract contract AssetsManager is BaseManager {
       _localDecimals: IERC20Metadata(_representation).decimals(),
       _adopted: _adoptedAssetId,
       _local: _representation,
-      _stableSwapPool: _stableSwapPool,
       _canonical: _canonical,
-      _cap: 0,
       _key: key
     });
 
     return _representation;
-  }
-
-  /**
-   * @notice Adds a stable swap pool for the local <> adopted asset.
-   * @dev Must pass in the _canonical information so it can be emitted in event
-   */
-  function updateLiquidityCap(TokenId calldata _canonical, uint256 _updated) external onlyOwnerOrRole(Role.Admin) {
-    bytes32 key = calculateCanonicalHash(_canonical.id, _canonical.domain);
-    _setLiquidityCap(_canonical, _updated, key);
   }
 
   /**
@@ -309,8 +267,7 @@ abstract contract AssetsManager is BaseManager {
     address _adoptedAssetId,
     address _representation
   ) external onlyOwnerOrRole(Role.Admin) {
-    TokenId memory canonical = adoptedToCanonical[_adoptedAssetId];
-    _removeAssetId(_key, _adoptedAssetId, _representation, canonical);
+    _removeAssetId(_key, _adoptedAssetId, _representation);
   }
 
   /**
@@ -325,7 +282,7 @@ abstract contract AssetsManager is BaseManager {
     address _representation
   ) external onlyOwnerOrRole(Role.Admin) {
     bytes32 key = calculateCanonicalHash(_canonical.id, _canonical.domain);
-    _removeAssetId(key, _adoptedAssetId, _representation, _canonical);
+    _removeAssetId(key, _adoptedAssetId, _representation);
   }
 
   /**
@@ -367,9 +324,7 @@ abstract contract AssetsManager is BaseManager {
     uint8 _localDecimals,
     address _adopted,
     address _local,
-    address _stableSwapPool,
     TokenId calldata _canonical,
-    uint256 _cap,
     bytes32 _key
   ) internal {
     // Sanity check: canonical ID and domain are not 0.
@@ -405,24 +360,16 @@ abstract contract AssetsManager is BaseManager {
   uint8 representationDecimals;
   address adopted;
   uint8 adoptedDecimals;
-  address adoptedToLocalExternalPools; // TODO: remove
   bool approval;
-  uint256 cap;
-  uint256 custodied;
     */
     // Generate Config
-    // NOTE: Using address(0) for stable swap, then using `_addStableSwap`. Slightly less
-    // efficient, but preserves event Same case for cap / custodied.
     // NOTE: IFF on canonical domain, `representation` must *always* be address(0)!
     tokenConfigs[_key] = TokenConfig({
       representation: _onCanonical ? address(0) : _local,
       representationDecimals: _localDecimals,
       adopted: adopted,
       adoptedDecimals: adoptedIsLocal ? _localDecimals : IERC20Metadata(adopted).decimals(),
-      adoptedToLocalExternalPools: address(0),
-      approval: true,
-      cap: _onCanonical ? _cap : 0,
-      custodied: 0
+      approval: true
     });
 
     // Update reverse lookups
@@ -434,13 +381,6 @@ abstract contract AssetsManager is BaseManager {
       // Update the local <> canonical. Representations only exist on non-canonical domain
       representationToCanonical[_local].domain = _canonical.domain;
       representationToCanonical[_local].id = _canonical.id;
-      // Update swap (on the canonical domain, there is no representation / pool).
-
-      // TODO: check below removal
-      //_addStableSwapPool(_canonical, _stableSwapPool, _key);
-    } else if (_cap > 0) {
-      // Update cap (only on canonical domain).
-      _setLiquidityCap(_canonical, _cap, _key);
     }
 
     // Emit event
@@ -455,43 +395,6 @@ abstract contract AssetsManager is BaseManager {
   }
 
   /**
-   * @notice Used to add a cap on amount of custodied canonical asset
-   * @dev The `custodied` amount will only increase in real time as router liquidity
-   * and xcall are used and the cap is set (i.e. if cap is removed, `custodied` values are
-   * no longer updated or enforced).
-   *
-   * When the `cap` is updated, the `custodied` value is set to the balance of the contract,
-   * which is distinct from *retrievable* funds from the contracts (i.e. could include the
-   * value someone just sent directly to the contract). Whenever you are updating the cap, you
-   * should set the value with this in mind.
-   *
-   * @param _canonical - The canonical TokenId to add (domain and id)
-   * @param _updated - The updated liquidity cap value
-   * @param _key - The hash of the canonical id and domain
-   */
-  function _setLiquidityCap(TokenId calldata _canonical, uint256 _updated, bytes32 _key) internal {
-    if (domain != _canonical.domain) {
-      revert AssetsManager__setLiquidityCap_notCanonicalDomain();
-    }
-    // Update the stored cap
-    tokenConfigs[_key].cap = _updated;
-
-    if (_updated > 0) {
-      // Update the custodied value to be the balance of this contract
-      address canonical = TypeCasts.bytes32ToAddress(_canonical.id);
-      tokenConfigs[_key].custodied = IERC20Metadata(canonical).balanceOf(address(this));
-    }
-
-    emit LiquidityCapUpdated({
-      key: _key,
-      canonicalId: _canonical.id,
-      domain: _canonical.domain,
-      cap: _updated,
-      caller: msg.sender
-    });
-  }
-
-  /**
    * @notice Used to remove assets from the allowlist
    *
    * @dev When you are removing an asset, `xcall` will fail but `handle` and `execute` will not to
@@ -501,14 +404,8 @@ abstract contract AssetsManager is BaseManager {
    * @param _key - The hash of the canonical id and domain to remove (mapping key)
    * @param _adoptedAssetId - Corresponding adopted asset to remove
    * @param _representation - Corresponding representation asset (i.e. bridged asset) to remove.
-   * @param _canonical - The TokenId (canonical ID and domain) of the asset.
    */
-  function _removeAssetId(
-    bytes32 _key,
-    address _adoptedAssetId,
-    address _representation,
-    TokenId memory _canonical
-  ) internal {
+  function _removeAssetId(bytes32 _key, address _adoptedAssetId, address _representation) internal {
     TokenConfig storage config = tokenConfigs[_key];
     // Sanity check: already approval
     if (!config.approval) revert AssetsManager__removeAssetId_notAdded();
@@ -518,36 +415,12 @@ abstract contract AssetsManager is BaseManager {
       revert AssetsManager__removeAssetId_invalidParams();
     }
 
-    bool onCanonical = domain == _canonical.domain;
-    if (onCanonical) {
-      // Sanity check: no value custodied if on canonical domain
-      address canonicalAsset = TypeCasts.bytes32ToAddress(_canonical.id);
-      // Check custodied amount for the given canonical asset addres
-      // NOTE: if the `cap` is not set, the `custodied` value will not continue to be updated,
-      // so you must use the `balanceOf` for accurate accounting. If there are funds held
-      // on these contracts, then when you remove the asset id, the assets cannot be bridged back and
-      // become worthles This means the bridged assets would become worthles
-      // An attacker could prevent admins from removing an asset by sending funds to this contract,
-      // but all of the liquidity should already be removed before this function is called.
-      if (IERC20Metadata(canonicalAsset).balanceOf(address(this)) > 0) {
-        revert AssetsManager__removeAssetId_remainsCustodied();
-      }
-    } else {
-      // Sanity check: supply is 0 if on remote domain.
-      if (IBridgeToken(_representation).totalSupply() > 0) {
-        revert AssetsManager__removeAssetId_remainsCustodied();
-      }
-    }
-
     // Delete token config from configs mapping.
     // NOTE: we do NOT delete the representation entries from the config. This is
     // done to prevent multiple representations being deployed in `setupAsset`
     delete tokenConfigs[_key].adopted;
     delete tokenConfigs[_key].adoptedDecimals;
-    delete tokenConfigs[_key].adoptedToLocalExternalPools;
     delete tokenConfigs[_key].approval;
-    delete tokenConfigs[_key].cap;
-    // NOTE: custodied will always be 0 at this point
 
     // Delete from reverse lookups
     delete representationToCanonical[_representation];

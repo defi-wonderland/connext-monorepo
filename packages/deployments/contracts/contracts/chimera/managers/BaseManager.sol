@@ -5,7 +5,6 @@ import {IERC20Metadata} from '@openzeppelin/contracts/token/ERC20/extensions/IER
 import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import {ConnextStorage} from '../ConnextStorage.sol';
 import {Constants} from '../libraries/Constants.sol';
-import {Role, TokenConfig} from '../libraries/LibConnextStorage.sol';
 
 abstract contract BaseManager is ConnextStorage {
   // ============ Libraries ============

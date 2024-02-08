@@ -3,7 +3,7 @@ pragma solidity 0.8.17;
 
 // ============ External Imports ============
 import {TypedMemView} from '../../shared/libraries/TypedMemView.sol';
-import {TokenId} from './TokenId.sol';
+import {IBaseConnext} from '../interfaces/IBaseConnext.sol';
 
 library BridgeMessage {
   // ============ Libraries ============
@@ -24,7 +24,7 @@ library BridgeMessage {
    * @param _view The message
    * @param _t The expected type
    */
-  modifier typeAssert(bytes29 _view, Types _t) {
+  modifier typeAssert(bytes29 _view, IBaseConnext.Types _t) {
     _view.assertType(uint40(_t));
     _;
   }
@@ -59,7 +59,7 @@ library BridgeMessage {
   function formatMessage(
     bytes29 _tokenId,
     bytes29 _action
-  ) internal view typeAssert(_tokenId, Types.TokenId) returns (bytes memory) {
+  ) internal view typeAssert(_tokenId, IBaseConnext.Types.TokenId) returns (bytes memory) {
     require(isValidAction(_action), '!action');
     bytes29[] memory _views = new bytes29[](2);
     _views[0] = _tokenId;
@@ -72,8 +72,8 @@ library BridgeMessage {
    * @param _view The message
    * @return The type of the message
    */
-  function messageType(bytes29 _view) internal pure returns (Types) {
-    return Types(uint8(_view.typeOf()));
+  function messageType(bytes29 _view) internal pure returns (IBaseConnext.Types) {
+    return IBaseConnext.Types(uint8(_view.typeOf()));
   }
 
   /**
@@ -82,7 +82,7 @@ library BridgeMessage {
    * @param _action The message
    * @return True if the message is of the specified type
    */
-  function isType(bytes29 _action, Types _type) internal pure returns (bool) {
+  function isType(bytes29 _action, IBaseConnext.Types _type) internal pure returns (bool) {
     return actionType(_action) == uint8(_type) && messageType(_action) == _type;
   }
 
@@ -92,7 +92,7 @@ library BridgeMessage {
    * @return True if the message is of type Transfer
    */
   function isTransfer(bytes29 _action) internal pure returns (bool) {
-    return isType(_action, Types.Transfer);
+    return isType(_action, IBaseConnext.Types.Transfer);
   }
 
   /**
@@ -102,7 +102,7 @@ library BridgeMessage {
    * @return
    */
   function formatTransfer(uint256 _amnt, bytes32 _transferId) internal pure returns (bytes29) {
-    return abi.encodePacked(Types.Transfer, _amnt, _transferId).ref(uint40(Types.Transfer));
+    return abi.encodePacked(IBaseConnext.Types.Transfer, _amnt, _transferId).ref(uint40(IBaseConnext.Types.Transfer));
   }
 
   /**
@@ -110,7 +110,7 @@ library BridgeMessage {
    * @param _tokenId The token id struct
    * @return The formatted Token ID
    */
-  function formatTokenId(TokenId memory _tokenId) internal pure returns (bytes29) {
+  function formatTokenId(IBaseConnext.TokenId memory _tokenId) internal pure returns (bytes29) {
     return formatTokenId(_tokenId.domain, _tokenId.id);
   }
 
@@ -121,7 +121,7 @@ library BridgeMessage {
    * @return The formatted Token ID
    */
   function formatTokenId(uint32 _domain, bytes32 _id) internal pure returns (bytes29) {
-    return abi.encodePacked(_domain, _id).ref(uint40(Types.TokenId));
+    return abi.encodePacked(_domain, _id).ref(uint40(IBaseConnext.Types.TokenId));
   }
 
   /**
@@ -129,7 +129,7 @@ library BridgeMessage {
    * @param _tokenId The message
    * @return The domain
    */
-  function domain(bytes29 _tokenId) internal pure typeAssert(_tokenId, Types.TokenId) returns (uint32) {
+  function domain(bytes29 _tokenId) internal pure typeAssert(_tokenId, IBaseConnext.Types.TokenId) returns (uint32) {
     return uint32(_tokenId.indexUint(0, 4));
   }
 
@@ -138,7 +138,7 @@ library BridgeMessage {
    * @param _tokenId The message
    * @return The ID
    */
-  function id(bytes29 _tokenId) internal pure typeAssert(_tokenId, Types.TokenId) returns (bytes32) {
+  function id(bytes29 _tokenId) internal pure typeAssert(_tokenId, IBaseConnext.Types.TokenId) returns (bytes32) {
     // before = 4 bytes domain
     return _tokenId.index(4, 32);
   }
@@ -148,7 +148,7 @@ library BridgeMessage {
    * @param _tokenId The message
    * @return The EVM ID
    */
-  function evmId(bytes29 _tokenId) internal pure typeAssert(_tokenId, Types.TokenId) returns (address) {
+  function evmId(bytes29 _tokenId) internal pure typeAssert(_tokenId, IBaseConnext.Types.TokenId) returns (address) {
     // before = 4 bytes domain + 12 bytes empty to trim for address
     return _tokenId.indexAddress(16);
   }
@@ -196,8 +196,8 @@ library BridgeMessage {
    * @param _message The message
    * @return The ID
    */
-  function tokenId(bytes29 _message) internal pure typeAssert(_message, Types.Message) returns (bytes29) {
-    return _message.slice(0, TOKEN_ID_LEN, uint40(Types.TokenId));
+  function tokenId(bytes29 _message) internal pure typeAssert(_message, IBaseConnext.Types.Message) returns (bytes29) {
+    return _message.slice(0, TOKEN_ID_LEN, uint40(IBaseConnext.Types.TokenId));
   }
 
   /**
@@ -205,7 +205,7 @@ library BridgeMessage {
    * @param _message The message
    * @return The action
    */
-  function action(bytes29 _message) internal pure typeAssert(_message, Types.Message) returns (bytes29) {
+  function action(bytes29 _message) internal pure typeAssert(_message, IBaseConnext.Types.Message) returns (bytes29) {
     uint256 _actionLen = _message.len() - TOKEN_ID_LEN;
     uint40 _type = uint40(msgType(_message));
     return _message.slice(TOKEN_ID_LEN, _actionLen, _type);
@@ -218,7 +218,7 @@ library BridgeMessage {
    */
   function tryAsMessage(bytes29 _message) internal pure returns (bytes29) {
     if (isValidMessageLength(_message)) {
-      return _message.castTo(uint40(Types.Message));
+      return _message.castTo(uint40(IBaseConnext.Types.Message));
     }
     return TypedMemView.nullView();
   }
