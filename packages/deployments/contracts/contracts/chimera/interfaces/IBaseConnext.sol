@@ -75,13 +75,9 @@ interface IBaseConnext {
    * @param canonicalDomain - The canonical domain of the asset you are bridging
    * @param to - The address you are sending funds (and potentially data) to
    * @param delegate - An address who can execute txs on behalf of `to`, in addition to allowing relayers
-   * @param receiveLocal - If true, will use the local asset on the destination instead of adopted.
    * @param callData - The data to execute on the receiving chain. If no crosschain call is needed, then leave empty.
-   * @param slippage - Slippage user is willing to accept from original amount in expressed in BPS (i.e. if
-   * a user takes 1% slippage, this is expressed as 1_000)
    * @param originSender - The msg.sender of the xcall
    * @param bridgedAmt - The amount sent over the bridge (after potential AMM on xcall)
-   * @param normalizedIn - The amount sent to `xcall`, normalized to 18 decimals
    * @param nonce - The nonce on the origin domain used to ensure the transferIds are unique
    * @param canonicalId - The unique identifier of the canonical token corresponding to bridge assets
    */
@@ -91,12 +87,9 @@ interface IBaseConnext {
     uint32 canonicalDomain;
     address to;
     address delegate;
-    bool receiveLocal;
     bytes callData;
-    uint256 slippage;
     address originSender;
     uint256 bridgedAmt;
-    uint256 normalizedIn;
     uint256 nonce;
     bytes32 canonicalId;
   }

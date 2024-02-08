@@ -21,7 +21,6 @@ abstract contract RoutersManager is BaseManager {
   error RoutersManager__addLiquidityForRouter_routerEmpty();
   error RoutersManager__addLiquidityForRouter_amountIsZero();
   error RoutersManager__addLiquidityForRouter_badRouter();
-  error RoutersManager__addLiquidityForRouter_capReached();
   error RoutersManager__removeRouterLiquidity_recipientEmpty();
   error RoutersManager__removeRouterLiquidity_amountIsZero();
   error RoutersManager__removeRouterLiquidity_insufficientFunds();
@@ -193,9 +192,6 @@ abstract contract RoutersManager is BaseManager {
 
     // Update approvals in config mapping
     delete routerConfigs[_router].approved;
-
-    // TODO: check removed line below
-    //delete routerConfigs[_router].portalApproved;
 
     // Emit event
     emit RouterRemoved(_router, msg.sender);

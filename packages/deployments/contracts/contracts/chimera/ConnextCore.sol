@@ -34,9 +34,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
   error Connext__onlyDelegate_notDelegate();
   error Connext__xcall_nativeAssetNotSupported();
   error Connext__xcall_emptyTo();
-  error Connext__xcall_invalidSlippage();
   error Connext_xcall__emptyLocalAsset();
-  error Connext__xcall_capReached();
   error Connext__execute_unapprovedSender();
   error Connext__execute_wrongDomain();
   error Connext__execute_notSupportedSequencer();
@@ -50,9 +48,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
   error Connext__excecute_insufficientGas();
   error Connext__bumpTransfer_valueIsZero();
   error Connext__bumpTransfer_noRelayerVault();
-  error Connext__forceUpdateSlippage_invalidSlippage();
-  error Connext__forceUpdateSlippage_notDestination();
-  error Connext__forceReceiveLocal_notDestination();
   error Connext__mustHaveRemote_destinationNotSupported();
 
   // ============ Properties ============
@@ -72,11 +67,9 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
    * @dev `execute` may be called when providing fast liquidity or when processing a reconciled (slow) transfer.
    * @param transferId - The unique identifier of the crosschain transfer.
    * @param to - The recipient `TransferInfo.to` provided, created as indexed parameter.
-   * @param asset - The asset the recipient is given or the external call is executed with. Should be the
-   * adopted asset on that chain.
+   * @param asset - The asset the recipient is given or the external call is executed with.
+   * It was either supplied by the router for a fast-liquidity transfer or by the bridge in a reconciled (slow) transfer.
    * @param args - The `ExecuteArgs` provided to the function.
-   * @param local - The local asset that was either supplied by the router for a fast-liquidity transfer or
-   * minted by the bridge in a reconciled (slow) transfer. Could be the same as the adopted `asset` param.
    * @param amount - The amount of transferring asset the recipient address receives or the external call is
    * executed with.
    * @param caller - The account that called the function.
@@ -86,7 +79,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     address indexed to,
     address indexed asset,
     ExecuteArgs args,
-    address local,
     uint256 amount,
     address caller
   );
@@ -100,21 +92,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
    * @param caller - The account that called the function
    */
   event TransferRelayerFeesIncreased(bytes32 indexed transferId, uint256 increase, address asset, address caller);
-
-  /**
-   * @notice Emitted when `forceUpdateSlippage` is called by user-delegated EOA
-   * on the destination domain
-   * @param transferId - The unique identifier of the crosschain transaction
-   * @param slippage - The updated slippage boundary
-   */
-  event SlippageUpdated(bytes32 indexed transferId, uint256 slippage);
-
-  /**
-   * @notice Emitted when `forceReceiveLocal` is called by a user-delegated EOA
-   * on the destination domain
-   * @param transferId - The unique identifier of the crosschain transaction
-   */
-  event ForceReceiveLocal(bytes32 indexed transferId);
 
   // ============ Modifiers ============
 
@@ -134,61 +111,22 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     address _asset,
     address _delegate,
     uint256 _amount,
-    uint256 _slippage,
     bytes calldata _callData
   ) external payable nonXCallReentrant returns (bytes32) {
     // NOTE: Here, we fill in as much information as we can for the TransferInfo.
     // Some info is left blank and will be assigned in the internal `_xcall` function (e.g.
-    // `normalizedIn`, `bridgedAmt`, canonical info, etc).
+    // `bridgedAmt`, canonical info, etc).
     TransferInfo memory params = TransferInfo({
       to: _to,
       callData: _callData,
       originDomain: domain,
       destinationDomain: _destination,
       delegate: _delegate,
-      // `receiveLocal: false` indicates we should always deliver the adopted asset on the
-      // destination chain, swapping from the local asset if needed.
-      receiveLocal: false,
-      slippage: _slippage,
       originSender: msg.sender,
       // The following values should be assigned in _xcall.
       nonce: 0,
       canonicalDomain: 0,
       bridgedAmt: 0,
-      normalizedIn: 0,
-      canonicalId: bytes32(0)
-    });
-    return _xcall(params, AssetTransfer(_asset, _amount), AssetTransfer(address(0), msg.value));
-  }
-
-  function xcallIntoLocal(
-    uint32 _destination,
-    address _to,
-    address _asset,
-    address _delegate,
-    uint256 _amount,
-    uint256 _slippage,
-    bytes calldata _callData
-  ) external payable nonXCallReentrant returns (bytes32) {
-    // NOTE: Here, we fill in as much information as we can for the TransferInfo.
-    // Some info is left blank and will be assigned in the internal `_xcall` function (e.g.
-    // `normalizedIn`, `bridgedAmt`, canonical info, etc).
-    TransferInfo memory params = TransferInfo({
-      to: _to,
-      callData: _callData,
-      originDomain: domain,
-      destinationDomain: _destination,
-      delegate: _delegate,
-      // `receiveLocal: true` indicates we should always deliver the local asset on the
-      // destination chain, and NOT swap into any adopted assets.
-      receiveLocal: true,
-      slippage: _slippage,
-      originSender: msg.sender,
-      // The following values should be assigned in _xcall.
-      nonce: 0,
-      canonicalDomain: 0,
-      bridgedAmt: 0,
-      normalizedIn: 0,
       canonicalId: bytes32(0)
     });
     return _xcall(params, AssetTransfer(_asset, _amount), AssetTransfer(address(0), msg.value));
@@ -200,63 +138,23 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     address _asset,
     address _delegate,
     uint256 _amount,
-    uint256 _slippage,
     bytes calldata _callData,
     uint256 _relayerFee
   ) external nonXCallReentrant returns (bytes32) {
     // NOTE: Here, we fill in as much information as we can for the TransferInfo.
     // Some info is left blank and will be assigned in the internal `_xcall` function (e.g.
-    // `normalizedIn`, `bridgedAmt`, canonical info, etc).
+    // `bridgedAmt`, canonical info, etc).
     TransferInfo memory params = TransferInfo({
       to: _to,
       callData: _callData,
       originDomain: domain,
       destinationDomain: _destination,
       delegate: _delegate,
-      // `receiveLocal: false` indicates we should always deliver the adopted asset on the
-      // destination chain, swapping from the local asset if needed.
-      receiveLocal: false,
-      slippage: _slippage,
       originSender: msg.sender,
       // The following values should be assigned in _xcall.
       nonce: 0,
       canonicalDomain: 0,
       bridgedAmt: 0,
-      normalizedIn: 0,
-      canonicalId: bytes32(0)
-    });
-    return _xcall(params, AssetTransfer(_asset, _amount), AssetTransfer(_asset, _relayerFee));
-  }
-
-  function xcallIntoLocal(
-    uint32 _destination,
-    address _to,
-    address _asset,
-    address _delegate,
-    uint256 _amount,
-    uint256 _slippage,
-    bytes calldata _callData,
-    uint256 _relayerFee
-  ) external nonXCallReentrant returns (bytes32) {
-    // NOTE: Here, we fill in as much information as we can for the TransferInfo.
-    // Some info is left blank and will be assigned in the internal `_xcall` function (e.g.
-    // `normalizedIn`, `bridgedAmt`, canonical info, etc).
-    TransferInfo memory params = TransferInfo({
-      to: _to,
-      callData: _callData,
-      originDomain: domain,
-      destinationDomain: _destination,
-      delegate: _delegate,
-      // `receiveLocal: true` indicates we should always deliver the local asset on the
-      // destination chain, and NOT swap into any adopted assets.
-      receiveLocal: true,
-      slippage: _slippage,
-      originSender: msg.sender,
-      // The following values should be assigned in _xcall.
-      nonce: 0,
-      canonicalDomain: 0,
-      bridgedAmt: 0,
-      normalizedIn: 0,
       canonicalId: bytes32(0)
     });
     return _xcall(params, AssetTransfer(_asset, _amount), AssetTransfer(_asset, _relayerFee));
@@ -286,8 +184,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
 
     // Supply assets to target recipient. Use router liquidity when this is a fast transfer, or mint bridge tokens
     // when this is a slow transfer.
-    // NOTE: Asset will be adopted unless specified to `receiveLocal` in params.
-    (uint256 amountOut, address asset, address local) = _handleExecuteLiquidity(
+    (uint256 amountOut, address asset) = _handleExecuteLiquidity(
       transferId,
       calculateCanonicalHash(_args.params.canonicalId, _args.params.canonicalDomain),
       updated != DestinationTransferStatus.Completed,
@@ -309,7 +206,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       to: _args.params.to,
       asset: asset,
       args: _args,
-      local: local,
       amount: amount,
       caller: msg.sender
     });
@@ -346,39 +242,12 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     _bumpTransfer(_transferId, _relayerFeeAsset, _relayerFee); */
   }
 
-  /**
-   * @notice Allows a user-specified account to withdraw the local asset directly
-   * @dev Calldata will still be executed with the local asset. `IXReceiver` contracts
-   * should be able to handle local assets in event of failures.
-   * @param _params TransferInfo associated with the transfer
-   */
-  function forceReceiveLocal(TransferInfo calldata _params) external onlyDelegate(_params) {
-    // Should only be called on destination domain
-    if (_params.destinationDomain != domain) {
-      revert Connext__forceReceiveLocal_notDestination();
-    }
-
-    // Get transferId
-    bytes32 transferId = _calculateTransferId(_params);
-
-    // Store overrides
-    receiveLocalOverride[transferId] = true;
-
-    // Emit event
-    emit ForceReceiveLocal(transferId);
-  }
-
   // ============ Internal: Bridge ============
 
   /**
    * @notice Initiates a cross-chain transfer of funds and/or calldata
    *
-   * @dev For ERC20 transfers, this contract must have approval to transfer the input (transacting) assets. The adopted
-   * assets will be swapped for their local asset counterparts (i.e. bridgeable tokens) via the configured AMM if
-   * necessary. In the event that the adopted assets *are* local bridge assets, no swap is needed. The local tokens will
-   * then be sent via the bridge router. If the local assets are representational for an asset on another chain, we will
-   * burn the tokens here. If the local assets are canonical (meaning that the adopted<>local asset pairing is native
-   * to this chain), we will custody the tokens here.
+   * @dev For ERC20 transfers, this contract must have approval to transfer the input (transacting) assets.
    *
    * @param _params - The TransferInfo arguments.
    * @return bytes32 - The transfer ID of the newly created crosschain transfer.
@@ -416,20 +285,13 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       if (_params.to == address(0)) {
         revert Connext__xcall_emptyTo();
       }
-
-      if (_params.slippage > Constants.BPS_FEE_DENOMINATOR) {
-        revert Connext__xcall_invalidSlippage();
-      }
     }
 
-    // NOTE: The local asset will stay address(0) if input asset is address(0) in the event of a
-    // 0-value transfer. Otherwise, the local address will be retrieved below
-    address local;
     bytes32 transferId;
     TokenId memory canonical;
     bool isCanonical;
     {
-      // Check that the asset is supported -- can be either adopted or local.
+      // Check that the asset is supported.
       // NOTE: Above we check that you can only have `address(0)` as the input asset if this is a
       // 0-value transfer. Because 0-value transfers short-circuit all checks on mappings keyed on
       // hash(canonicalId, canonicalDomain), this is safe even when the address(0) asset is not
@@ -446,25 +308,9 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
         isCanonical = _params.originDomain == canonical.domain;
 
         // Get the local address
-        local = isCanonical ? TypeCasts.bytes32ToAddress(canonical.id) : config.representation;
+        address local = isCanonical ? TypeCasts.bytes32ToAddress(canonical.id) : config.representation;
         if (local == address(0)) {
           revert Connext_xcall__emptyLocalAsset();
-        }
-
-        {
-          // Enforce liquidity caps.
-          // NOTE: Safe to do this before the swap because canonical domains do
-          // not hit the AMMs (local == canonical).
-          uint256 cap = config.cap;
-          if (isCanonical && cap > 0) {
-            // NOTE: this method includes router liquidity as part of the caps,
-            // not only the minted amount
-            uint256 newCustodiedAmount = config.custodied + _asset.amount;
-            if (newCustodiedAmount > cap) {
-              revert Connext__xcall_capReached();
-            }
-            tokenConfigs[key].custodied = newCustodiedAmount;
-          }
         }
 
         // Update TransferInfo to reflect the canonical token information.
@@ -474,24 +320,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
         if (_asset.amount > 0) {
           // Transfer funds of input asset to the contract from the user.
           AssetLogic.handleIncomingAsset(_asset.asset, _asset.amount);
-
-          // Swap to the local asset from adopted if applicable.
-          _params.bridgedAmt = AssetLogic.swapToLocalAssetIfNeeded(
-            key,
-            _asset.asset,
-            local,
-            _asset.amount,
-            _params.slippage
-          );
-
-          // Get the normalized amount in (amount sent in by user in 18 decimals).
-          // NOTE: when getting the decimals from `_asset`, you don't know if you are looking for
-          // adopted or local assets
-          _params.normalizedIn = AssetLogic.normalizeDecimals(
-            _asset.asset == local ? config.representationDecimals : config.adoptedDecimals,
-            Constants.DEFAULT_NORMALIZED_DECIMALS,
-            _asset.amount
-          );
         }
       }
 
@@ -501,8 +329,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     }
 
     // Handle the relayer fee.
-    // NOTE: This has to be done *after* transferring in + swapping assets because
-    // the transfer id uses the amount that is bridged (i.e. amount in local asset).
     if (_relayer.amount > 0) {
       _bumpTransfer(transferId, _relayer.asset, _relayer.amount);
     }
@@ -514,9 +340,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       _asset.asset,
       _asset.amount,
       remoteInstance,
-      canonical,
-      local,
-      isCanonical
+      canonical
     );
 
     return transferId; */
@@ -599,10 +423,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     //     revert Connext__execute_notSupportedSequencer();
     //   }
     //   // Check to make sure the sequencer provided did sign the transfer ID and router path provided.
-    //   // NOTE: when caps are enforced, this signature also acts as protection from malicious routers looking
-    //   // to block the network. routers could `execute` a fake transaction, and use up the rest of the `custodied`
-    //   // bandwidth, causing future `execute`s to fail. this would also cause a break in the accounting, where the
-    //   // `custodied` balance no longer tracks representation asset minting / burning
     //   if (
     //     _args.sequencer != _recoverSignature(keccak256(abi.encode(transferId, _args.routers)), _args.sequencerSignature)
     //   ) {
@@ -663,25 +483,21 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     bytes32 _key,
     bool _isFast,
     ExecuteArgs calldata _args
-  ) private returns (uint256, address, address) {
+  ) private returns (uint256, address) {
     // // Save the addresses of all routers providing liquidity for this transfer.
     // routedTransfers[_transferId] = _args.routers;
 
-    // // Get the local asset contract address (if applicable).
-    // address local;
+    // // Get the local asset contract address.
+    // address asset;
     // if (_args.params.canonicalDomain != 0) {
-    //   local = _getLocalAsset(_key, _args.params.canonicalId, _args.params.canonicalDomain);
+    //   asset = _getLocalAsset(_key, _args.params.canonicalId, _args.params.canonicalDomain);
     // }
 
     // // If this is a zero-value transfer, short-circuit remaining logic.
     // if (_args.params.bridgedAmt == 0) {
-    //   return (0, local, local);
+    //   return (0, asset);
     // }
 
-    // // Get the receive local status
-    // bool receiveLocal = _args.params.receiveLocal || receiveLocalOverride[_transferId];
-
-    // uint256 toSwap = _args.params.bridgedAmt;
     // // If this is a fast liquidity path, we should handle deducting from applicable routers' liquidity.
     // // If this is a slow liquidity path, the transfer must have been reconciled (if we've reached this point),
     // // and the funds would have been custodied in this contract. The exact custodied amount is untracked in state
@@ -690,74 +506,31 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     //   uint256 pathLen = _args.routers.length;
 
     //   // Calculate amount that routers will provide with the fast-liquidity fee deducted.
-    //   toSwap = _muldiv(_args.params.bridgedAmt, LIQUIDITY_FEE_NUMERATOR, Constants.BPS_FEE_DENOMINATOR);
+    //   uint256 toTransfer = _muldiv(_args.params.bridgedAmt, LIQUIDITY_FEE_NUMERATOR, Constants.BPS_FEE_DENOMINATOR);
 
     //   if (pathLen == 1) {
-    //     // If router does not have enough liquidity, try to use Aave Portals.
-    //     // NOTE: Only one router should be responsible for taking on this credit risk, and it should only deal
-    //     // with transfers expecting adopted assets (to avoid introducing runtime slippage).
-    //     if (!receiveLocal && routerBalances[_args.routers[0]][local] < toSwap && aavePool != address(0)) {
-    //       if (!routerConfigs[_args.routers[0]].portalApproved) revert Connext__execute_notApprovedForPortals();
-
-    //       // Portals deliver the adopted asset directly; return after portal execution is completed.
-    //       (uint256 portalDeliveredAmount, address adoptedAsset) = _executePortalTransfer(
-    //         _transferId,
-    //         _key,
-    //         toSwap,
-    //         _args.routers[0]
-    //       );
-    //       return (portalDeliveredAmount, adoptedAsset, local);
-    //     } else {
-    //       // Decrement the router's liquidity.
-    //       routerBalances[_args.routers[0]][local] -= toSwap;
-    //     }
+    //     // Decrement the router's liquidity.
+    //     // NOTE: If the router has insufficient liquidity, this will revert with an underflow error.
+    //     routerBalances[_args.routers[0]][asset] -= toTransfer;
     //   } else {
     //     // For each router, assert they are approved, and deduct liquidity.
-    //     uint256 routerAmount = toSwap / pathLen;
+    //     uint256 routerAmount = toTransfer / pathLen;
     //     for (uint256 i; i < pathLen - 1; ) {
     //       // Decrement router's liquidity.
     //       // NOTE: If any router in the path has insufficient liquidity, this will revert with an underflow error.
-    //       routerBalances[_args.routers[i]][local] -= routerAmount;
+    //       routerBalances[_args.routers[i]][asset] -= routerAmount;
 
     //       unchecked {
     //         ++i;
     //       }
     //     }
     //     // The last router in the multipath will sweep the remaining balance to account for remainder dust.
-    //     uint256 toSweep = routerAmount + (toSwap % pathLen);
-    //     routerBalances[_args.routers[pathLen - 1]][local] -= toSweep;
+    //     uint256 toSweep = routerAmount + (toTransfer % pathLen);
+    //     routerBalances[_args.routers[pathLen - 1]][asset] -= toSweep;
     //   }
     // }
 
-    // // If it is the canonical domain, decrease custodied value
-    // if (domain == _args.params.canonicalDomain && _getConfig(_key).cap > 0) {
-    //   // NOTE: safe to use the amount here instead of post-swap because there are no
-    //   // AMMs on the canonical domain (assuming canonical == adopted on canonical domain)
-    //   tokenConfigs[_key].custodied -= toSwap;
-    // }
-
-    // // If the local asset is specified, or the adopted asset was overridden (e.g. when user facing slippage
-    // // conditions outside of their boundaries), exit without swapping.
-    // if (receiveLocal) {
-    //   // Delete override
-    //   delete receiveLocalOverride[_transferId];
-
-    //   return (toSwap, local, local);
-    // }
-
-    // // Swap out of representational asset into adopted asset if needed.
-    // uint256 slippageOverride = slippage[_transferId];
-    // // delete for gas refund
-    // delete slippage[_transferId];
-
-    // (uint256 amount, address adopted) = AssetLogic.swapFromLocalAssetIfNeeded(
-    //   _key,
-    //   local,
-    //   toSwap,
-    //   slippageOverride != 0 ? slippageOverride : _args.params.slippage,
-    //   _args.params.normalizedIn
-    // );
-    // return (amount, adopted, local);
+    // return (amount, asset);
   }
 
   /**
@@ -767,7 +540,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
   function _handleExecuteTransaction(
     ExecuteArgs calldata _args,
     uint256 _amountOut,
-    address _asset, // adopted (or local if specified)
+    address _asset,
     bytes32 _transferId,
     bool _reconciled
   ) private returns (uint256) {
