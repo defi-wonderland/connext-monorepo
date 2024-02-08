@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.17;
 
 import {LibArbitrumL2} from "@openzeppelin/contracts/crosschain/arbitrum/LibArbitrumL2.sol";
 import {IArbSys} from "@openzeppelin/contracts/vendor/arbitrum/IArbSys.sol";

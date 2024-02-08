@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.17;
 
 /// @dev An arbitrary length message passed from L2
 /// @notice Under the hood it is `L2Log` sent from the special system L2 contract

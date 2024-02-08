@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.18;
+pragma solidity 0.8.17;
 
 import {MockHubConnector} from "../../../utils/Mock.sol";
 import {SpokeConnector} from "@contracts/messaging/connectors/SpokeConnector.sol";

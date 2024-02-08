@@ -5,7 +5,7 @@ script = 'scripts'
 test = 'contracts/test/solidity'
 libs = ["node_modules", "lib"]
 block_timestamp = 1648744712
-solc_version = '0.8.18'
+solc_version = '0.8.17'
 fs_permissions = [
     { access = "read-write", path = "./deployments/"},
 	{ access = "read", path = "./scripts/" },

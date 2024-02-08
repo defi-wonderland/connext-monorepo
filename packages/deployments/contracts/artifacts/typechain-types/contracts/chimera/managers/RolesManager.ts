@@ -47,7 +47,6 @@ export interface RolesManagerInterface extends utils.Interface {
     "proposeRouterAllowlistRemoval()": FunctionFragment;
     "proposed()": FunctionFragment;
     "proposedOwnershipTimestamp()": FunctionFragment;
-    "receiveLocalOverride(bytes32)": FunctionFragment;
     "relayerFeeVault()": FunctionFragment;
     "remotes(uint32)": FunctionFragment;
     "removeRelayer(address)": FunctionFragment;
@@ -91,7 +90,6 @@ export interface RolesManagerInterface extends utils.Interface {
       | "proposeRouterAllowlistRemoval"
       | "proposed"
       | "proposedOwnershipTimestamp"
-      | "receiveLocalOverride"
       | "relayerFeeVault"
       | "remotes"
       | "removeRelayer"
@@ -174,10 +172,6 @@ export interface RolesManagerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "proposedOwnershipTimestamp",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "receiveLocalOverride",
-    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "relayerFeeVault",
@@ -316,10 +310,6 @@ export interface RolesManagerInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "proposed", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "proposedOwnershipTimestamp",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "receiveLocalOverride",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -564,24 +554,24 @@ export interface RolesManager extends BaseContract {
     ): Promise<ContractTransaction>;
 
     approvedRelayers(
-      _relayer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[boolean] & { _approved: boolean }>;
+    ): Promise<[boolean]>;
 
     approvedSequencers(
-      _sequencer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[boolean] & { _approved: boolean }>;
+    ): Promise<[boolean]>;
 
     assetCanonicalIds(
-      _asset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _canonicalId: string }>;
+    ): Promise<[string]>;
 
     assetIdToTickerHash(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _tickerHash: string }>;
+    ): Promise<[string]>;
 
     assignRole(
       _account: PromiseOrValue<string>,
@@ -602,9 +592,9 @@ export interface RolesManager extends BaseContract {
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     nextAssetToTickerHash(
-      _nextAsset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _tickerHash: string }>;
+    ): Promise<[string]>;
 
     nonce(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -618,17 +608,12 @@ export interface RolesManager extends BaseContract {
 
     proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    receiveLocalOverride(
-      _transferId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[boolean] & { _receives: boolean }>;
-
     relayerFeeVault(overrides?: CallOverrides): Promise<[string]>;
 
     remotes(
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _router: string }>;
+    ): Promise<[string]>;
 
     removeRelayer(
       _relayer: PromiseOrValue<string>,
@@ -650,28 +635,28 @@ export interface RolesManager extends BaseContract {
     ): Promise<ContractTransaction>;
 
     roles(
-      _account: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[number] & { _role: number }>;
+    ): Promise<[number]>;
 
     routedTransfers(
-      _transferId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _routers: string }>;
+    ): Promise<[string]>;
 
     routerAllowlistRemoved(overrides?: CallOverrides): Promise<[boolean]>;
 
     routerAllowlistTimestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     routerBalances(
-      _router: PromiseOrValue<string>,
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { _amount: BigNumber }>;
+    ): Promise<[BigNumber]>;
 
     routerConfigs(
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<
       [boolean, boolean, string, string, string, BigNumber] & {
@@ -685,35 +670,35 @@ export interface RolesManager extends BaseContract {
     >;
 
     routerCredits(
-      _assetId: PromiseOrValue<string>,
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { _amount: BigNumber }>;
+    ): Promise<[BigNumber]>;
 
     settlementStrategies(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _path: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _strategy: string }>;
+    ): Promise<[string]>;
 
     supportedAssetDomains(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[boolean] & { _supported: boolean }>;
+    ): Promise<[boolean]>;
 
     tickerHashToAssetId(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _assetId: string }>;
+    ): Promise<[string]>;
 
     tickerHashToNextAsset(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _nextAsset: string }>;
+    ): Promise<[string]>;
 
     tokenConfigs(
-      _canonicalId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<
       [
@@ -738,14 +723,14 @@ export interface RolesManager extends BaseContract {
     >;
 
     transferStatus(
-      _domain: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<[number] & { _status: number }>;
+    ): Promise<[number]>;
 
     unclaimedAssets(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { _amount: BigNumber }>;
+    ): Promise<[BigNumber]>;
 
     xAppConnectionManager(overrides?: CallOverrides): Promise<[string]>;
   };
@@ -763,22 +748,22 @@ export interface RolesManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   approvedRelayers(
-    _relayer: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   approvedSequencers(
-    _sequencer: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   assetCanonicalIds(
-    _asset: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<string>;
 
   assetIdToTickerHash(
-    _assetId: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -801,7 +786,7 @@ export interface RolesManager extends BaseContract {
   maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
 
   nextAssetToTickerHash(
-    _nextAsset: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -817,15 +802,10 @@ export interface RolesManager extends BaseContract {
 
   proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-  receiveLocalOverride(
-    _transferId: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
   relayerFeeVault(overrides?: CallOverrides): Promise<string>;
 
   remotes(
-    _domain: PromiseOrValue<BigNumberish>,
+    arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -849,12 +829,12 @@ export interface RolesManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   roles(
-    _account: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<number>;
 
   routedTransfers(
-    _transferId: PromiseOrValue<BytesLike>,
+    arg0: PromiseOrValue<BytesLike>,
     arg1: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
@@ -864,13 +844,13 @@ export interface RolesManager extends BaseContract {
   routerAllowlistTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
   routerBalances(
-    _router: PromiseOrValue<string>,
-    _assetId: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   routerConfigs(
-    _router: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<
     [boolean, boolean, string, string, string, BigNumber] & {
@@ -884,35 +864,35 @@ export interface RolesManager extends BaseContract {
   >;
 
   routerCredits(
-    _assetId: PromiseOrValue<string>,
-    _router: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   settlementStrategies(
-    _tickerHash: PromiseOrValue<BytesLike>,
-    _path: PromiseOrValue<BytesLike>,
+    arg0: PromiseOrValue<BytesLike>,
+    arg1: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
 
   supportedAssetDomains(
-    _tickerHash: PromiseOrValue<BytesLike>,
-    _domain: PromiseOrValue<BigNumberish>,
+    arg0: PromiseOrValue<BytesLike>,
+    arg1: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   tickerHashToAssetId(
-    _tickerHash: PromiseOrValue<BytesLike>,
+    arg0: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
 
   tickerHashToNextAsset(
-    _tickerHash: PromiseOrValue<BytesLike>,
+    arg0: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
 
   tokenConfigs(
-    _canonicalId: PromiseOrValue<BytesLike>,
+    arg0: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<
     [string, number, string, number, string, boolean, BigNumber, BigNumber] & {
@@ -928,12 +908,12 @@ export interface RolesManager extends BaseContract {
   >;
 
   transferStatus(
-    _domain: PromiseOrValue<BytesLike>,
+    arg0: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<number>;
 
   unclaimedAssets(
-    _assetId: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -953,22 +933,22 @@ export interface RolesManager extends BaseContract {
     ): Promise<void>;
 
     approvedRelayers(
-      _relayer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     approvedSequencers(
-      _sequencer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     assetCanonicalIds(
-      _asset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
 
     assetIdToTickerHash(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -991,7 +971,7 @@ export interface RolesManager extends BaseContract {
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextAssetToTickerHash(
-      _nextAsset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -1005,15 +985,10 @@ export interface RolesManager extends BaseContract {
 
     proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-    receiveLocalOverride(
-      _transferId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     relayerFeeVault(overrides?: CallOverrides): Promise<string>;
 
     remotes(
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -1035,12 +1010,12 @@ export interface RolesManager extends BaseContract {
     ): Promise<void>;
 
     roles(
-      _account: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<number>;
 
     routedTransfers(
-      _transferId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
@@ -1050,13 +1025,13 @@ export interface RolesManager extends BaseContract {
     routerAllowlistTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
     routerBalances(
-      _router: PromiseOrValue<string>,
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     routerConfigs(
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<
       [boolean, boolean, string, string, string, BigNumber] & {
@@ -1070,35 +1045,35 @@ export interface RolesManager extends BaseContract {
     >;
 
     routerCredits(
-      _assetId: PromiseOrValue<string>,
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     settlementStrategies(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _path: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
 
     supportedAssetDomains(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     tickerHashToAssetId(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
 
     tickerHashToNextAsset(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
 
     tokenConfigs(
-      _canonicalId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<
       [
@@ -1123,12 +1098,12 @@ export interface RolesManager extends BaseContract {
     >;
 
     transferStatus(
-      _domain: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<number>;
 
     unclaimedAssets(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1216,22 +1191,22 @@ export interface RolesManager extends BaseContract {
     ): Promise<BigNumber>;
 
     approvedRelayers(
-      _relayer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     approvedSequencers(
-      _sequencer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     assetCanonicalIds(
-      _asset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     assetIdToTickerHash(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1254,7 +1229,7 @@ export interface RolesManager extends BaseContract {
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextAssetToTickerHash(
-      _nextAsset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1270,15 +1245,10 @@ export interface RolesManager extends BaseContract {
 
     proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-    receiveLocalOverride(
-      _transferId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     relayerFeeVault(overrides?: CallOverrides): Promise<BigNumber>;
 
     remotes(
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1302,12 +1272,12 @@ export interface RolesManager extends BaseContract {
     ): Promise<BigNumber>;
 
     roles(
-      _account: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     routedTransfers(
-      _transferId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1317,56 +1287,56 @@ export interface RolesManager extends BaseContract {
     routerAllowlistTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
     routerBalances(
-      _router: PromiseOrValue<string>,
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     routerConfigs(
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     routerCredits(
-      _assetId: PromiseOrValue<string>,
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     settlementStrategies(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _path: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     supportedAssetDomains(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     tickerHashToAssetId(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     tickerHashToNextAsset(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     tokenConfigs(
-      _canonicalId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     transferStatus(
-      _domain: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     unclaimedAssets(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1387,22 +1357,22 @@ export interface RolesManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     approvedRelayers(
-      _relayer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     approvedSequencers(
-      _sequencer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     assetCanonicalIds(
-      _asset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     assetIdToTickerHash(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1427,7 +1397,7 @@ export interface RolesManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     nextAssetToTickerHash(
-      _nextAsset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1445,15 +1415,10 @@ export interface RolesManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    receiveLocalOverride(
-      _transferId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     relayerFeeVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     remotes(
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1477,12 +1442,12 @@ export interface RolesManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     roles(
-      _account: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     routedTransfers(
-      _transferId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1496,56 +1461,56 @@ export interface RolesManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     routerBalances(
-      _router: PromiseOrValue<string>,
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     routerConfigs(
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     routerCredits(
-      _assetId: PromiseOrValue<string>,
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     settlementStrategies(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _path: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     supportedAssetDomains(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     tickerHashToAssetId(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     tickerHashToNextAsset(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     tokenConfigs(
-      _canonicalId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     transferStatus(
-      _domain: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     unclaimedAssets(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

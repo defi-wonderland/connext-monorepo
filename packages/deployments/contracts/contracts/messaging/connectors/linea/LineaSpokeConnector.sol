@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.17;
 
 import {SpokeConnector} from "../SpokeConnector.sol";
 import {Connector} from "../Connector.sol";

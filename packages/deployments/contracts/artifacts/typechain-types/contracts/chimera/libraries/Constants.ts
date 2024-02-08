@@ -33,6 +33,7 @@ export interface ConstantsInterface extends utils.Interface {
     "FUTURE_TIME_BUFFER()": FunctionFragment;
     "GOVERNANCE_DELAY()": FunctionFragment;
     "INITIAL_AAVE_REFERRAL_CODE()": FunctionFragment;
+    "INITIAL_LIQUIDITY_FEE_NUMERATOR()": FunctionFragment;
     "INITIAL_MAX_ROUTERS()": FunctionFragment;
     "MAXIMUM_POOLED_TOKENS()": FunctionFragment;
     "MAX_A()": FunctionFragment;
@@ -60,6 +61,7 @@ export interface ConstantsInterface extends utils.Interface {
       | "FUTURE_TIME_BUFFER"
       | "GOVERNANCE_DELAY"
       | "INITIAL_AAVE_REFERRAL_CODE"
+      | "INITIAL_LIQUIDITY_FEE_NUMERATOR"
       | "INITIAL_MAX_ROUTERS"
       | "MAXIMUM_POOLED_TOKENS"
       | "MAX_A"
@@ -116,6 +118,10 @@ export interface ConstantsInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "INITIAL_AAVE_REFERRAL_CODE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "INITIAL_LIQUIDITY_FEE_NUMERATOR",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -206,6 +212,10 @@ export interface ConstantsInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "INITIAL_AAVE_REFERRAL_CODE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "INITIAL_LIQUIDITY_FEE_NUMERATOR",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -308,6 +318,10 @@ export interface Constants extends BaseContract {
 
     INITIAL_AAVE_REFERRAL_CODE(overrides?: CallOverrides): Promise<[number]>;
 
+    INITIAL_LIQUIDITY_FEE_NUMERATOR(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     INITIAL_MAX_ROUTERS(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     MAXIMUM_POOLED_TOKENS(overrides?: CallOverrides): Promise<[BigNumber]>;
@@ -355,6 +369,10 @@ export interface Constants extends BaseContract {
 
   INITIAL_AAVE_REFERRAL_CODE(overrides?: CallOverrides): Promise<number>;
 
+  INITIAL_LIQUIDITY_FEE_NUMERATOR(
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   INITIAL_MAX_ROUTERS(overrides?: CallOverrides): Promise<BigNumber>;
 
   MAXIMUM_POOLED_TOKENS(overrides?: CallOverrides): Promise<BigNumber>;
@@ -401,6 +419,10 @@ export interface Constants extends BaseContract {
     GOVERNANCE_DELAY(overrides?: CallOverrides): Promise<BigNumber>;
 
     INITIAL_AAVE_REFERRAL_CODE(overrides?: CallOverrides): Promise<number>;
+
+    INITIAL_LIQUIDITY_FEE_NUMERATOR(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     INITIAL_MAX_ROUTERS(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -451,6 +473,10 @@ export interface Constants extends BaseContract {
     GOVERNANCE_DELAY(overrides?: CallOverrides): Promise<BigNumber>;
 
     INITIAL_AAVE_REFERRAL_CODE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    INITIAL_LIQUIDITY_FEE_NUMERATOR(
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     INITIAL_MAX_ROUTERS(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -513,6 +539,10 @@ export interface Constants extends BaseContract {
     GOVERNANCE_DELAY(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     INITIAL_AAVE_REFERRAL_CODE(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    INITIAL_LIQUIDITY_FEE_NUMERATOR(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

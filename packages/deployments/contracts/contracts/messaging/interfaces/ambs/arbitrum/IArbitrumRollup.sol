@@ -1,4 +1,4 @@
-pragma solidity 0.8.18;
+pragma solidity 0.8.17;
 
 // modified from: https://github.com/OffchainLabs/nitro/blob/master/contracts/src/rollup/Node.sol
 struct Node {

@@ -1,27 +1,33 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity 0.8.17;
 
-import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
-import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
-import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
+import {IERC20Metadata} from '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
+import {ECDSA} from '@openzeppelin/contracts/utils/cryptography/ECDSA.sol';
+import {Address} from '@openzeppelin/contracts/utils/Address.sol';
 
-import {ExcessivelySafeCall} from "../shared/libraries/ExcessivelySafeCall.sol";
-import {TypedMemView} from "../shared/libraries/TypedMemView.sol";
-import {TypeCasts} from "../shared/libraries/TypeCasts.sol";
+import {ExcessivelySafeCall} from '../shared/libraries/ExcessivelySafeCall.sol';
+import {TypedMemView} from '../shared/libraries/TypedMemView.sol';
+import {TypeCasts} from '../shared/libraries/TypeCasts.sol';
 
-import {ExecuteArgs, TransferInfo, DestinationTransferStatus, TokenConfig, AssetTransfer} from "./libraries/LibConnextStorage.sol";
-import {Constants} from "./libraries/Constants.sol";
-import {TokenId} from "./libraries/TokenId.sol";
+import {
+  ExecuteArgs,
+  TransferInfo,
+  DestinationTransferStatus,
+  TokenConfig,
+  AssetTransfer
+} from './libraries/LibConnextStorage.sol';
+import {Constants} from './libraries/Constants.sol';
+import {TokenId} from './libraries/TokenId.sol';
 
-import {IXReceiver} from "./interfaces/IXReceiver.sol";
+import {IXReceiver} from './interfaces/IXReceiver.sol';
 
-import {IConnextCore} from "./interfaces/IConnextCore.sol";
-import {AssetsManager} from "./managers/AssetsManager.sol";
-import {ProtocolManager} from "./managers/ProtocolManager.sol";
-import {RolesManager} from "./managers/RolesManager.sol";
-import {RoutersManager} from "./managers/RoutersManager.sol";
-import {CreditsManager} from "./managers/CreditsManager.sol";
+import {IConnextCore} from './interfaces/IConnextCore.sol';
+import {AssetsManager} from './managers/AssetsManager.sol';
+import {ProtocolManager} from './managers/ProtocolManager.sol';
+import {RolesManager} from './managers/RolesManager.sol';
+import {RoutersManager} from './managers/RoutersManager.sol';
+import {CreditsManager} from './managers/CreditsManager.sol';
 
 // Core contract
 contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManager, RoutersManager, CreditsManager {
@@ -362,9 +368,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
 
     // Get transferId
     bytes32 transferId = _calculateTransferId(_params);
-
-    // Store overrides
-    receiveLocalOverride[transferId] = true;
 
     // Emit event
     emit ForceReceiveLocal(transferId);
@@ -810,7 +813,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
         _reconciled ? _params.originSender : address(0), // use passed in value iff authenticated
         _params.originDomain,
         _params.callData
-      )
+        )
     });
 
     if (!_reconciled && !success) {

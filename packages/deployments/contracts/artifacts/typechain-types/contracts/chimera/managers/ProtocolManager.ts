@@ -45,7 +45,6 @@ export interface ProtocolManagerInterface extends utils.Interface {
     "proposeNewOwner(address)": FunctionFragment;
     "proposed()": FunctionFragment;
     "proposedOwnershipTimestamp()": FunctionFragment;
-    "receiveLocalOverride(bytes32)": FunctionFragment;
     "relayerFeeVault()": FunctionFragment;
     "remotes(uint32)": FunctionFragment;
     "roles(address)": FunctionFragment;
@@ -55,6 +54,7 @@ export interface ProtocolManagerInterface extends utils.Interface {
     "routerBalances(address,address)": FunctionFragment;
     "routerConfigs(address)": FunctionFragment;
     "routerCredits(address,address)": FunctionFragment;
+    "setLiquidityFeeNumerator(uint256)": FunctionFragment;
     "setMaxRoutersPerTransfer(uint256)": FunctionFragment;
     "setRelayerFeeVault(address)": FunctionFragment;
     "setXAppConnectionManager(address)": FunctionFragment;
@@ -87,7 +87,6 @@ export interface ProtocolManagerInterface extends utils.Interface {
       | "proposeNewOwner"
       | "proposed"
       | "proposedOwnershipTimestamp"
-      | "receiveLocalOverride"
       | "relayerFeeVault"
       | "remotes"
       | "roles"
@@ -97,6 +96,7 @@ export interface ProtocolManagerInterface extends utils.Interface {
       | "routerBalances"
       | "routerConfigs"
       | "routerCredits"
+      | "setLiquidityFeeNumerator"
       | "setMaxRoutersPerTransfer"
       | "setRelayerFeeVault"
       | "setXAppConnectionManager"
@@ -161,10 +161,6 @@ export interface ProtocolManagerInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "receiveLocalOverride",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "relayerFeeVault",
     values?: undefined
   ): string;
@@ -199,6 +195,10 @@ export interface ProtocolManagerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "routerCredits",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setLiquidityFeeNumerator",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "setMaxRoutersPerTransfer",
@@ -296,10 +296,6 @@ export interface ProtocolManagerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "receiveLocalOverride",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "relayerFeeVault",
     data: BytesLike
   ): Result;
@@ -327,6 +323,10 @@ export interface ProtocolManagerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "routerCredits",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setLiquidityFeeNumerator",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -376,6 +376,7 @@ export interface ProtocolManagerInterface extends utils.Interface {
   ): Result;
 
   events: {
+    "LiquidityFeeNumeratorUpdated(uint256,address)": EventFragment;
     "MaxRoutersPerTransferUpdated(uint256,address)": EventFragment;
     "OwnershipProposed(address)": EventFragment;
     "Paused()": EventFragment;
@@ -385,6 +386,9 @@ export interface ProtocolManagerInterface extends utils.Interface {
   };
 
   getEvent(
+    nameOrSignatureOrTopic: "LiquidityFeeNumeratorUpdated"
+  ): EventFragment;
+  getEvent(
     nameOrSignatureOrTopic: "MaxRoutersPerTransferUpdated"
   ): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipProposed"): EventFragment;
@@ -393,6 +397,18 @@ export interface ProtocolManagerInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Unpaused"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "XAppConnectionManagerSet"): EventFragment;
 }
+
+export interface LiquidityFeeNumeratorUpdatedEventObject {
+  liquidityFeeNumerator: BigNumber;
+  caller: string;
+}
+export type LiquidityFeeNumeratorUpdatedEvent = TypedEvent<
+  [BigNumber, string],
+  LiquidityFeeNumeratorUpdatedEventObject
+>;
+
+export type LiquidityFeeNumeratorUpdatedEventFilter =
+  TypedEventFilter<LiquidityFeeNumeratorUpdatedEvent>;
 
 export interface MaxRoutersPerTransferUpdatedEventObject {
   maxRoutersPerTransfer: BigNumber;
@@ -486,24 +502,24 @@ export interface ProtocolManager extends BaseContract {
     acceptanceDelay(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     approvedRelayers(
-      _relayer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[boolean] & { _approved: boolean }>;
+    ): Promise<[boolean]>;
 
     approvedSequencers(
-      _sequencer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[boolean] & { _approved: boolean }>;
+    ): Promise<[boolean]>;
 
     assetCanonicalIds(
-      _asset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _canonicalId: string }>;
+    ): Promise<[string]>;
 
     assetIdToTickerHash(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _tickerHash: string }>;
+    ): Promise<[string]>;
 
     domain(overrides?: CallOverrides): Promise<[number]>;
 
@@ -512,9 +528,9 @@ export interface ProtocolManager extends BaseContract {
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     nextAssetToTickerHash(
-      _nextAsset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _tickerHash: string }>;
+    ): Promise<[string]>;
 
     nonce(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -533,41 +549,36 @@ export interface ProtocolManager extends BaseContract {
 
     proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    receiveLocalOverride(
-      _transferId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[boolean] & { _receives: boolean }>;
-
     relayerFeeVault(overrides?: CallOverrides): Promise<[string]>;
 
     remotes(
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _router: string }>;
+    ): Promise<[string]>;
 
     roles(
-      _account: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[number] & { _role: number }>;
+    ): Promise<[number]>;
 
     routedTransfers(
-      _transferId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _routers: string }>;
+    ): Promise<[string]>;
 
     routerAllowlistRemoved(overrides?: CallOverrides): Promise<[boolean]>;
 
     routerAllowlistTimestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     routerBalances(
-      _router: PromiseOrValue<string>,
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { _amount: BigNumber }>;
+    ): Promise<[BigNumber]>;
 
     routerConfigs(
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<
       [boolean, boolean, string, string, string, BigNumber] & {
@@ -581,10 +592,15 @@ export interface ProtocolManager extends BaseContract {
     >;
 
     routerCredits(
-      _assetId: PromiseOrValue<string>,
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { _amount: BigNumber }>;
+    ): Promise<[BigNumber]>;
+
+    setLiquidityFeeNumerator(
+      _numerator: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
 
     setMaxRoutersPerTransfer(
       _newMaxRouters: PromiseOrValue<BigNumberish>,
@@ -602,29 +618,29 @@ export interface ProtocolManager extends BaseContract {
     ): Promise<ContractTransaction>;
 
     settlementStrategies(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _path: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _strategy: string }>;
+    ): Promise<[string]>;
 
     supportedAssetDomains(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
-    ): Promise<[boolean] & { _supported: boolean }>;
+    ): Promise<[boolean]>;
 
     tickerHashToAssetId(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _assetId: string }>;
+    ): Promise<[string]>;
 
     tickerHashToNextAsset(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<[string] & { _nextAsset: string }>;
+    ): Promise<[string]>;
 
     tokenConfigs(
-      _canonicalId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<
       [
@@ -649,14 +665,14 @@ export interface ProtocolManager extends BaseContract {
     >;
 
     transferStatus(
-      _domain: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
-    ): Promise<[number] & { _status: number }>;
+    ): Promise<[number]>;
 
     unclaimedAssets(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { _amount: BigNumber }>;
+    ): Promise<[BigNumber]>;
 
     unpause(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -672,22 +688,22 @@ export interface ProtocolManager extends BaseContract {
   acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
   approvedRelayers(
-    _relayer: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   approvedSequencers(
-    _sequencer: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   assetCanonicalIds(
-    _asset: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<string>;
 
   assetIdToTickerHash(
-    _assetId: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -698,7 +714,7 @@ export interface ProtocolManager extends BaseContract {
   maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
 
   nextAssetToTickerHash(
-    _nextAsset: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -719,25 +735,20 @@ export interface ProtocolManager extends BaseContract {
 
   proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-  receiveLocalOverride(
-    _transferId: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
   relayerFeeVault(overrides?: CallOverrides): Promise<string>;
 
   remotes(
-    _domain: PromiseOrValue<BigNumberish>,
+    arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
   roles(
-    _account: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<number>;
 
   routedTransfers(
-    _transferId: PromiseOrValue<BytesLike>,
+    arg0: PromiseOrValue<BytesLike>,
     arg1: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
@@ -747,13 +758,13 @@ export interface ProtocolManager extends BaseContract {
   routerAllowlistTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
   routerBalances(
-    _router: PromiseOrValue<string>,
-    _assetId: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   routerConfigs(
-    _router: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<
     [boolean, boolean, string, string, string, BigNumber] & {
@@ -767,10 +778,15 @@ export interface ProtocolManager extends BaseContract {
   >;
 
   routerCredits(
-    _assetId: PromiseOrValue<string>,
-    _router: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
+
+  setLiquidityFeeNumerator(
+    _numerator: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
 
   setMaxRoutersPerTransfer(
     _newMaxRouters: PromiseOrValue<BigNumberish>,
@@ -788,29 +804,29 @@ export interface ProtocolManager extends BaseContract {
   ): Promise<ContractTransaction>;
 
   settlementStrategies(
-    _tickerHash: PromiseOrValue<BytesLike>,
-    _path: PromiseOrValue<BytesLike>,
+    arg0: PromiseOrValue<BytesLike>,
+    arg1: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
 
   supportedAssetDomains(
-    _tickerHash: PromiseOrValue<BytesLike>,
-    _domain: PromiseOrValue<BigNumberish>,
+    arg0: PromiseOrValue<BytesLike>,
+    arg1: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
   tickerHashToAssetId(
-    _tickerHash: PromiseOrValue<BytesLike>,
+    arg0: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
 
   tickerHashToNextAsset(
-    _tickerHash: PromiseOrValue<BytesLike>,
+    arg0: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
 
   tokenConfigs(
-    _canonicalId: PromiseOrValue<BytesLike>,
+    arg0: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<
     [string, number, string, number, string, boolean, BigNumber, BigNumber] & {
@@ -826,12 +842,12 @@ export interface ProtocolManager extends BaseContract {
   >;
 
   transferStatus(
-    _domain: PromiseOrValue<BytesLike>,
+    arg0: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<number>;
 
   unclaimedAssets(
-    _assetId: PromiseOrValue<string>,
+    arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -847,22 +863,22 @@ export interface ProtocolManager extends BaseContract {
     acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
     approvedRelayers(
-      _relayer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     approvedSequencers(
-      _sequencer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     assetCanonicalIds(
-      _asset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
 
     assetIdToTickerHash(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -873,7 +889,7 @@ export interface ProtocolManager extends BaseContract {
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextAssetToTickerHash(
-      _nextAsset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -892,25 +908,20 @@ export interface ProtocolManager extends BaseContract {
 
     proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-    receiveLocalOverride(
-      _transferId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     relayerFeeVault(overrides?: CallOverrides): Promise<string>;
 
     remotes(
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
     roles(
-      _account: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<number>;
 
     routedTransfers(
-      _transferId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
@@ -920,13 +931,13 @@ export interface ProtocolManager extends BaseContract {
     routerAllowlistTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
     routerBalances(
-      _router: PromiseOrValue<string>,
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     routerConfigs(
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<
       [boolean, boolean, string, string, string, BigNumber] & {
@@ -940,10 +951,15 @@ export interface ProtocolManager extends BaseContract {
     >;
 
     routerCredits(
-      _assetId: PromiseOrValue<string>,
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    setLiquidityFeeNumerator(
+      _numerator: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     setMaxRoutersPerTransfer(
       _newMaxRouters: PromiseOrValue<BigNumberish>,
@@ -961,29 +977,29 @@ export interface ProtocolManager extends BaseContract {
     ): Promise<void>;
 
     settlementStrategies(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _path: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
 
     supportedAssetDomains(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
     tickerHashToAssetId(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
 
     tickerHashToNextAsset(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
 
     tokenConfigs(
-      _canonicalId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<
       [
@@ -1008,12 +1024,12 @@ export interface ProtocolManager extends BaseContract {
     >;
 
     transferStatus(
-      _domain: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<number>;
 
     unclaimedAssets(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1023,6 +1039,15 @@ export interface ProtocolManager extends BaseContract {
   };
 
   filters: {
+    "LiquidityFeeNumeratorUpdated(uint256,address)"(
+      liquidityFeeNumerator?: null,
+      caller?: null
+    ): LiquidityFeeNumeratorUpdatedEventFilter;
+    LiquidityFeeNumeratorUpdated(
+      liquidityFeeNumerator?: null,
+      caller?: null
+    ): LiquidityFeeNumeratorUpdatedEventFilter;
+
     "MaxRoutersPerTransferUpdated(uint256,address)"(
       maxRoutersPerTransfer?: null,
       caller?: null
@@ -1074,22 +1099,22 @@ export interface ProtocolManager extends BaseContract {
     acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
     approvedRelayers(
-      _relayer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     approvedSequencers(
-      _sequencer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     assetCanonicalIds(
-      _asset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     assetIdToTickerHash(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1100,7 +1125,7 @@ export interface ProtocolManager extends BaseContract {
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
 
     nextAssetToTickerHash(
-      _nextAsset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1121,25 +1146,20 @@ export interface ProtocolManager extends BaseContract {
 
     proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
-    receiveLocalOverride(
-      _transferId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     relayerFeeVault(overrides?: CallOverrides): Promise<BigNumber>;
 
     remotes(
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     roles(
-      _account: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     routedTransfers(
-      _transferId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1149,20 +1169,25 @@ export interface ProtocolManager extends BaseContract {
     routerAllowlistTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
 
     routerBalances(
-      _router: PromiseOrValue<string>,
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     routerConfigs(
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     routerCredits(
-      _assetId: PromiseOrValue<string>,
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    setLiquidityFeeNumerator(
+      _numerator: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     setMaxRoutersPerTransfer(
@@ -1181,39 +1206,39 @@ export interface ProtocolManager extends BaseContract {
     ): Promise<BigNumber>;
 
     settlementStrategies(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _path: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     supportedAssetDomains(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     tickerHashToAssetId(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     tickerHashToNextAsset(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     tokenConfigs(
-      _canonicalId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     transferStatus(
-      _domain: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     unclaimedAssets(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1232,22 +1257,22 @@ export interface ProtocolManager extends BaseContract {
     acceptanceDelay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     approvedRelayers(
-      _relayer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     approvedSequencers(
-      _sequencer: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     assetCanonicalIds(
-      _asset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     assetIdToTickerHash(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1260,7 +1285,7 @@ export interface ProtocolManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     nextAssetToTickerHash(
-      _nextAsset: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1283,25 +1308,20 @@ export interface ProtocolManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    receiveLocalOverride(
-      _transferId: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     relayerFeeVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     remotes(
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     roles(
-      _account: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     routedTransfers(
-      _transferId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
@@ -1315,20 +1335,25 @@ export interface ProtocolManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     routerBalances(
-      _router: PromiseOrValue<string>,
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     routerConfigs(
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     routerCredits(
-      _assetId: PromiseOrValue<string>,
-      _router: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    setLiquidityFeeNumerator(
+      _numerator: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     setMaxRoutersPerTransfer(
@@ -1347,39 +1372,39 @@ export interface ProtocolManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     settlementStrategies(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _path: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     supportedAssetDomains(
-      _tickerHash: PromiseOrValue<BytesLike>,
-      _domain: PromiseOrValue<BigNumberish>,
+      arg0: PromiseOrValue<BytesLike>,
+      arg1: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     tickerHashToAssetId(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     tickerHashToNextAsset(
-      _tickerHash: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     tokenConfigs(
-      _canonicalId: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     transferStatus(
-      _domain: PromiseOrValue<BytesLike>,
+      arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     unclaimedAssets(
-      _assetId: PromiseOrValue<string>,
+      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

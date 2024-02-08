@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.17;
 
 library Constants {
   // ============= Initial Values =============
@@ -7,7 +7,7 @@ library Constants {
   /**
    * @notice Sets the initial lp fee at 5 bps
    */
-  //uint256 public constant INITIAL_LIQUIDITY_FEE_NUMERATOR = 9995;
+  uint256 public constant INITIAL_LIQUIDITY_FEE_NUMERATOR = 9995;
 
   /**
    * @notice Sets the initial max routers per transfer
@@ -37,7 +37,7 @@ library Constants {
   /**
    * @notice Contains hash of empty bytes
    */
-  bytes32 internal constant EMPTY_HASH = keccak256("");
+  bytes32 internal constant EMPTY_HASH = keccak256('');
 
   /**
    * @notice Denominator for BPS values

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity 0.8.17;
 
-import {Role} from "../libraries/LibConnextStorage.sol";
-import {BaseManager} from "./BaseManager.sol";
-import {Constants} from "../libraries/Constants.sol";
-import {IConnectorManager} from "../../messaging/interfaces/IConnectorManager.sol";
+import {Role} from '../libraries/LibConnextStorage.sol';
+import {BaseManager} from './BaseManager.sol';
+import {Constants} from '../libraries/Constants.sol';
+import {IConnectorManager} from '../../messaging/interfaces/IConnectorManager.sol';
 
 abstract contract ProtocolManager is BaseManager {
   // ========== Custom Errors ===========
@@ -45,7 +45,7 @@ abstract contract ProtocolManager is BaseManager {
    * @param liquidityFeeNumerator - The LIQUIDITY_FEE_NUMERATOR new value
    * @param caller - The account that called the function
    */
-  //event LiquidityFeeNumeratorUpdated(uint256 liquidityFeeNumerator, address caller);
+  event LiquidityFeeNumeratorUpdated(uint256 liquidityFeeNumerator, address caller);
 
   /**
    * @notice Emitted `xAppConnectionManager` is updated
@@ -134,6 +134,23 @@ abstract contract ProtocolManager is BaseManager {
   modifier onlyProposed() {
     if (proposed != msg.sender) revert ProtocolManager__onlyProposed_notProposedOwner();
     _;
+  }
+
+  /**
+   * @notice Sets the LIQUIDITY_FEE_NUMERATOR
+   * @dev Admin can set LIQUIDITY_FEE_NUMERATOR variable, Liquidity fee should be less than 5%
+   * @param _numerator new LIQUIDITY_FEE_NUMERATOR
+   */
+  function setLiquidityFeeNumerator(uint256 _numerator) external onlyOwnerOrRole(Role.Admin) {
+    // Slightly misleading: the liquidity fee numerator is not the amount charged,
+    // but the amount received after fees are deducted (e.g. 9995/10000 would be .005%).
+    uint256 denominator = Constants.BPS_FEE_DENOMINATOR;
+    if (_numerator < (denominator * 95) / 100) revert ProtocolManager__setLiquidityFeeNumerator_tooSmall();
+
+    if (_numerator > denominator) revert ProtocolManager__setLiquidityFeeNumerator_tooLarge();
+    LIQUIDITY_FEE_NUMERATOR = _numerator;
+
+    emit LiquidityFeeNumeratorUpdated(_numerator, msg.sender);
   }
 
   function pause() public onlyOwnerOrRole(Role.Watcher) {

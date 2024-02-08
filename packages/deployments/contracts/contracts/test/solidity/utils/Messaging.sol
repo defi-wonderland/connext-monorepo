@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.18;
+pragma solidity 0.8.17;
 
 import {TransferInfo} from "@contracts/core/connext/libraries/LibConnextStorage.sol";
 import {IBridgeToken} from "@contracts/core/connext/interfaces/IBridgeToken.sol";

@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity 0.8.17;
 
-import {IERC20Metadata} from "@openzeppelin/contracts/interfaces/IERC20Metadata.sol";
-import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
-import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
-import {TypedMemView} from "../../shared/libraries/TypedMemView.sol";
+import {IERC20Metadata} from '@openzeppelin/contracts/interfaces/IERC20Metadata.sol';
+import {TypeCasts} from '../../shared/libraries/TypeCasts.sol';
+import {TypeCasts} from '../../shared/libraries/TypeCasts.sol';
+import {TypedMemView} from '../../shared/libraries/TypedMemView.sol';
 
-import {BridgeMessage} from "../libraries/BridgeMessage.sol";
+import {BridgeMessage} from '../libraries/BridgeMessage.sol';
 
-import {Role, TokenId, TokenConfig, DestinationTransferStatus} from "../libraries/LibConnextStorage.sol";
-import {BaseManager} from "./BaseManager.sol";
-import {BridgeToken} from "../helpers/BridgeToken.sol";
-import {IBridgeToken} from "../interfaces/IBridgeToken.sol";
+import {Role, TokenId, TokenConfig, DestinationTransferStatus} from '../libraries/LibConnextStorage.sol';
+import {BaseManager} from './BaseManager.sol';
+import {BridgeToken} from '../helpers/BridgeToken.sol';
+import {IBridgeToken} from '../interfaces/IBridgeToken.sol';
 
 abstract contract AssetsManager is BaseManager {
   // ============ Libraries ============
@@ -61,11 +61,7 @@ abstract contract AssetsManager is BaseManager {
    * @param caller - The account that called the function
    */
   event LiquidityCapUpdated(
-    bytes32 indexed key,
-    bytes32 indexed canonicalId,
-    uint32 indexed domain,
-    uint256 cap,
-    address caller
+    bytes32 indexed key, bytes32 indexed canonicalId, uint32 indexed domain, uint256 cap, address caller
   );
 
   /**

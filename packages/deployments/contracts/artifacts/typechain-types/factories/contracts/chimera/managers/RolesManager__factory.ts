@@ -365,7 +365,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_relayer",
+        name: "",
         type: "address",
       },
     ],
@@ -373,7 +373,7 @@ const _abi = [
     outputs: [
       {
         internalType: "bool",
-        name: "_approved",
+        name: "",
         type: "bool",
       },
     ],
@@ -384,7 +384,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_sequencer",
+        name: "",
         type: "address",
       },
     ],
@@ -392,7 +392,7 @@ const _abi = [
     outputs: [
       {
         internalType: "bool",
-        name: "_approved",
+        name: "",
         type: "bool",
       },
     ],
@@ -403,7 +403,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_asset",
+        name: "",
         type: "address",
       },
     ],
@@ -411,7 +411,7 @@ const _abi = [
     outputs: [
       {
         internalType: "bytes32",
-        name: "_canonicalId",
+        name: "",
         type: "bytes32",
       },
     ],
@@ -422,7 +422,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_assetId",
+        name: "",
         type: "address",
       },
     ],
@@ -430,7 +430,7 @@ const _abi = [
     outputs: [
       {
         internalType: "bytes32",
-        name: "_tickerHash",
+        name: "",
         type: "bytes32",
       },
     ],
@@ -516,7 +516,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_nextAsset",
+        name: "",
         type: "address",
       },
     ],
@@ -524,7 +524,7 @@ const _abi = [
     outputs: [
       {
         internalType: "bytes32",
-        name: "_tickerHash",
+        name: "",
         type: "bytes32",
       },
     ],
@@ -591,25 +591,6 @@ const _abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "_transferId",
-        type: "bytes32",
-      },
-    ],
-    name: "receiveLocalOverride",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "_receives",
-        type: "bool",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [],
     name: "relayerFeeVault",
     outputs: [
@@ -626,7 +607,7 @@ const _abi = [
     inputs: [
       {
         internalType: "uint32",
-        name: "_domain",
+        name: "",
         type: "uint32",
       },
     ],
@@ -634,7 +615,7 @@ const _abi = [
     outputs: [
       {
         internalType: "bytes32",
-        name: "_router",
+        name: "",
         type: "bytes32",
       },
     ],
@@ -691,7 +672,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_account",
+        name: "",
         type: "address",
       },
     ],
@@ -699,7 +680,7 @@ const _abi = [
     outputs: [
       {
         internalType: "enum Role",
-        name: "_role",
+        name: "",
         type: "uint8",
       },
     ],
@@ -710,7 +691,7 @@ const _abi = [
     inputs: [
       {
         internalType: "bytes32",
-        name: "_transferId",
+        name: "",
         type: "bytes32",
       },
       {
@@ -723,7 +704,7 @@ const _abi = [
     outputs: [
       {
         internalType: "address",
-        name: "_routers",
+        name: "",
         type: "address",
       },
     ],
@@ -760,12 +741,12 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_router",
+        name: "",
         type: "address",
       },
       {
         internalType: "address",
-        name: "_assetId",
+        name: "",
         type: "address",
       },
     ],
@@ -773,7 +754,7 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "_amount",
+        name: "",
         type: "uint256",
       },
     ],
@@ -784,7 +765,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_router",
+        name: "",
         type: "address",
       },
     ],
@@ -828,12 +809,12 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_assetId",
+        name: "",
         type: "address",
       },
       {
         internalType: "address",
-        name: "_router",
+        name: "",
         type: "address",
       },
     ],
@@ -841,7 +822,7 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "_amount",
+        name: "",
         type: "uint256",
       },
     ],
@@ -852,12 +833,12 @@ const _abi = [
     inputs: [
       {
         internalType: "bytes32",
-        name: "_tickerHash",
+        name: "",
         type: "bytes32",
       },
       {
         internalType: "bytes",
-        name: "_path",
+        name: "",
         type: "bytes",
       },
     ],
@@ -865,7 +846,7 @@ const _abi = [
     outputs: [
       {
         internalType: "address",
-        name: "_strategy",
+        name: "",
         type: "address",
       },
     ],
@@ -876,12 +857,12 @@ const _abi = [
     inputs: [
       {
         internalType: "bytes32",
-        name: "_tickerHash",
+        name: "",
         type: "bytes32",
       },
       {
         internalType: "uint32",
-        name: "_domain",
+        name: "",
         type: "uint32",
       },
     ],
@@ -889,7 +870,7 @@ const _abi = [
     outputs: [
       {
         internalType: "bool",
-        name: "_supported",
+        name: "",
         type: "bool",
       },
     ],
@@ -900,7 +881,7 @@ const _abi = [
     inputs: [
       {
         internalType: "bytes32",
-        name: "_tickerHash",
+        name: "",
         type: "bytes32",
       },
     ],
@@ -908,7 +889,7 @@ const _abi = [
     outputs: [
       {
         internalType: "address",
-        name: "_assetId",
+        name: "",
         type: "address",
       },
     ],
@@ -919,7 +900,7 @@ const _abi = [
     inputs: [
       {
         internalType: "bytes32",
-        name: "_tickerHash",
+        name: "",
         type: "bytes32",
       },
     ],
@@ -927,7 +908,7 @@ const _abi = [
     outputs: [
       {
         internalType: "address",
-        name: "_nextAsset",
+        name: "",
         type: "address",
       },
     ],
@@ -938,7 +919,7 @@ const _abi = [
     inputs: [
       {
         internalType: "bytes32",
-        name: "_canonicalId",
+        name: "",
         type: "bytes32",
       },
     ],
@@ -992,7 +973,7 @@ const _abi = [
     inputs: [
       {
         internalType: "bytes32",
-        name: "_domain",
+        name: "",
         type: "bytes32",
       },
     ],
@@ -1000,7 +981,7 @@ const _abi = [
     outputs: [
       {
         internalType: "enum DestinationTransferStatus",
-        name: "_status",
+        name: "",
         type: "uint8",
       },
     ],
@@ -1011,7 +992,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "_assetId",
+        name: "",
         type: "address",
       },
     ],
@@ -1019,7 +1000,7 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "_amount",
+        name: "",
         type: "uint256",
       },
     ],

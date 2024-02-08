@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity 0.8.17;
 
-import {BaseManager} from "./BaseManager.sol";
-import {Role} from "../libraries/LibConnextStorage.sol";
-import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
+import {BaseManager} from './BaseManager.sol';
+import {Role} from '../libraries/LibConnextStorage.sol';
+import {TypeCasts} from '../../shared/libraries/TypeCasts.sol';
 
 abstract contract RolesManager is BaseManager {
   // ========== Custom Errors ===========
@@ -179,7 +179,7 @@ abstract contract RolesManager is BaseManager {
    * @param _router The address of the remote xApp Router
    */
   function enrollRemoteRouter(uint32 _domain, bytes32 _router) external onlyOwnerOrRole(Role.Admin) {
-    if (_router == bytes32("")) revert RolesManager__addRemote_invalidRouter();
+    if (_router == bytes32('')) revert RolesManager__addRemote_invalidRouter();
 
     // Make sure we aren't setting the current domain (or an empty one) as the connextion.
     if (_domain == 0 || _domain == domain) {

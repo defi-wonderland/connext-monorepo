@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.18;
+pragma solidity 0.8.17;
 
 import {ProposedOwnable} from "../shared/ProposedOwnable.sol";
 import {ExcessivelySafeCall} from "../shared/libraries/ExcessivelySafeCall.sol";

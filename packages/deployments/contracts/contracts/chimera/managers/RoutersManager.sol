@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.18;
+pragma solidity 0.8.17;
 
-import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
-import {Constants} from "../libraries/Constants.sol";
-import {RouterConfig, Role} from "../libraries/LibConnextStorage.sol";
-import {TokenId} from "../libraries/TokenId.sol";
-import {BaseManager} from "./BaseManager.sol";
+import {TypeCasts} from '../../shared/libraries/TypeCasts.sol';
+import {Constants} from '../libraries/Constants.sol';
+import {RouterConfig, Role} from '../libraries/LibConnextStorage.sol';
+import {TokenId} from '../libraries/TokenId.sol';
+import {BaseManager} from './BaseManager.sol';
 
 abstract contract RoutersManager is BaseManager {
   // ========== Custom Errors ===========
@@ -99,12 +99,7 @@ abstract contract RoutersManager is BaseManager {
    * @param caller - The account that called the function
    */
   event RouterLiquidityRemoved(
-    address indexed router,
-    address to,
-    address local,
-    bytes32 key,
-    uint256 amount,
-    address caller
+    address indexed router, address to, address local, bytes32 key, uint256 amount, address caller
   );
 
   // ============ Modifiers ============
@@ -234,10 +229,8 @@ abstract contract RoutersManager is BaseManager {
     // Ensure the config is empty
     RouterConfig memory config = routerConfigs[msg.sender];
     if (
-      config.owner != address(0) ||
-      config.recipient != address(0) ||
-      config.proposed != address(0) ||
-      config.proposedTimestamp > 0
+      config.owner != address(0) || config.recipient != address(0) || config.proposed != address(0)
+        || config.proposedTimestamp > 0
     ) {
       revert RoutersManager__initializeRouter_configNotEmpty();
     }
