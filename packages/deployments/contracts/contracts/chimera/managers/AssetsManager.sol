@@ -1,17 +1,17 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
-import {IERC20Metadata} from '@openzeppelin/contracts/interfaces/IERC20Metadata.sol';
-import {TypeCasts} from '../../shared/libraries/TypeCasts.sol';
-import {TypeCasts} from '../../shared/libraries/TypeCasts.sol';
-import {TypedMemView} from '../../shared/libraries/TypedMemView.sol';
+import {IERC20Metadata} from "@openzeppelin/contracts/interfaces/IERC20Metadata.sol";
+import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
+import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
+import {TypedMemView} from "../../shared/libraries/TypedMemView.sol";
 
-import {BridgeMessage} from '../libraries/BridgeMessage.sol';
+import {BridgeMessage} from "../libraries/BridgeMessage.sol";
 
-import {Role, TokenId, TokenConfig, DestinationTransferStatus} from '../libraries/LibConnextStorage.sol';
-import {BaseManager} from './BaseManager.sol';
-import {BridgeToken} from '../helpers/BridgeToken.sol';
-import {IBridgeToken} from '../interfaces/IBridgeToken.sol';
+import {Role, TokenId, TokenConfig, DestinationTransferStatus} from "../libraries/LibConnextStorage.sol";
+import {BaseManager} from "./BaseManager.sol";
+import {BridgeToken} from "../helpers/BridgeToken.sol";
+import {IBridgeToken} from "../interfaces/IBridgeToken.sol";
 
 abstract contract AssetsManager is BaseManager {
   // ============ Libraries ============
@@ -61,7 +61,11 @@ abstract contract AssetsManager is BaseManager {
    * @param caller - The account that called the function
    */
   event LiquidityCapUpdated(
-    bytes32 indexed key, bytes32 indexed canonicalId, uint32 indexed domain, uint256 cap, address caller
+    bytes32 indexed key,
+    bytes32 indexed canonicalId,
+    uint32 indexed domain,
+    uint256 cap,
+    address caller
   );
 
   /**
@@ -128,21 +132,6 @@ abstract contract AssetsManager is BaseManager {
     address liquidityProvider,
     uint256 amount
   );
-
-  // ============ Getters ============
-  /*
-  function approvedAssets(bytes32 _key) public view returns (bool) {
-    return tokenConfigs[_key].approval;
-  }
-
-  function approvedAssets(TokenId calldata _canonical) public view returns (bool) {
-    return approvedAssets(calculateCanonicalHash(_canonical.id, _canonical.domain));
-  }
-
-  function getCustodiedAmount(bytes32 _key) public view returns (uint256) {
-    return tokenConfigs[_key].custodied;
-  }
-  */
 
   // ============ Admin functions ============
 
@@ -380,17 +369,13 @@ abstract contract AssetsManager is BaseManager {
     //   if (_canonical.domain == 0 || _canonical.id == bytes32('')) {
     //     revert AssetsManager__enrollAdoptedAndLocalAssets_emptyCanonical();
     //   }
-
     //   // Get true adopted
     //   bool adoptedIsLocal = _adopted == address(0);
     //   address adopted = adoptedIsLocal ? _local : _adopted;
-
     //   // Get whether you are on canonical
     //   bool onCanonical = domain == _canonical.domain;
-
     //   // Sanity check: needs approval
     //   if (tokenConfigs[_key].approval) revert AssetsManager__addAssetId_alreadyAdded();
-
     //   // Sanity check: bridge can mint / burn on remote
     //   if (!onCanonical) {
     //     IBridgeToken candidate = IBridgeToken(_local);
@@ -428,25 +413,21 @@ abstract contract AssetsManager is BaseManager {
     //     cap: _onCanonical ? _cap : 0,
     //     custodied: 0
     //   });
-
     //   // Update reverse lookups
     //   // Update the adopted mapping using convention of local == adopted iff (_adopted == address(0))
     //   adoptedToCanonical[adopted].domain = _canonical.domain;
     //   adoptedToCanonical[adopted].id = _canonical.id;
-
     //   if (!_onCanonical) {
     //     // Update the local <> canonical. Representations only exist on non-canonical domain
     //     representationToCanonical[_local].domain = _canonical.domain;
     //     representationToCanonical[_local].id = _canonical.id;
     //     // Update swap (on the canonical domain, there is no representation / pool).
-
     //     // TODO: check below removal
     //     //_addStableSwapPool(_canonical, _stableSwapPool, _key);
     //   } else if (_cap > 0) {
     //     // Update cap (only on canonical domain).
     //     _setLiquidityCap(_canonical, _cap, _key);
     //   }
-
     //   // Emit event
     //   emit AssetAdded({
     //     key: _key,
@@ -517,12 +498,10 @@ abstract contract AssetsManager is BaseManager {
     // TokenConfig storage config = tokenConfigs[_key];
     // // Sanity check: already approval
     // if (!config.approval) revert AssetsManager__removeAssetId_notAdded();
-
     // // Sanity check: consistent set of params
     // if (config.adopted != _adoptedAssetId || config.representation != _representation) {
     //   revert AssetsManager__removeAssetId_invalidParams();
     // }
-
     // bool onCanonical = domain == _canonical.domain;
     // if (onCanonical) {
     //   // Sanity check: no value custodied if on canonical domain
@@ -543,7 +522,6 @@ abstract contract AssetsManager is BaseManager {
     //     revert AssetsManager__removeAssetId_remainsCustodied();
     //   }
     // }
-
     // // Delete token config from configs mapping.
     // // NOTE: we do NOT delete the representation entries from the config. This is
     // // done to prevent multiple representations being deployed in `setupAsset`
@@ -553,11 +531,9 @@ abstract contract AssetsManager is BaseManager {
     // delete tokenConfigs[_key].approval;
     // delete tokenConfigs[_key].cap;
     // // NOTE: custodied will always be 0 at this point
-
     // // Delete from reverse lookups
     // delete representationToCanonical[_representation];
     // delete adoptedToCanonical[_adoptedAssetId];
-
     // // Emit event
     // emit AssetRemoved(_key, msg.sender);
   }

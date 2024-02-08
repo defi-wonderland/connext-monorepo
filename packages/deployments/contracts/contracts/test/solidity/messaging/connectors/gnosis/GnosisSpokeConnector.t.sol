@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {GnosisSpokeConnector} from "@contracts/messaging/connectors/gnosis/GnosisSpokeConnector.sol";
 import {GnosisAmb} from "@contracts/messaging/interfaces/ambs/GnosisAmb.sol";

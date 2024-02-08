@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 // https://github.com/fx-portal/contracts/blob/main/contracts/lib/MerklePatriciaProof.sol
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {RLPReader} from "./RLPReader.sol";
 

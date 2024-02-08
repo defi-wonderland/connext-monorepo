@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {SafeERC20, IERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
@@ -193,15 +193,7 @@ library SwapUtilsExternal {
     uint8 tokenIndex,
     uint256 tokenAmount,
     uint256 totalSupply
-  )
-    public
-    view
-    returns (
-      uint256,
-      uint256,
-      uint256
-    )
-  {
+  ) public view returns (uint256, uint256, uint256) {
     // Get the current D, then solve the stableswap invariant
     // y_i for D - tokenAmount
     uint256[] memory xp = _xp(self);
@@ -261,12 +253,7 @@ library SwapUtilsExternal {
    * @param d the stableswap invariant
    * @return the price of the token, in the same precision as in xp
    */
-  function getYD(
-    uint256 a,
-    uint8 tokenIndex,
-    uint256[] memory xp,
-    uint256 d
-  ) public pure returns (uint256) {
+  function getYD(uint256 a, uint8 tokenIndex, uint256[] memory xp, uint256 d) public pure returns (uint256) {
     uint256 numTokens = xp.length;
     require(tokenIndex < numTokens, "Token not found");
 
@@ -376,11 +363,10 @@ library SwapUtilsExternal {
    *
    * @return an array of amounts "scaled" to the pool's precision
    */
-  function _xp(uint256[] memory balances, uint256[] memory precisionMultipliers)
-    internal
-    pure
-    returns (uint256[] memory)
-  {
+  function _xp(
+    uint256[] memory balances,
+    uint256[] memory precisionMultipliers
+  ) internal pure returns (uint256[] memory) {
     uint256 numTokens = balances.length;
     require(numTokens == precisionMultipliers.length, "mismatch multipliers");
     uint256[] memory xp = new uint256[](numTokens);
@@ -414,7 +400,7 @@ library SwapUtilsExternal {
     LPToken lpToken = self.lpToken;
     uint256 supply = lpToken.totalSupply();
     if (supply != 0) {
-      return (d * (10**uint256(Constants.POOL_PRECISION_DECIMALS))) / supply;
+      return (d * (10 ** uint256(Constants.POOL_PRECISION_DECIMALS))) / supply;
     }
     return 0;
   }
@@ -800,11 +786,7 @@ library SwapUtilsExternal {
    * allowed addresses. If the pool is not in the guarded launch phase, this parameter will be ignored.
    * @return amount of LP token user received
    */
-  function addLiquidity(
-    Swap storage self,
-    uint256[] memory amounts,
-    uint256 minToMint
-  ) external returns (uint256) {
+  function addLiquidity(Swap storage self, uint256[] memory amounts, uint256 minToMint) external returns (uint256) {
     uint256 numTokens = self.pooledTokens.length;
     require(amounts.length == numTokens, "mismatch pooled tokens");
 
@@ -1111,11 +1093,7 @@ library SwapUtilsExternal {
    * @param futureA_ the new A to ramp towards
    * @param futureTime_ timestamp when the new A should be reached
    */
-  function rampA(
-    Swap storage self,
-    uint256 futureA_,
-    uint256 futureTime_
-  ) external {
+  function rampA(Swap storage self, uint256 futureA_, uint256 futureTime_) external {
     require(block.timestamp >= self.initialATime + Constants.MIN_RAMP_DELAY, "Wait 1 day before starting ramp");
     require(futureTime_ >= block.timestamp + Constants.MIN_RAMP_TIME, "Insufficient ramp time");
     require(futureA_ != 0 && futureA_ < Constants.MAX_A, "futureA_ must be > 0 and < Constants.MAX_A");

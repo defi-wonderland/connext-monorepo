@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {IERC20Metadata} from "@openzeppelin/contracts/interfaces/IERC20Metadata.sol";
 
@@ -327,11 +327,7 @@ contract TokenFacet is BaseConnextFacet {
       * @param _representation - Corresponding representation asset to remove
 
    */
-  function removeAssetId(
-    bytes32 _key,
-    address _adoptedAssetId,
-    address _representation
-  ) external onlyOwnerOrAdmin {
+  function removeAssetId(bytes32 _key, address _adoptedAssetId, address _representation) external onlyOwnerOrAdmin {
     TokenId memory canonical = s.adoptedToCanonical[_adoptedAssetId];
     _removeAssetId(_key, _adoptedAssetId, _representation, canonical);
   }
@@ -465,11 +461,7 @@ contract TokenFacet is BaseConnextFacet {
    * @param _stableSwap - The address of the amm to add
    * @param _key - The hash of the canonical id and domain
    */
-  function _addStableSwapPool(
-    TokenId calldata _canonical,
-    address _stableSwap,
-    bytes32 _key
-  ) internal {
+  function _addStableSwapPool(TokenId calldata _canonical, address _stableSwap, bytes32 _key) internal {
     // Update the pool mapping
     s.tokenConfigs[_key].adoptedToLocalExternalPools = _stableSwap;
 
@@ -492,11 +484,7 @@ contract TokenFacet is BaseConnextFacet {
    * @param _updated - The updated liquidity cap value
    * @param _key - The hash of the canonical id and domain
    */
-  function _setLiquidityCap(
-    TokenId calldata _canonical,
-    uint256 _updated,
-    bytes32 _key
-  ) internal {
+  function _setLiquidityCap(TokenId calldata _canonical, uint256 _updated, bytes32 _key) internal {
     if (s.domain != _canonical.domain) {
       revert TokenFacet__setLiquidityCap_notCanonicalDomain();
     }

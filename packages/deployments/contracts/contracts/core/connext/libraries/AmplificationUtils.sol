@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {SwapUtils} from "./SwapUtils.sol";
 import {Constants} from "./Constants.sol";
@@ -60,11 +60,7 @@ library AmplificationUtils {
    * @param futureA_ the new A to ramp towards
    * @param futureTime_ timestamp when the new A should be reached
    */
-  function rampA(
-    SwapUtils.Swap storage self,
-    uint256 futureA_,
-    uint256 futureTime_
-  ) internal {
+  function rampA(SwapUtils.Swap storage self, uint256 futureA_, uint256 futureTime_) internal {
     require(block.timestamp >= self.initialATime + Constants.MIN_RAMP_DELAY, "Wait 1 day before starting ramp");
     require(futureTime_ >= block.timestamp + Constants.MIN_RAMP_TIME, "Insufficient ramp time");
     require(futureA_ != 0 && futureA_ < Constants.MAX_A, "futureA_ must be > 0 and < MAX_A");

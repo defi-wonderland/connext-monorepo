@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {TransferInfo, AppStorage, Role} from "../libraries/LibConnextStorage.sol";
 import {LibDiamond} from "../libraries/LibDiamond.sol";
@@ -159,11 +159,7 @@ contract BaseConnextFacet {
     return (uint64(_origin) << 32) | _nonce;
   }
 
-  function _getLocalAsset(
-    bytes32 _key,
-    bytes32 _id,
-    uint32 _domain
-  ) internal view returns (address) {
+  function _getLocalAsset(bytes32 _key, bytes32 _id, uint32 _domain) internal view returns (address) {
     return AssetLogic.getLocalAsset(_key, _id, _domain, s);
   }
 

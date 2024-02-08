@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {WormholeSpokeConnector} from "@contracts/messaging/connectors/wormhole/WormholeSpokeConnector.sol";
 import {BaseWormhole} from "@contracts/messaging/connectors/wormhole/BaseWormhole.sol";

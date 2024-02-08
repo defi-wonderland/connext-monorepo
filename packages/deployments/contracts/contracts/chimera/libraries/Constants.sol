@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 library Constants {
   // ============= Initial Values =============
@@ -37,7 +37,7 @@ library Constants {
   /**
    * @notice Contains hash of empty bytes
    */
-  bytes32 internal constant EMPTY_HASH = keccak256('');
+  bytes32 internal constant EMPTY_HASH = keccak256("");
 
   /**
    * @notice Denominator for BPS values

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 /**
  * @dev The optimism bridge shares both of these functions, but it is important
@@ -18,11 +18,7 @@ pragma solidity 0.8.17;
  * L1 messenger: https://github.com/ethereum-optimism/optimism/blob/develop/packages/contracts/contracts/L1/messaging/L1CrossDomainMessenger.sol
  */
 interface OptimismAmb {
-  function sendMessage(
-    address _target,
-    bytes memory _message,
-    uint32 _gasLimit
-  ) external;
+  function sendMessage(address _target, bytes memory _message, uint32 _gasLimit) external;
 
   function xDomainMessageSender() external view returns (address);
 }

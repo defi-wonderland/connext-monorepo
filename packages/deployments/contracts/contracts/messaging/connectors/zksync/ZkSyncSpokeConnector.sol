@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 // Importing interfaces and addresses of the system contracts
 import {IL1Messenger} from "../../interfaces/ambs/zksync/IL1Messenger.sol";

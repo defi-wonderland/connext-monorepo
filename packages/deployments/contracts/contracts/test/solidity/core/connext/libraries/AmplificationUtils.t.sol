@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import "@contracts/core/connext/libraries/SwapUtils.sol";
 import "../../../utils/FacetHelper.sol";

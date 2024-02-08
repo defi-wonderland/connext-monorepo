@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
@@ -20,13 +20,7 @@ interface AggregatorV3Interface {
   function latestRoundData()
     external
     view
-    returns (
-      uint80 roundId,
-      int256 answer,
-      uint256 startedAt,
-      uint256 updatedAt,
-      uint80 answeredInRound
-    );
+    returns (uint80 roundId, int256 answer, uint256 startedAt, uint256 updatedAt, uint80 answeredInRound);
 }
 
 /**
@@ -134,9 +128,9 @@ contract ConnextPriceOracle is PriceOracle, ProposedOwnable {
         // Make the decimals to 1e18.
         uint256 aggregatorDecimals = uint256(aggregator.decimals());
         if (aggregatorDecimals > Constants.DEFAULT_NORMALIZED_DECIMALS) {
-          price = retVal / (10**(aggregatorDecimals - Constants.DEFAULT_NORMALIZED_DECIMALS));
+          price = retVal / (10 ** (aggregatorDecimals - Constants.DEFAULT_NORMALIZED_DECIMALS));
         } else {
-          price = retVal * (10**(Constants.DEFAULT_NORMALIZED_DECIMALS - aggregatorDecimals));
+          price = retVal * (10 ** (Constants.DEFAULT_NORMALIZED_DECIMALS - aggregatorDecimals));
         }
 
         return price;
@@ -149,11 +143,7 @@ contract ConnextPriceOracle is PriceOracle, ProposedOwnable {
     return 0;
   }
 
-  function setDirectPrice(
-    address _token,
-    uint256 _price,
-    uint256 _timestamp
-  ) external onlyOwner {
+  function setDirectPrice(address _token, uint256 _price, uint256 _timestamp) external onlyOwner {
     require(_price != 0, "bad price");
     if (block.timestamp > _timestamp) {
       // reject stale price

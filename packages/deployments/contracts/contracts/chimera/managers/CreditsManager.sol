@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
-import {BaseManager} from './BaseManager.sol';
-import {BridgeMessage} from '../libraries/BridgeMessage.sol';
-import {IOutbox} from '../../messaging/interfaces/IOutbox.sol';
-import {IBridgeToken} from '../interfaces/IBridgeToken.sol';
+import {BaseManager} from "./BaseManager.sol";
+import {BridgeMessage} from "../libraries/BridgeMessage.sol";
+import {IOutbox} from "../../messaging/interfaces/IOutbox.sol";
+import {IBridgeToken} from "../interfaces/IBridgeToken.sol";
 
-import {TransferInfo, TokenId} from '../libraries/LibConnextStorage.sol';
+import {TransferInfo, TokenId} from "../libraries/LibConnextStorage.sol";
 
 contract CreditsManager is BaseManager {
   // ============ Events ============
@@ -67,14 +67,16 @@ contract CreditsManager is BaseManager {
       // NOTE: The tokens should be in the contract already at this point from xcall.
     }
 
-    bytes memory _messageBody =
-    // solhint-disable-next-line func-named-parameters
-     abi.encodePacked(_canonical.domain, _canonical.id, BridgeMessage.Types.Transfer, bridgedAmt, _transferId);
+    bytes memory _messageBody = // solhint-disable-next-line func-named-parameters
+    abi.encodePacked(_canonical.domain, _canonical.id, BridgeMessage.Types.Transfer, bridgedAmt, _transferId);
 
     // Send message to destination chain bridge router.
     // return message hash and unhashed body
-    (bytes32 messageHash, bytes memory messageBody) =
-      IOutbox(xAppConnectionManager.home()).dispatch(_params.destinationDomain, _connextion, _messageBody);
+    (bytes32 messageHash, bytes memory messageBody) = IOutbox(xAppConnectionManager.home()).dispatch(
+      _params.destinationDomain,
+      _connextion,
+      _messageBody
+    );
 
     // emit event
     emit XCalled({

@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
-import {BaseManager} from './BaseManager.sol';
-import {Role} from '../libraries/LibConnextStorage.sol';
-import {TypeCasts} from '../../shared/libraries/TypeCasts.sol';
+import {BaseManager} from "./BaseManager.sol";
+import {Role} from "../libraries/LibConnextStorage.sol";
+import {TypeCasts} from "../../shared/libraries/TypeCasts.sol";
 
 abstract contract RolesManager is BaseManager {
   // ========== Custom Errors ===========
@@ -68,29 +68,6 @@ abstract contract RolesManager is BaseManager {
    * @param caller - The account that called the function
    */
   event RemoteAdded(uint32 domain, address remote, address caller);
-
-  // /**
-  //  * @notice Returns if the router allowlist is removed.
-  //  */
-  // function routerAllowlistRemoved() public view returns (bool) {
-  //   return routerAllowlistRemoved;
-  // }
-
-  // /**
-  //  * @notice Returns the timestamp when router allowlist was last proposed to be removed
-  //  */
-  // function routerAllowlistTimestamp() public view returns (uint256) {
-  //   return routerAllowlistTimestamp;
-  // }
-
-  // /**
-  //  * @notice Returns the Role of the address
-  //  * @dev returns uint value of representing enum value of Role
-  //  * @param _role The address for which Role need to be queried
-  //  */
-  // function queryRole(address _role) public view returns (Role) {
-  //   return roles[_role];
-  // }
 
   // ============ External ============
 
@@ -202,7 +179,7 @@ abstract contract RolesManager is BaseManager {
    * @param _router The address of the remote xApp Router
    */
   function enrollRemoteRouter(uint32 _domain, bytes32 _router) external onlyOwnerOrRole(Role.Admin) {
-    if (_router == bytes32('')) revert RolesManager__addRemote_invalidRouter();
+    if (_router == bytes32("")) revert RolesManager__addRemote_invalidRouter();
 
     // Make sure we aren't setting the current domain (or an empty one) as the connextion.
     if (_domain == 0 || _domain == domain) {

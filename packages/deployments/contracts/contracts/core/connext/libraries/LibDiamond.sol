@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 /******************************************************************************\
 * Author: Nick Mudge <nick@perfectabstractions.com> (https://twitter.com/mudgen)
@@ -106,11 +106,7 @@ library LibDiamond {
   event DiamondCut(IDiamondCut.FacetCut[] _diamondCut, address _init, bytes _calldata);
 
   // Internal function version of diamondCut
-  function diamondCut(
-    IDiamondCut.FacetCut[] memory _diamondCut,
-    address _init,
-    bytes memory _calldata
-  ) internal {
+  function diamondCut(IDiamondCut.FacetCut[] memory _diamondCut, address _init, bytes memory _calldata) internal {
     DiamondStorage storage ds = diamondStorage();
     bytes32 key = keccak256(abi.encode(_diamondCut, _init, _calldata));
     if (ds.facetAddresses.length != 0) {
@@ -233,11 +229,7 @@ library LibDiamond {
     ds.selectorToFacetAndPosition[_selector].facetAddress = _facetAddress;
   }
 
-  function removeFunction(
-    DiamondStorage storage ds,
-    address _facetAddress,
-    bytes4 _selector
-  ) internal {
+  function removeFunction(DiamondStorage storage ds, address _facetAddress, bytes4 _selector) internal {
     require(_facetAddress != address(0), "LibDiamondCut: Can't remove function that doesn't exist");
     // an immutable function is a function defined directly in a diamond
     require(_facetAddress != address(this), "LibDiamondCut: Can't remove immutable function");

@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
-import {Address} from '@openzeppelin/contracts/utils/Address.sol';
-import {IERC20} from '@openzeppelin/contracts/token/ERC20/IERC20.sol';
-import {ECDSA} from '@openzeppelin/contracts/utils/cryptography/ECDSA.sol';
-import {ReentrancyGuard} from '@openzeppelin/contracts/security/ReentrancyGuard.sol';
-import {GelatoRelayFeeCollector} from '@gelatonetwork/relay-context/contracts/GelatoRelayFeeCollector.sol';
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
+import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {GelatoRelayFeeCollector} from "@gelatonetwork/relay-context/contracts/GelatoRelayFeeCollector.sol";
 
-import {ProposedOwnable} from '../../shared/ProposedOwnable.sol';
-import {IConnextCore, ExecuteArgs} from '../interfaces/IConnextCore.sol';
+import {ProposedOwnable} from "../../shared/ProposedOwnable.sol";
+import {IConnextCore, ExecuteArgs} from "../interfaces/IConnextCore.sol";
 
 interface ISpokeConnector {
   struct Proof {
@@ -192,7 +192,8 @@ contract RelayerProxy is ProposedOwnable, ReentrancyGuard, GelatoRelayFeeCollect
    * @param oldProposeAggregateRootCooldown Old cooldown period
    */
   event ProposeAggregateRootCooldownChanged(
-    uint256 proposeAggregateRootCooldown, uint256 oldProposeAggregateRootCooldown
+    uint256 proposeAggregateRootCooldown,
+    uint256 oldProposeAggregateRootCooldown
   );
 
   /**

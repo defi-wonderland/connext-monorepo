@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {MultichainSpokeConnector} from "@contracts/messaging/connectors/multichain/MultichainSpokeConnector.sol";
 import {Multichain} from "@contracts/messaging/interfaces/ambs/Multichain.sol";

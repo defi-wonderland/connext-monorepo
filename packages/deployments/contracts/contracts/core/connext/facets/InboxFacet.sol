@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {TypedMemView} from "../../../shared/libraries/TypedMemView.sol";
 
@@ -145,12 +145,7 @@ contract InboxFacet is BaseConnextFacet {
    * @param _asset Local asset address (representational or canonical).
    * @param _amount The amount of the local asset.
    */
-  function _reconcile(
-    bytes32 _transferId,
-    uint32 _origin,
-    address _asset,
-    uint256 _amount
-  ) internal {
+  function _reconcile(bytes32 _transferId, uint32 _origin, address _asset, uint256 _amount) internal {
     // Ensure the transfer has not already been handled (i.e. previously reconciled).
     // Will be previously reconciled IFF status == reconciled -or- status == executed
     // and there is no path length on the transfers (no fast liquidity)

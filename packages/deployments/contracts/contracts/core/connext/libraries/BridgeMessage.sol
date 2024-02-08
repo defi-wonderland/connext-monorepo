@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 // ============ External Imports ============
 import {TypedMemView} from "../../../shared/libraries/TypedMemView.sol";
@@ -77,12 +77,10 @@ library BridgeMessage {
    * @param _action The action
    * @return The formatted message
    */
-  function formatMessage(bytes29 _tokenId, bytes29 _action)
-    internal
-    view
-    typeAssert(_tokenId, Types.TokenId)
-    returns (bytes memory)
-  {
+  function formatMessage(
+    bytes29 _tokenId,
+    bytes29 _action
+  ) internal view typeAssert(_tokenId, Types.TokenId) returns (bytes memory) {
     require(isValidAction(_action), "!action");
     bytes29[] memory _views = new bytes29[](2);
     _views[0] = _tokenId;

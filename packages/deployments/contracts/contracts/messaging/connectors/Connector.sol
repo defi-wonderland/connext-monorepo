@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
@@ -192,9 +192,7 @@ abstract contract Connector is ProposedOwnable, IConnector {
    * @notice This function is used by the AMBs to handle incoming messages. Should store the latest
    * root generated on the l2 domain.
    */
-  function _processMessage(
-    bytes memory /* _data */
-  ) internal virtual {
+  function _processMessage(bytes memory /* _data */) internal virtual {
     // By default, reverts. This is to ensure the call path is not used unless this function is
     // overridden by the inheriting class
     revert Connector__processMessage_notUsed();

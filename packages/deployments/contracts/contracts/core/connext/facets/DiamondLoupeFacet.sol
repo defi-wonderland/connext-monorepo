@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 /******************************************************************************\
 * Author: Nick Mudge <nick@perfectabstractions.com> (https://twitter.com/mudgen)
 * EIP-2535 Diamonds: https://eips.ethereum.org/EIPS/eip-2535
@@ -42,12 +42,9 @@ contract DiamondLoupeFacet is IDiamondLoupe, IERC165 {
   /// @notice Gets all the function selectors provided by a facet.
   /// @param _facet The facet address.
   /// @return facetFunctionSelectors_
-  function facetFunctionSelectors(address _facet)
-    external
-    view
-    override
-    returns (bytes4[] memory facetFunctionSelectors_)
-  {
+  function facetFunctionSelectors(
+    address _facet
+  ) external view override returns (bytes4[] memory facetFunctionSelectors_) {
     LibDiamond.DiamondStorage storage ds = LibDiamond.diamondStorage();
     facetFunctionSelectors_ = ds.facetFunctionSelectors[_facet].functionSelectors;
   }

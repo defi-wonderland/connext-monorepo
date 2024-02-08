@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 /**
  * @notice Interface for sending L1 -> L2 messagesto Arbitrum.
@@ -112,9 +112,5 @@ interface IArbitrumOutbox {
     bytes calldata data
   ) external pure returns (bytes32);
 
-  function calculateMerkleRoot(
-    bytes32[] memory proof,
-    uint256 path,
-    bytes32 item
-  ) external pure returns (bytes32);
+  function calculateMerkleRoot(bytes32[] memory proof, uint256 path, bytes32 item) external pure returns (bytes32);
 }

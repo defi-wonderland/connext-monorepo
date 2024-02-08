@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {IRootManager} from "@contracts/messaging/interfaces/IRootManager.sol";
 import {MainnetSpokeConnector} from "@contracts/messaging/connectors/mainnet/MainnetSpokeConnector.sol";

@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 // This is modified from "@openzeppelin/contracts/token/ERC20/IERC20.sol"
 // Modifications were made to allow the name, hashed name, and cached
 // domain separator to be internal
 
-import '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
-import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
-import '@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol';
-import {EIP712} from '@openzeppelin/contracts/utils/cryptography/EIP712.sol';
-import {ECDSA} from '@openzeppelin/contracts/utils/cryptography/ECDSA.sol';
-import '@openzeppelin/contracts/utils/Counters.sol';
+import "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/draft-IERC20Permit.sol";
+import {EIP712} from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
+import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 
 /**
  * @dev Implementation of the {IERC20} interface.
@@ -71,9 +71,9 @@ contract ERC20 is IERC20Metadata, IERC20Permit {
   // Immutables used in EIP 712 structured data hashing & signing
   // https://eips.ethereum.org/EIPS/eip-712
   bytes32 private constant _PERMIT_TYPEHASH =
-    keccak256('Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)');
+    keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
   bytes32 internal constant _TYPE_HASH =
-    keccak256('EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)');
+    keccak256("EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)");
   // made internal, need access
 
   // Cache the domain separator as an immutable value, but also store the chain id that it corresponds to, in order to
@@ -240,7 +240,7 @@ contract ERC20 is IERC20Metadata, IERC20Permit {
    */
   function decreaseAllowance(address _spender, uint256 _subtractedValue) public virtual returns (bool) {
     uint256 currentAllowance = allowance(msg.sender, _spender);
-    require(currentAllowance >= _subtractedValue, 'ERC20: decreased allowance below zero');
+    require(currentAllowance >= _subtractedValue, "ERC20: decreased allowance below zero");
     unchecked {
       _approve(msg.sender, _spender, currentAllowance - _subtractedValue);
     }
@@ -263,13 +263,13 @@ contract ERC20 is IERC20Metadata, IERC20Permit {
    * - `_sender` must have a balance of at least `amount`.
    */
   function _transfer(address _sender, address _recipient, uint256 _amount) internal virtual {
-    require(_sender != address(0), 'ERC20: transfer from the zero address');
-    require(_recipient != address(0), 'ERC20: transfer to the zero address');
+    require(_sender != address(0), "ERC20: transfer from the zero address");
+    require(_recipient != address(0), "ERC20: transfer to the zero address");
 
     _beforeTokenTransfer(_sender, _recipient, _amount);
 
     uint256 fromBalance = _balances[_sender];
-    require(fromBalance >= _amount, 'ERC20: transfer amount exceeds balance');
+    require(fromBalance >= _amount, "ERC20: transfer amount exceeds balance");
     unchecked {
       _balances[_sender] = fromBalance - _amount;
       // Overflow not possible: the sum of all balances is capped by totalSupply, and the sum is preserved by
@@ -293,7 +293,7 @@ contract ERC20 is IERC20Metadata, IERC20Permit {
    * - `to` cannot be the zero address.
    */
   function _mint(address _account, uint256 _amount) internal virtual {
-    require(_account != address(0), 'ERC20: mint to the zero address');
+    require(_account != address(0), "ERC20: mint to the zero address");
 
     _beforeTokenTransfer(address(0), _account, _amount);
 
@@ -319,12 +319,12 @@ contract ERC20 is IERC20Metadata, IERC20Permit {
    * - `_account` must have at least `_amount` tokens.
    */
   function _burn(address _account, uint256 _amount) internal virtual {
-    require(_account != address(0), 'ERC20: burn from the zero address');
+    require(_account != address(0), "ERC20: burn from the zero address");
 
     _beforeTokenTransfer(_account, address(0), _amount);
 
     uint256 accountBalance = _balances[_account];
-    require(accountBalance >= _amount, 'ERC20: burn amount exceeds balance');
+    require(accountBalance >= _amount, "ERC20: burn amount exceeds balance");
     unchecked {
       _balances[_account] = accountBalance - _amount;
       // Overflow not possible: amount <= accountBalance <= totalSupply
@@ -350,8 +350,8 @@ contract ERC20 is IERC20Metadata, IERC20Permit {
    * - `_spender` cannot be the zero address.
    */
   function _approve(address _owner, address _spender, uint256 _amount) internal virtual {
-    require(_owner != address(0), 'ERC20: approve from the zero address');
-    require(_spender != address(0), 'ERC20: approve to the zero address');
+    require(_owner != address(0), "ERC20: approve from the zero address");
+    require(_spender != address(0), "ERC20: approve to the zero address");
 
     _allowances[_owner][_spender] = _amount;
     emit Approval(_owner, _spender, _amount);
@@ -368,7 +368,7 @@ contract ERC20 is IERC20Metadata, IERC20Permit {
   function _spendAllowance(address _owner, address _spender, uint256 _amount) internal virtual {
     uint256 currentAllowance = allowance(_owner, _spender);
     if (currentAllowance != type(uint256).max) {
-      require(currentAllowance >= _amount, 'ERC20: insufficient allowance');
+      require(currentAllowance >= _amount, "ERC20: insufficient allowance");
       unchecked {
         _approve(_owner, _spender, currentAllowance - _amount);
       }
@@ -431,16 +431,15 @@ contract ERC20 is IERC20Metadata, IERC20Permit {
     bytes32 _r,
     bytes32 _s
   ) public virtual override {
-    require(block.timestamp <= _deadline, 'ERC20Permit: expired deadline');
+    require(block.timestamp <= _deadline, "ERC20Permit: expired deadline");
 
-    bytes32 _structHash =
-    // solhint-disable-next-line func-named-parameters
-     keccak256(abi.encode(_PERMIT_TYPEHASH, _owner, _spender, _value, _useNonce(_owner), _deadline));
+    bytes32 _structHash = // solhint-disable-next-line func-named-parameters
+    keccak256(abi.encode(_PERMIT_TYPEHASH, _owner, _spender, _value, _useNonce(_owner), _deadline));
 
     bytes32 _hash = _hashTypedDataV4(_structHash);
 
     address _signer = ECDSA.recover(_hash, _v, _r, _s);
-    require(_signer == _owner, 'ERC20Permit: invalid signature');
+    require(_signer == _owner, "ERC20Permit: invalid signature");
 
     _approve(_owner, _spender, _value);
   }

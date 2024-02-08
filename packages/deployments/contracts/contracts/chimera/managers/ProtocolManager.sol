@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
-import {Role} from '../libraries/LibConnextStorage.sol';
-import {BaseManager} from './BaseManager.sol';
-import {Constants} from '../libraries/Constants.sol';
-import {IConnectorManager} from '../../messaging/interfaces/IConnectorManager.sol';
+import {Role} from "../libraries/LibConnextStorage.sol";
+import {BaseManager} from "./BaseManager.sol";
+import {Constants} from "../libraries/Constants.sol";
+import {IConnectorManager} from "../../messaging/interfaces/IConnectorManager.sol";
 
 abstract contract ProtocolManager is BaseManager {
   // ========== Custom Errors ===========
@@ -54,30 +54,6 @@ abstract contract ProtocolManager is BaseManager {
    */
   event XAppConnectionManagerSet(address updated, address caller);
 
-  // ============ External: Getters ============
-  /**
-   * @notice Returns the address of the proposed owner.
-   */
-
-  // function proposed() public view returns (address) {
-  //   return proposed;
-  // }
-
-  // /**
-  //  * @notice Returns the address of the proposed owner.
-  //  */
-
-  // function proposedTimestamp() public view returns (uint256) {
-  //   return proposedOwnershipTimestamp;
-  // }
-
-  // /**
-  //  * @notice Returns if paused or not.
-  //  */
-  // function paused() public view returns (bool) {
-  //   return _paused;
-  // }
-
   // ============ External ============
 
   /**
@@ -111,7 +87,6 @@ abstract contract ProtocolManager is BaseManager {
 
     // Emit event, set new owner, reset timestamp
     _setOwner(proposed);
-    
   }
 
   /**

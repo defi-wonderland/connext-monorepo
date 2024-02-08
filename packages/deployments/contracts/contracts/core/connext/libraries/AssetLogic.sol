@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
@@ -82,11 +82,7 @@ library AssetLogic {
    * @param _to - The recipient address that will receive the funds.
    * @param _amount - The amount to withdraw from contract.
    */
-  function handleOutgoingAsset(
-    address _asset,
-    address _to,
-    uint256 _amount
-  ) internal {
+  function handleOutgoingAsset(address _asset, address _to, uint256 _amount) internal {
     // Sanity check: if amount is 0, do nothing.
     if (_amount == 0) {
       return;
@@ -557,20 +553,16 @@ library AssetLogic {
    * @param _amount The value to normalize to the `_out` decimals
    * @return uint256 Normalized decimals.
    */
-  function normalizeDecimals(
-    uint8 _in,
-    uint8 _out,
-    uint256 _amount
-  ) internal pure returns (uint256) {
+  function normalizeDecimals(uint8 _in, uint8 _out, uint256 _amount) internal pure returns (uint256) {
     if (_in == _out) {
       return _amount;
     }
     // Convert this value to the same decimals as _out
     uint256 normalized;
     if (_in < _out) {
-      normalized = _amount * (10**(_out - _in));
+      normalized = _amount * (10 ** (_out - _in));
     } else {
-      normalized = _amount / (10**(_in - _out));
+      normalized = _amount / (10 ** (_in - _out));
     }
     return normalized;
   }

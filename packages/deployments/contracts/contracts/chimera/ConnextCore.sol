@@ -1,33 +1,27 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
-import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
-import {IERC20Metadata} from '@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol';
-import {ECDSA} from '@openzeppelin/contracts/utils/cryptography/ECDSA.sol';
-import {Address} from '@openzeppelin/contracts/utils/Address.sol';
+import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import {IERC20Metadata} from "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol";
+import {ECDSA} from "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 
-import {ExcessivelySafeCall} from '../shared/libraries/ExcessivelySafeCall.sol';
-import {TypedMemView} from '../shared/libraries/TypedMemView.sol';
-import {TypeCasts} from '../shared/libraries/TypeCasts.sol';
+import {ExcessivelySafeCall} from "../shared/libraries/ExcessivelySafeCall.sol";
+import {TypedMemView} from "../shared/libraries/TypedMemView.sol";
+import {TypeCasts} from "../shared/libraries/TypeCasts.sol";
 
-import {
-  ExecuteArgs,
-  TransferInfo,
-  DestinationTransferStatus,
-  TokenConfig,
-  AssetTransfer
-} from './libraries/LibConnextStorage.sol';
-import {Constants} from './libraries/Constants.sol';
-import {TokenId} from './libraries/TokenId.sol';
+import {ExecuteArgs, TransferInfo, DestinationTransferStatus, TokenConfig, AssetTransfer} from "./libraries/LibConnextStorage.sol";
+import {Constants} from "./libraries/Constants.sol";
+import {TokenId} from "./libraries/TokenId.sol";
 
-import {IXReceiver} from './interfaces/IXReceiver.sol';
+import {IXReceiver} from "./interfaces/IXReceiver.sol";
 
-import {IConnextCore} from './interfaces/IConnextCore.sol';
-import {AssetsManager} from './managers/AssetsManager.sol';
-import {ProtocolManager} from './managers/ProtocolManager.sol';
-import {RolesManager} from './managers/RolesManager.sol';
-import {RoutersManager} from './managers/RoutersManager.sol';
-import {CreditsManager} from './managers/CreditsManager.sol';
+import {IConnextCore} from "./interfaces/IConnextCore.sol";
+import {AssetsManager} from "./managers/AssetsManager.sol";
+import {ProtocolManager} from "./managers/ProtocolManager.sol";
+import {RolesManager} from "./managers/RolesManager.sol";
+import {RoutersManager} from "./managers/RoutersManager.sol";
+import {CreditsManager} from "./managers/CreditsManager.sol";
 
 // Core contract
 contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManager, RoutersManager, CreditsManager {
@@ -575,30 +569,23 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     // if (!approvedRelayers[msg.sender] && msg.sender != _args.params.delegate) {
     //   revert Connext__execute_unapprovedSender();
     // }
-
     // // If this is not the destination domain revert
     // if (_args.params.destinationDomain != domain) {
     //   revert Connext__execute_wrongDomain();
     // }
-
     // // Path length refers to the number of facilitating routers. A transfer is considered 'multipath'
     // // if multiple routers provide liquidity (in even 'shares') for it.
     // uint256 pathLength = _args.routers.length;
-
     // // Derive transfer ID based on given arguments.
     // bytes32 transferId = _calculateTransferId(_args.params);
-
     // // Retrieve the reconciled record.
     // DestinationTransferStatus status = transferStatus[transferId];
-
     // if (pathLength != 0) {
     //   // Make sure number of routers is below the configured maximum.
     //   if (pathLength > maxRoutersPerTransfer) revert Connext__execute_maxRoutersExceeded();
-
     //   // Check to make sure the transfer has not been reconciled (no need for routers if the transfer is
     //   // already reconciled; i.e. if there are routers provided, the transfer must *not* be reconciled).
     //   if (status != DestinationTransferStatus.None) revert Connext__execute_badFastLiquidityStatus();
-
     //   // NOTE: The sequencer address may be empty and no signature needs to be provided in the case of the
     //   // slow liquidity route (i.e. no routers involved). Additionally, the sequencer does not need to be the
     //   // msg.sender.
@@ -616,13 +603,11 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     //   ) {
     //     revert Connext__execute_invalidSequencerSignature();
     //   }
-
     //   // Hash the payload for which each router should have produced a signature.
     //   // Each router should have signed the `transferId` (which implicitly signs call params,
     //   // amount, and tokenId) as well as the `pathLength`, or the number of routers with which
     //   // they are splitting liquidity provision.
     //   bytes32 routerHash = keccak256(abi.encode(transferId, pathLength));
-
     //   for (uint256 i; i < pathLength; ) {
     //     // Make sure the router is approved, if applicable.
     //     // If router ownership is renounced (_RouterOwnershipRenounced() is true), then the router allowlist
@@ -630,13 +615,11 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     //     if (!_isRouterAllowlistRemoved() && !routerConfigs[_args.routers[i]].approved) {
     //       revert Connext__execute_notSupportedRouter();
     //     }
-
     //     // Validate the signature. We'll recover the signer's address using the expected payload and basic ECDSA
     //     // signature scheme recovery. The address for each signature must match the router's address.
     //     if (_args.routers[i] != _recoverSignature(routerHash, _args.routerSignatures[i])) {
     //       revert Connext__execute_invalidRouterSignature();
     //     }
-
     //     unchecked {
     //       ++i;
     //     }
@@ -646,7 +629,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     //   // case, we must make sure the transfer's been reconciled.
     //   if (status != DestinationTransferStatus.Reconciled) revert Connext__execute_notReconciled();
     // }
-
     // return (transferId, status);
   }
 
@@ -674,21 +656,17 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
   ) private returns (uint256, address, address) {
     // // Save the addresses of all routers providing liquidity for this transfer.
     // routedTransfers[_transferId] = _args.routers;
-
     // // Get the local asset contract address (if applicable).
     // address local;
     // if (_args.params.canonicalDomain != 0) {
     //   local = _getLocalAsset(_key, _args.params.canonicalId, _args.params.canonicalDomain);
     // }
-
     // // If this is a zero-value transfer, short-circuit remaining logic.
     // if (_args.params.bridgedAmt == 0) {
     //   return (0, local, local);
     // }
-
     // // Get the receive local status
     // bool receiveLocal = _args.params.receiveLocal || receiveLocalOverride[_transferId];
-
     // uint256 toSwap = _args.params.bridgedAmt;
     // // If this is a fast liquidity path, we should handle deducting from applicable routers' liquidity.
     // // If this is a slow liquidity path, the transfer must have been reconciled (if we've reached this point),
@@ -696,17 +674,14 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     // // (since the amount is hashed in the transfer ID itself) - thus, no updates are required.
     // if (_isFast) {
     //   uint256 pathLen = _args.routers.length;
-
     //   // Calculate amount that routers will provide with the fast-liquidity fee deducted.
     //   toSwap = _muldiv(_args.params.bridgedAmt, LIQUIDITY_FEE_NUMERATOR, Constants.BPS_FEE_DENOMINATOR);
-
     //   if (pathLen == 1) {
     //     // If router does not have enough liquidity, try to use Aave Portals.
     //     // NOTE: Only one router should be responsible for taking on this credit risk, and it should only deal
     //     // with transfers expecting adopted assets (to avoid introducing runtime slippage).
     //     if (!receiveLocal && routerBalances[_args.routers[0]][local] < toSwap && aavePool != address(0)) {
     //       if (!routerConfigs[_args.routers[0]].portalApproved) revert Connext__execute_notApprovedForPortals();
-
     //       // Portals deliver the adopted asset directly; return after portal execution is completed.
     //       (uint256 portalDeliveredAmount, address adoptedAsset) = _executePortalTransfer(
     //         _transferId,
@@ -726,7 +701,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     //       // Decrement router's liquidity.
     //       // NOTE: If any router in the path has insufficient liquidity, this will revert with an underflow error.
     //       routerBalances[_args.routers[i]][local] -= routerAmount;
-
     //       unchecked {
     //         ++i;
     //       }
@@ -736,28 +710,23 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     //     routerBalances[_args.routers[pathLen - 1]][local] -= toSweep;
     //   }
     // }
-
     // // If it is the canonical domain, decrease custodied value
     // if (domain == _args.params.canonicalDomain && _getConfig(_key).cap > 0) {
     //   // NOTE: safe to use the amount here instead of post-swap because there are no
     //   // AMMs on the canonical domain (assuming canonical == adopted on canonical domain)
     //   tokenConfigs[_key].custodied -= toSwap;
     // }
-
     // // If the local asset is specified, or the adopted asset was overridden (e.g. when user facing slippage
     // // conditions outside of their boundaries), exit without swapping.
     // if (receiveLocal) {
     //   // Delete override
     //   delete receiveLocalOverride[_transferId];
-
     //   return (toSwap, local, local);
     // }
-
     // // Swap out of representational asset into adopted asset if needed.
     // uint256 slippageOverride = slippage[_transferId];
     // // delete for gas refund
     // delete slippage[_transferId];
-
     // (uint256 amount, address adopted) = AssetLogic.swapFromLocalAssetIfNeeded(
     //   _key,
     //   local,
@@ -841,7 +810,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
         _reconciled ? _params.originSender : address(0), // use passed in value iff authenticated
         _params.originDomain,
         _params.callData
-        )
+      )
     });
 
     if (!_reconciled && !success) {

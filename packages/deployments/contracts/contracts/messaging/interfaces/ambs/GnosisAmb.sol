@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 // Taken from: https://github.com/omni/tokenbridge-contracts/blob/master/contracts/interfaces/IAMB.sol
 interface GnosisAmb {
@@ -21,17 +21,9 @@ interface GnosisAmb {
 
   function failedMessageSender(bytes32 _messageId) external view returns (address);
 
-  function requireToPassMessage(
-    address _contract,
-    bytes memory _data,
-    uint256 _gas
-  ) external returns (bytes32);
+  function requireToPassMessage(address _contract, bytes memory _data, uint256 _gas) external returns (bytes32);
 
-  function requireToConfirmMessage(
-    address _contract,
-    bytes memory _data,
-    uint256 _gas
-  ) external returns (bytes32);
+  function requireToConfirmMessage(address _contract, bytes memory _data, uint256 _gas) external returns (bytes32);
 
   function requireToGetInformation(bytes32 _requestSelector, bytes memory _data) external returns (bytes32);
 

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.17;
+pragma solidity 0.8.18;
 
 interface IAavePool {
   /**
@@ -10,12 +10,7 @@ interface IAavePool {
    * @param referralCode Code used to register the integrator originating the operation, for potential rewards.
    *   0 if the action is executed directly by the user, without any middle-man
    **/
-  function mintUnbacked(
-    address asset,
-    uint256 amount,
-    address onBehalfOf,
-    uint16 referralCode
-  ) external;
+  function mintUnbacked(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
 
   /**
    * @dev Back the current unbacked underlying with `amount` and pay `fee`.
@@ -23,11 +18,7 @@ interface IAavePool {
    * @param amount The amount to back
    * @param fee The amount paid in fees
    **/
-  function backUnbacked(
-    address asset,
-    uint256 amount,
-    uint256 fee
-  ) external;
+  function backUnbacked(address asset, uint256 amount, uint256 fee) external;
 
   /**
    * @notice Withdraws an `amount` of underlying asset from the reserve, burning the equivalent aTokens owned
@@ -40,9 +31,5 @@ interface IAavePool {
    *   different wallet
    * @return The final amount withdrawn
    **/
-  function withdraw(
-    address asset,
-    uint256 amount,
-    address to
-  ) external returns (uint256);
+  function withdraw(address asset, uint256 amount, address to) external returns (uint256);
 }
