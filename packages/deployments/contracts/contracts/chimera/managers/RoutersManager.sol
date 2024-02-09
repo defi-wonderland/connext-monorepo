@@ -112,6 +112,55 @@ abstract contract RoutersManager is BaseManager {
     _;
   }
 
+  // ============ Getters ==============
+
+  function LIQUIDITY_FEE_DENOMINATOR() public pure returns (uint256) {
+    return Constants.BPS_FEE_DENOMINATOR;
+  }
+
+  /**
+   * @notice Returns the approved router for the given router address
+   * @param _router The relevant router address
+   */
+  function getRouterApproval(address _router) public view returns (bool) {
+    return routerConfigs[_router].approved;
+  }
+
+  /**
+   * @notice Returns the recipient for the specified router
+   * @dev The recipient (if set) receives all funds when router liquidity is removed
+   * @param _router The relevant router address
+   */
+  function getRouterRecipient(address _router) public view returns (address) {
+    return routerConfigs[_router].recipient;
+  }
+
+  /**
+   * @notice Returns the router owner if it is set, or the router itself if not
+   * @param _router The relevant router address
+   */
+  function getRouterOwner(address _router) public view returns (address) {
+    return routerConfigs[_router].owner;
+  }
+
+  /**
+   * @notice Returns the currently proposed router owner
+   * @dev All routers must wait for the delay timeout before accepting a new owner
+   * @param _router The relevant router address
+   */
+  function getProposedRouterOwner(address _router) public view returns (address) {
+    return routerConfigs[_router].proposed;
+  }
+
+  /**
+   * @notice Returns the currently proposed router owner timestamp
+   * @dev All routers must wait for the delay timeout before accepting a new owner
+   * @param _router The relevant router address
+   */
+  function getProposedRouterOwnerTimestamp(address _router) public view returns (uint256) {
+    return routerConfigs[_router].proposedTimestamp;
+  }
+
   // ============ Admin methods ==============
 
   /**

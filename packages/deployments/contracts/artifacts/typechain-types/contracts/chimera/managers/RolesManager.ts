@@ -29,19 +29,18 @@ import type {
 
 export interface RolesManagerInterface extends utils.Interface {
   functions: {
+    "LIQUIDITY_FEE_NUMERATOR()": FunctionFragment;
     "acceptanceDelay()": FunctionFragment;
     "addRelayer(address)": FunctionFragment;
     "addSequencer(address)": FunctionFragment;
-    "approvedRelayers(address)": FunctionFragment;
-    "approvedSequencers(address)": FunctionFragment;
     "assetCanonicalIds(address)": FunctionFragment;
     "assetIdToTickerHash(address)": FunctionFragment;
     "assignRole(address,uint8)": FunctionFragment;
+    "credits(address,address)": FunctionFragment;
     "domain()": FunctionFragment;
     "enrollRemoteRouter(uint32,bytes32)": FunctionFragment;
     "initialized()": FunctionFragment;
     "maxRoutersPerTransfer()": FunctionFragment;
-    "nextAssetToTickerHash(address)": FunctionFragment;
     "nonce()": FunctionFragment;
     "owner()": FunctionFragment;
     "proposeRouterAllowlistRemoval()": FunctionFragment;
@@ -59,11 +58,9 @@ export interface RolesManagerInterface extends utils.Interface {
     "routerAllowlistTimestamp()": FunctionFragment;
     "routerBalances(address,address)": FunctionFragment;
     "routerConfigs(address)": FunctionFragment;
-    "routerCredits(address,address)": FunctionFragment;
     "settlementStrategies(bytes32,bytes)": FunctionFragment;
     "supportedAssetDomains(bytes32,uint32)": FunctionFragment;
     "tickerHashToAssetId(bytes32)": FunctionFragment;
-    "tickerHashToNextAsset(bytes32)": FunctionFragment;
     "tokenConfigs(bytes32)": FunctionFragment;
     "transferStatus(bytes32)": FunctionFragment;
     "unclaimedAssets(address)": FunctionFragment;
@@ -72,19 +69,18 @@ export interface RolesManagerInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "LIQUIDITY_FEE_NUMERATOR"
       | "acceptanceDelay"
       | "addRelayer"
       | "addSequencer"
-      | "approvedRelayers"
-      | "approvedSequencers"
       | "assetCanonicalIds"
       | "assetIdToTickerHash"
       | "assignRole"
+      | "credits"
       | "domain"
       | "enrollRemoteRouter"
       | "initialized"
       | "maxRoutersPerTransfer"
-      | "nextAssetToTickerHash"
       | "nonce"
       | "owner"
       | "proposeRouterAllowlistRemoval"
@@ -102,17 +98,19 @@ export interface RolesManagerInterface extends utils.Interface {
       | "routerAllowlistTimestamp"
       | "routerBalances"
       | "routerConfigs"
-      | "routerCredits"
       | "settlementStrategies"
       | "supportedAssetDomains"
       | "tickerHashToAssetId"
-      | "tickerHashToNextAsset"
       | "tokenConfigs"
       | "transferStatus"
       | "unclaimedAssets"
       | "xAppConnectionManager"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "LIQUIDITY_FEE_NUMERATOR",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "acceptanceDelay",
     values?: undefined
@@ -123,14 +121,6 @@ export interface RolesManagerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "addSequencer",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "approvedRelayers",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "approvedSequencers",
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
@@ -145,6 +135,10 @@ export interface RolesManagerInterface extends utils.Interface {
     functionFragment: "assignRole",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "credits",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(functionFragment: "domain", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "enrollRemoteRouter",
@@ -157,10 +151,6 @@ export interface RolesManagerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "maxRoutersPerTransfer",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "nextAssetToTickerHash",
-    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "nonce", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -222,10 +212,6 @@ export interface RolesManagerInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "routerCredits",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "settlementStrategies",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
@@ -235,10 +221,6 @@ export interface RolesManagerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "tickerHashToAssetId",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "tickerHashToNextAsset",
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
@@ -259,20 +241,16 @@ export interface RolesManagerInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(
+    functionFragment: "LIQUIDITY_FEE_NUMERATOR",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "acceptanceDelay",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "addRelayer", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "addSequencer",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "approvedRelayers",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "approvedSequencers",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -284,6 +262,7 @@ export interface RolesManagerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "assignRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "credits", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "domain", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "enrollRemoteRouter",
@@ -295,10 +274,6 @@ export interface RolesManagerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "maxRoutersPerTransfer",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "nextAssetToTickerHash",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "nonce", data: BytesLike): Result;
@@ -352,10 +327,6 @@ export interface RolesManagerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "routerCredits",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "settlementStrategies",
     data: BytesLike
   ): Result;
@@ -365,10 +336,6 @@ export interface RolesManagerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "tickerHashToAssetId",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "tickerHashToNextAsset",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -541,6 +508,8 @@ export interface RolesManager extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     acceptanceDelay(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     addRelayer(
@@ -552,16 +521,6 @@ export interface RolesManager extends BaseContract {
       _sequencer: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    approvedRelayers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    approvedSequencers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
 
     assetCanonicalIds(
       arg0: PromiseOrValue<string>,
@@ -579,6 +538,12 @@ export interface RolesManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    credits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     domain(overrides?: CallOverrides): Promise<[number]>;
 
     enrollRemoteRouter(
@@ -590,11 +555,6 @@ export interface RolesManager extends BaseContract {
     initialized(overrides?: CallOverrides): Promise<[boolean]>;
 
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    nextAssetToTickerHash(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
 
     nonce(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -669,12 +629,6 @@ export interface RolesManager extends BaseContract {
       }
     >;
 
-    routerCredits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     settlementStrategies(
       arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BytesLike>,
@@ -688,11 +642,6 @@ export interface RolesManager extends BaseContract {
     ): Promise<[boolean]>;
 
     tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    tickerHashToNextAsset(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[string]>;
@@ -735,6 +684,8 @@ export interface RolesManager extends BaseContract {
     xAppConnectionManager(overrides?: CallOverrides): Promise<[string]>;
   };
 
+  LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
   acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
   addRelayer(
@@ -746,16 +697,6 @@ export interface RolesManager extends BaseContract {
     _sequencer: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
-
-  approvedRelayers(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  approvedSequencers(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
 
   assetCanonicalIds(
     arg0: PromiseOrValue<string>,
@@ -773,6 +714,12 @@ export interface RolesManager extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  credits(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   domain(overrides?: CallOverrides): Promise<number>;
 
   enrollRemoteRouter(
@@ -784,11 +731,6 @@ export interface RolesManager extends BaseContract {
   initialized(overrides?: CallOverrides): Promise<boolean>;
 
   maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
-  nextAssetToTickerHash(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
 
   nonce(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -863,12 +805,6 @@ export interface RolesManager extends BaseContract {
     }
   >;
 
-  routerCredits(
-    arg0: PromiseOrValue<string>,
-    arg1: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   settlementStrategies(
     arg0: PromiseOrValue<BytesLike>,
     arg1: PromiseOrValue<BytesLike>,
@@ -882,11 +818,6 @@ export interface RolesManager extends BaseContract {
   ): Promise<boolean>;
 
   tickerHashToAssetId(
-    arg0: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  tickerHashToNextAsset(
     arg0: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
@@ -920,6 +851,8 @@ export interface RolesManager extends BaseContract {
   xAppConnectionManager(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
+    LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
     acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
     addRelayer(
@@ -931,16 +864,6 @@ export interface RolesManager extends BaseContract {
       _sequencer: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    approvedRelayers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    approvedSequencers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
 
     assetCanonicalIds(
       arg0: PromiseOrValue<string>,
@@ -958,6 +881,12 @@ export interface RolesManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    credits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     domain(overrides?: CallOverrides): Promise<number>;
 
     enrollRemoteRouter(
@@ -969,11 +898,6 @@ export interface RolesManager extends BaseContract {
     initialized(overrides?: CallOverrides): Promise<boolean>;
 
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nextAssetToTickerHash(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     nonce(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1044,12 +968,6 @@ export interface RolesManager extends BaseContract {
       }
     >;
 
-    routerCredits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     settlementStrategies(
       arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BytesLike>,
@@ -1063,11 +981,6 @@ export interface RolesManager extends BaseContract {
     ): Promise<boolean>;
 
     tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    tickerHashToNextAsset(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
@@ -1178,6 +1091,8 @@ export interface RolesManager extends BaseContract {
   };
 
   estimateGas: {
+    LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
     acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
     addRelayer(
@@ -1188,16 +1103,6 @@ export interface RolesManager extends BaseContract {
     addSequencer(
       _sequencer: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    approvedRelayers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    approvedSequencers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     assetCanonicalIds(
@@ -1216,6 +1121,12 @@ export interface RolesManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    credits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     domain(overrides?: CallOverrides): Promise<BigNumber>;
 
     enrollRemoteRouter(
@@ -1227,11 +1138,6 @@ export interface RolesManager extends BaseContract {
     initialized(overrides?: CallOverrides): Promise<BigNumber>;
 
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nextAssetToTickerHash(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     nonce(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1297,12 +1203,6 @@ export interface RolesManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    routerCredits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     settlementStrategies(
       arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BytesLike>,
@@ -1316,11 +1216,6 @@ export interface RolesManager extends BaseContract {
     ): Promise<BigNumber>;
 
     tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    tickerHashToNextAsset(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1344,6 +1239,10 @@ export interface RolesManager extends BaseContract {
   };
 
   populateTransaction: {
+    LIQUIDITY_FEE_NUMERATOR(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     acceptanceDelay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     addRelayer(
@@ -1354,16 +1253,6 @@ export interface RolesManager extends BaseContract {
     addSequencer(
       _sequencer: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    approvedRelayers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    approvedSequencers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     assetCanonicalIds(
@@ -1382,6 +1271,12 @@ export interface RolesManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    credits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     domain(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     enrollRemoteRouter(
@@ -1393,11 +1288,6 @@ export interface RolesManager extends BaseContract {
     initialized(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     maxRoutersPerTransfer(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    nextAssetToTickerHash(
-      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1471,12 +1361,6 @@ export interface RolesManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    routerCredits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     settlementStrategies(
       arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BytesLike>,
@@ -1490,11 +1374,6 @@ export interface RolesManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    tickerHashToNextAsset(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

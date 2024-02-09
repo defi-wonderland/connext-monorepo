@@ -129,6 +129,19 @@ abstract contract AssetsManager is BaseManager {
     uint256 amount
   );
 
+  // ============ Getters ============
+  function approvedAssets(bytes32 _key) public view returns (bool) {
+    return tokenConfigs[_key].approval;
+  }
+
+  function approvedAssets(TokenId calldata _canonical) public view returns (bool) {
+    return approvedAssets(calculateCanonicalHash(_canonical.id, _canonical.domain));
+  }
+
+  function getCustodiedAmount(bytes32 _key) public view returns (uint256) {
+    return tokenConfigs[_key].custodied;
+  }
+
   // ============ Admin functions ============
 
   /**

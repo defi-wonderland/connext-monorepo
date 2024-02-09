@@ -40,20 +40,25 @@ export type TokenIdStructOutput = [number, string] & {
 
 export interface RoutersManagerInterface extends utils.Interface {
   functions: {
+    "LIQUIDITY_FEE_DENOMINATOR()": FunctionFragment;
+    "LIQUIDITY_FEE_NUMERATOR()": FunctionFragment;
     "acceptProposedRouterOwner(address)": FunctionFragment;
     "acceptanceDelay()": FunctionFragment;
     "addRouterLiquidity(uint256,address)": FunctionFragment;
     "addRouterLiquidityFor(uint256,address,address)": FunctionFragment;
     "approveRouter(address)": FunctionFragment;
-    "approvedRelayers(address)": FunctionFragment;
-    "approvedSequencers(address)": FunctionFragment;
     "assetCanonicalIds(address)": FunctionFragment;
     "assetIdToTickerHash(address)": FunctionFragment;
+    "credits(address,address)": FunctionFragment;
     "domain()": FunctionFragment;
+    "getProposedRouterOwner(address)": FunctionFragment;
+    "getProposedRouterOwnerTimestamp(address)": FunctionFragment;
+    "getRouterApproval(address)": FunctionFragment;
+    "getRouterOwner(address)": FunctionFragment;
+    "getRouterRecipient(address)": FunctionFragment;
     "initializeRouter(address,address)": FunctionFragment;
     "initialized()": FunctionFragment;
     "maxRoutersPerTransfer()": FunctionFragment;
-    "nextAssetToTickerHash(address)": FunctionFragment;
     "nonce()": FunctionFragment;
     "owner()": FunctionFragment;
     "proposeRouterOwner(address,address)": FunctionFragment;
@@ -69,12 +74,10 @@ export interface RoutersManagerInterface extends utils.Interface {
     "routerAllowlistTimestamp()": FunctionFragment;
     "routerBalances(address,address)": FunctionFragment;
     "routerConfigs(address)": FunctionFragment;
-    "routerCredits(address,address)": FunctionFragment;
     "setRouterRecipient(address,address)": FunctionFragment;
     "settlementStrategies(bytes32,bytes)": FunctionFragment;
     "supportedAssetDomains(bytes32,uint32)": FunctionFragment;
     "tickerHashToAssetId(bytes32)": FunctionFragment;
-    "tickerHashToNextAsset(bytes32)": FunctionFragment;
     "tokenConfigs(bytes32)": FunctionFragment;
     "transferStatus(bytes32)": FunctionFragment;
     "unapproveRouter(address)": FunctionFragment;
@@ -84,20 +87,25 @@ export interface RoutersManagerInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "LIQUIDITY_FEE_DENOMINATOR"
+      | "LIQUIDITY_FEE_NUMERATOR"
       | "acceptProposedRouterOwner"
       | "acceptanceDelay"
       | "addRouterLiquidity"
       | "addRouterLiquidityFor"
       | "approveRouter"
-      | "approvedRelayers"
-      | "approvedSequencers"
       | "assetCanonicalIds"
       | "assetIdToTickerHash"
+      | "credits"
       | "domain"
+      | "getProposedRouterOwner"
+      | "getProposedRouterOwnerTimestamp"
+      | "getRouterApproval"
+      | "getRouterOwner"
+      | "getRouterRecipient"
       | "initializeRouter"
       | "initialized"
       | "maxRoutersPerTransfer"
-      | "nextAssetToTickerHash"
       | "nonce"
       | "owner"
       | "proposeRouterOwner"
@@ -113,12 +121,10 @@ export interface RoutersManagerInterface extends utils.Interface {
       | "routerAllowlistTimestamp"
       | "routerBalances"
       | "routerConfigs"
-      | "routerCredits"
       | "setRouterRecipient"
       | "settlementStrategies"
       | "supportedAssetDomains"
       | "tickerHashToAssetId"
-      | "tickerHashToNextAsset"
       | "tokenConfigs"
       | "transferStatus"
       | "unapproveRouter"
@@ -126,6 +132,14 @@ export interface RoutersManagerInterface extends utils.Interface {
       | "xAppConnectionManager"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "LIQUIDITY_FEE_DENOMINATOR",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "LIQUIDITY_FEE_NUMERATOR",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "acceptProposedRouterOwner",
     values: [PromiseOrValue<string>]
@@ -151,14 +165,6 @@ export interface RoutersManagerInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "approvedRelayers",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "approvedSequencers",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "assetCanonicalIds",
     values: [PromiseOrValue<string>]
   ): string;
@@ -166,7 +172,31 @@ export interface RoutersManagerInterface extends utils.Interface {
     functionFragment: "assetIdToTickerHash",
     values: [PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "credits",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(functionFragment: "domain", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "getProposedRouterOwner",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getProposedRouterOwnerTimestamp",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRouterApproval",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRouterOwner",
+    values: [PromiseOrValue<string>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getRouterRecipient",
+    values: [PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(
     functionFragment: "initializeRouter",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
@@ -178,10 +208,6 @@ export interface RoutersManagerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "maxRoutersPerTransfer",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "nextAssetToTickerHash",
-    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "nonce", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -244,10 +270,6 @@ export interface RoutersManagerInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "routerCredits",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "setRouterRecipient",
     values: [PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
@@ -261,10 +283,6 @@ export interface RoutersManagerInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "tickerHashToAssetId",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "tickerHashToNextAsset",
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
@@ -289,6 +307,14 @@ export interface RoutersManagerInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(
+    functionFragment: "LIQUIDITY_FEE_DENOMINATOR",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "LIQUIDITY_FEE_NUMERATOR",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "acceptProposedRouterOwner",
     data: BytesLike
   ): Result;
@@ -309,14 +335,6 @@ export interface RoutersManagerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "approvedRelayers",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "approvedSequencers",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "assetCanonicalIds",
     data: BytesLike
   ): Result;
@@ -324,7 +342,28 @@ export interface RoutersManagerInterface extends utils.Interface {
     functionFragment: "assetIdToTickerHash",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "credits", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "domain", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getProposedRouterOwner",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getProposedRouterOwnerTimestamp",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRouterApproval",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRouterOwner",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRouterRecipient",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "initializeRouter",
     data: BytesLike
@@ -335,10 +374,6 @@ export interface RoutersManagerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "maxRoutersPerTransfer",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "nextAssetToTickerHash",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "nonce", data: BytesLike): Result;
@@ -387,10 +422,6 @@ export interface RoutersManagerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "routerCredits",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "setRouterRecipient",
     data: BytesLike
   ): Result;
@@ -404,10 +435,6 @@ export interface RoutersManagerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "tickerHashToAssetId",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "tickerHashToNextAsset",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -582,6 +609,10 @@ export interface RoutersManager extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    LIQUIDITY_FEE_DENOMINATOR(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     acceptProposedRouterOwner(
       _router: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -607,16 +638,6 @@ export interface RoutersManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    approvedRelayers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    approvedSequencers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
     assetCanonicalIds(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -627,7 +648,38 @@ export interface RoutersManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    credits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     domain(overrides?: CallOverrides): Promise<[number]>;
+
+    getProposedRouterOwner(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    getProposedRouterOwnerTimestamp(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
+    getRouterApproval(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[boolean]>;
+
+    getRouterOwner(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
+    getRouterRecipient(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     initializeRouter(
       _owner: PromiseOrValue<string>,
@@ -638,11 +690,6 @@ export interface RoutersManager extends BaseContract {
     initialized(overrides?: CallOverrides): Promise<[boolean]>;
 
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    nextAssetToTickerHash(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
 
     nonce(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -715,12 +762,6 @@ export interface RoutersManager extends BaseContract {
       }
     >;
 
-    routerCredits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     setRouterRecipient(
       _router: PromiseOrValue<string>,
       _recipient: PromiseOrValue<string>,
@@ -740,11 +781,6 @@ export interface RoutersManager extends BaseContract {
     ): Promise<[boolean]>;
 
     tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    tickerHashToNextAsset(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[string]>;
@@ -792,6 +828,10 @@ export interface RoutersManager extends BaseContract {
     xAppConnectionManager(overrides?: CallOverrides): Promise<[string]>;
   };
 
+  LIQUIDITY_FEE_DENOMINATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
+  LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
   acceptProposedRouterOwner(
     _router: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -817,16 +857,6 @@ export interface RoutersManager extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  approvedRelayers(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  approvedSequencers(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
   assetCanonicalIds(
     arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -837,7 +867,38 @@ export interface RoutersManager extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  credits(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   domain(overrides?: CallOverrides): Promise<number>;
+
+  getProposedRouterOwner(
+    _router: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getProposedRouterOwnerTimestamp(
+    _router: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getRouterApproval(
+    _router: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<boolean>;
+
+  getRouterOwner(
+    _router: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
+  getRouterRecipient(
+    _router: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   initializeRouter(
     _owner: PromiseOrValue<string>,
@@ -848,11 +909,6 @@ export interface RoutersManager extends BaseContract {
   initialized(overrides?: CallOverrides): Promise<boolean>;
 
   maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
-  nextAssetToTickerHash(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
 
   nonce(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -925,12 +981,6 @@ export interface RoutersManager extends BaseContract {
     }
   >;
 
-  routerCredits(
-    arg0: PromiseOrValue<string>,
-    arg1: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   setRouterRecipient(
     _router: PromiseOrValue<string>,
     _recipient: PromiseOrValue<string>,
@@ -950,11 +1000,6 @@ export interface RoutersManager extends BaseContract {
   ): Promise<boolean>;
 
   tickerHashToAssetId(
-    arg0: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  tickerHashToNextAsset(
     arg0: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
@@ -993,6 +1038,10 @@ export interface RoutersManager extends BaseContract {
   xAppConnectionManager(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
+    LIQUIDITY_FEE_DENOMINATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
+    LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
     acceptProposedRouterOwner(
       _router: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1018,16 +1067,6 @@ export interface RoutersManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    approvedRelayers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    approvedSequencers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
     assetCanonicalIds(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1038,7 +1077,38 @@ export interface RoutersManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    credits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     domain(overrides?: CallOverrides): Promise<number>;
+
+    getProposedRouterOwner(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getProposedRouterOwnerTimestamp(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getRouterApproval(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<boolean>;
+
+    getRouterOwner(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
+    getRouterRecipient(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     initializeRouter(
       _owner: PromiseOrValue<string>,
@@ -1049,11 +1119,6 @@ export interface RoutersManager extends BaseContract {
     initialized(overrides?: CallOverrides): Promise<boolean>;
 
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nextAssetToTickerHash(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     nonce(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1126,12 +1191,6 @@ export interface RoutersManager extends BaseContract {
       }
     >;
 
-    routerCredits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     setRouterRecipient(
       _router: PromiseOrValue<string>,
       _recipient: PromiseOrValue<string>,
@@ -1151,11 +1210,6 @@ export interface RoutersManager extends BaseContract {
     ): Promise<boolean>;
 
     tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    tickerHashToNextAsset(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
@@ -1296,6 +1350,10 @@ export interface RoutersManager extends BaseContract {
   };
 
   estimateGas: {
+    LIQUIDITY_FEE_DENOMINATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
+    LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
     acceptProposedRouterOwner(
       _router: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1321,16 +1379,6 @@ export interface RoutersManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    approvedRelayers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    approvedSequencers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     assetCanonicalIds(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1341,7 +1389,38 @@ export interface RoutersManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    credits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     domain(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getProposedRouterOwner(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getProposedRouterOwnerTimestamp(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getRouterApproval(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getRouterOwner(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getRouterRecipient(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     initializeRouter(
       _owner: PromiseOrValue<string>,
@@ -1352,11 +1431,6 @@ export interface RoutersManager extends BaseContract {
     initialized(overrides?: CallOverrides): Promise<BigNumber>;
 
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nextAssetToTickerHash(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     nonce(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1420,12 +1494,6 @@ export interface RoutersManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    routerCredits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     setRouterRecipient(
       _router: PromiseOrValue<string>,
       _recipient: PromiseOrValue<string>,
@@ -1445,11 +1513,6 @@ export interface RoutersManager extends BaseContract {
     ): Promise<BigNumber>;
 
     tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    tickerHashToNextAsset(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
@@ -1478,6 +1541,14 @@ export interface RoutersManager extends BaseContract {
   };
 
   populateTransaction: {
+    LIQUIDITY_FEE_DENOMINATOR(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    LIQUIDITY_FEE_NUMERATOR(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     acceptProposedRouterOwner(
       _router: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1503,16 +1574,6 @@ export interface RoutersManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    approvedRelayers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    approvedSequencers(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     assetCanonicalIds(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1523,7 +1584,38 @@ export interface RoutersManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    credits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     domain(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getProposedRouterOwner(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getProposedRouterOwnerTimestamp(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getRouterApproval(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getRouterOwner(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getRouterRecipient(
+      _router: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     initializeRouter(
       _owner: PromiseOrValue<string>,
@@ -1534,11 +1626,6 @@ export interface RoutersManager extends BaseContract {
     initialized(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     maxRoutersPerTransfer(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    nextAssetToTickerHash(
-      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1610,12 +1697,6 @@ export interface RoutersManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    routerCredits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     setRouterRecipient(
       _router: PromiseOrValue<string>,
       _recipient: PromiseOrValue<string>,
@@ -1635,11 +1716,6 @@ export interface RoutersManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    tickerHashToNextAsset(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;

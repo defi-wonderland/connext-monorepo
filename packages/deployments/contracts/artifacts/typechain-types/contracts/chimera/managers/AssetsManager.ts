@@ -39,16 +39,18 @@ export type TokenIdStructOutput = [number, string] & {
 
 export interface AssetsManagerInterface extends utils.Interface {
   functions: {
+    "LIQUIDITY_FEE_NUMERATOR()": FunctionFragment;
     "acceptanceDelay()": FunctionFragment;
-    "approvedRelayers(address)": FunctionFragment;
-    "approvedSequencers(address)": FunctionFragment;
+    "approvedAssets(bytes32)": FunctionFragment;
+    "approvedAssets((uint32,bytes32))": FunctionFragment;
     "assetCanonicalIds(address)": FunctionFragment;
     "assetIdToTickerHash(address)": FunctionFragment;
+    "credits(address,address)": FunctionFragment;
     "domain()": FunctionFragment;
+    "getCustodiedAmount(bytes32)": FunctionFragment;
     "handle(uint32,uint32,bytes32,bytes)": FunctionFragment;
     "initialized()": FunctionFragment;
     "maxRoutersPerTransfer()": FunctionFragment;
-    "nextAssetToTickerHash(address)": FunctionFragment;
     "nonce()": FunctionFragment;
     "owner()": FunctionFragment;
     "proposed()": FunctionFragment;
@@ -63,13 +65,11 @@ export interface AssetsManagerInterface extends utils.Interface {
     "routerAllowlistTimestamp()": FunctionFragment;
     "routerBalances(address,address)": FunctionFragment;
     "routerConfigs(address)": FunctionFragment;
-    "routerCredits(address,address)": FunctionFragment;
     "settlementStrategies(bytes32,bytes)": FunctionFragment;
     "setupAsset((uint32,bytes32),uint8,string,string,address,address,uint256)": FunctionFragment;
     "setupAssetWithDeployedRepresentation((uint32,bytes32),address,address,address)": FunctionFragment;
     "supportedAssetDomains(bytes32,uint32)": FunctionFragment;
     "tickerHashToAssetId(bytes32)": FunctionFragment;
-    "tickerHashToNextAsset(bytes32)": FunctionFragment;
     "tokenConfigs(bytes32)": FunctionFragment;
     "transferStatus(bytes32)": FunctionFragment;
     "unclaimedAssets(address)": FunctionFragment;
@@ -80,16 +80,18 @@ export interface AssetsManagerInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "LIQUIDITY_FEE_NUMERATOR"
       | "acceptanceDelay"
-      | "approvedRelayers"
-      | "approvedSequencers"
+      | "approvedAssets(bytes32)"
+      | "approvedAssets((uint32,bytes32))"
       | "assetCanonicalIds"
       | "assetIdToTickerHash"
+      | "credits"
       | "domain"
+      | "getCustodiedAmount"
       | "handle"
       | "initialized"
       | "maxRoutersPerTransfer"
-      | "nextAssetToTickerHash"
       | "nonce"
       | "owner"
       | "proposed"
@@ -104,13 +106,11 @@ export interface AssetsManagerInterface extends utils.Interface {
       | "routerAllowlistTimestamp"
       | "routerBalances"
       | "routerConfigs"
-      | "routerCredits"
       | "settlementStrategies"
       | "setupAsset"
       | "setupAssetWithDeployedRepresentation"
       | "supportedAssetDomains"
       | "tickerHashToAssetId"
-      | "tickerHashToNextAsset"
       | "tokenConfigs"
       | "transferStatus"
       | "unclaimedAssets"
@@ -120,16 +120,20 @@ export interface AssetsManagerInterface extends utils.Interface {
   ): FunctionFragment;
 
   encodeFunctionData(
+    functionFragment: "LIQUIDITY_FEE_NUMERATOR",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "acceptanceDelay",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "approvedRelayers",
-    values: [PromiseOrValue<string>]
+    functionFragment: "approvedAssets(bytes32)",
+    values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "approvedSequencers",
-    values: [PromiseOrValue<string>]
+    functionFragment: "approvedAssets((uint32,bytes32))",
+    values: [TokenIdStruct]
   ): string;
   encodeFunctionData(
     functionFragment: "assetCanonicalIds",
@@ -139,7 +143,15 @@ export interface AssetsManagerInterface extends utils.Interface {
     functionFragment: "assetIdToTickerHash",
     values: [PromiseOrValue<string>]
   ): string;
+  encodeFunctionData(
+    functionFragment: "credits",
+    values: [PromiseOrValue<string>, PromiseOrValue<string>]
+  ): string;
   encodeFunctionData(functionFragment: "domain", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "getCustodiedAmount",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
   encodeFunctionData(
     functionFragment: "handle",
     values: [
@@ -156,10 +168,6 @@ export interface AssetsManagerInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "maxRoutersPerTransfer",
     values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "nextAssetToTickerHash",
-    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(functionFragment: "nonce", values?: undefined): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
@@ -213,10 +221,6 @@ export interface AssetsManagerInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "routerCredits",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "settlementStrategies",
     values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
@@ -250,10 +254,6 @@ export interface AssetsManagerInterface extends utils.Interface {
     values: [PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
-    functionFragment: "tickerHashToNextAsset",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "tokenConfigs",
     values: [PromiseOrValue<BytesLike>]
   ): string;
@@ -279,15 +279,19 @@ export interface AssetsManagerInterface extends utils.Interface {
   ): string;
 
   decodeFunctionResult(
+    functionFragment: "LIQUIDITY_FEE_NUMERATOR",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "acceptanceDelay",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "approvedRelayers",
+    functionFragment: "approvedAssets(bytes32)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "approvedSequencers",
+    functionFragment: "approvedAssets((uint32,bytes32))",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -298,7 +302,12 @@ export interface AssetsManagerInterface extends utils.Interface {
     functionFragment: "assetIdToTickerHash",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "credits", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "domain", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getCustodiedAmount",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "handle", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "initialized",
@@ -306,10 +315,6 @@ export interface AssetsManagerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "maxRoutersPerTransfer",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "nextAssetToTickerHash",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "nonce", data: BytesLike): Result;
@@ -354,10 +359,6 @@ export interface AssetsManagerInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "routerCredits",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
     functionFragment: "settlementStrategies",
     data: BytesLike
   ): Result;
@@ -372,10 +373,6 @@ export interface AssetsManagerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "tickerHashToAssetId",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "tickerHashToNextAsset",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -529,15 +526,17 @@ export interface AssetsManager extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     acceptanceDelay(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    approvedRelayers(
-      arg0: PromiseOrValue<string>,
+    "approvedAssets(bytes32)"(
+      _key: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    approvedSequencers(
-      arg0: PromiseOrValue<string>,
+    "approvedAssets((uint32,bytes32))"(
+      _canonical: TokenIdStruct,
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
@@ -551,7 +550,18 @@ export interface AssetsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    credits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     domain(overrides?: CallOverrides): Promise<[number]>;
+
+    getCustodiedAmount(
+      _key: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     handle(
       _origin: PromiseOrValue<BigNumberish>,
@@ -564,11 +574,6 @@ export interface AssetsManager extends BaseContract {
     initialized(overrides?: CallOverrides): Promise<[boolean]>;
 
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    nextAssetToTickerHash(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
 
     nonce(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -634,12 +639,6 @@ export interface AssetsManager extends BaseContract {
       }
     >;
 
-    routerCredits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     settlementStrategies(
       arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BytesLike>,
@@ -672,11 +671,6 @@ export interface AssetsManager extends BaseContract {
     ): Promise<[boolean]>;
 
     tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    tickerHashToNextAsset(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<[string]>;
@@ -732,15 +726,17 @@ export interface AssetsManager extends BaseContract {
     xAppConnectionManager(overrides?: CallOverrides): Promise<[string]>;
   };
 
+  LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
   acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
-  approvedRelayers(
-    arg0: PromiseOrValue<string>,
+  "approvedAssets(bytes32)"(
+    _key: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  approvedSequencers(
-    arg0: PromiseOrValue<string>,
+  "approvedAssets((uint32,bytes32))"(
+    _canonical: TokenIdStruct,
     overrides?: CallOverrides
   ): Promise<boolean>;
 
@@ -754,7 +750,18 @@ export interface AssetsManager extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  credits(
+    arg0: PromiseOrValue<string>,
+    arg1: PromiseOrValue<string>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   domain(overrides?: CallOverrides): Promise<number>;
+
+  getCustodiedAmount(
+    _key: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   handle(
     _origin: PromiseOrValue<BigNumberish>,
@@ -767,11 +774,6 @@ export interface AssetsManager extends BaseContract {
   initialized(overrides?: CallOverrides): Promise<boolean>;
 
   maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
-  nextAssetToTickerHash(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
 
   nonce(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -837,12 +839,6 @@ export interface AssetsManager extends BaseContract {
     }
   >;
 
-  routerCredits(
-    arg0: PromiseOrValue<string>,
-    arg1: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   settlementStrategies(
     arg0: PromiseOrValue<BytesLike>,
     arg1: PromiseOrValue<BytesLike>,
@@ -875,11 +871,6 @@ export interface AssetsManager extends BaseContract {
   ): Promise<boolean>;
 
   tickerHashToAssetId(
-    arg0: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  tickerHashToNextAsset(
     arg0: PromiseOrValue<BytesLike>,
     overrides?: CallOverrides
   ): Promise<string>;
@@ -926,15 +917,17 @@ export interface AssetsManager extends BaseContract {
   xAppConnectionManager(overrides?: CallOverrides): Promise<string>;
 
   callStatic: {
+    LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
     acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
-    approvedRelayers(
-      arg0: PromiseOrValue<string>,
+    "approvedAssets(bytes32)"(
+      _key: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    approvedSequencers(
-      arg0: PromiseOrValue<string>,
+    "approvedAssets((uint32,bytes32))"(
+      _canonical: TokenIdStruct,
       overrides?: CallOverrides
     ): Promise<boolean>;
 
@@ -948,7 +941,18 @@ export interface AssetsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    credits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     domain(overrides?: CallOverrides): Promise<number>;
+
+    getCustodiedAmount(
+      _key: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     handle(
       _origin: PromiseOrValue<BigNumberish>,
@@ -961,11 +965,6 @@ export interface AssetsManager extends BaseContract {
     initialized(overrides?: CallOverrides): Promise<boolean>;
 
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nextAssetToTickerHash(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     nonce(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1031,12 +1030,6 @@ export interface AssetsManager extends BaseContract {
       }
     >;
 
-    routerCredits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     settlementStrategies(
       arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BytesLike>,
@@ -1069,11 +1062,6 @@ export interface AssetsManager extends BaseContract {
     ): Promise<boolean>;
 
     tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    tickerHashToNextAsset(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<string>;
@@ -1216,15 +1204,17 @@ export interface AssetsManager extends BaseContract {
   };
 
   estimateGas: {
+    LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
     acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
-    approvedRelayers(
-      arg0: PromiseOrValue<string>,
+    "approvedAssets(bytes32)"(
+      _key: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    approvedSequencers(
-      arg0: PromiseOrValue<string>,
+    "approvedAssets((uint32,bytes32))"(
+      _canonical: TokenIdStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1238,7 +1228,18 @@ export interface AssetsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    credits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     domain(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getCustodiedAmount(
+      _key: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     handle(
       _origin: PromiseOrValue<BigNumberish>,
@@ -1251,11 +1252,6 @@ export interface AssetsManager extends BaseContract {
     initialized(overrides?: CallOverrides): Promise<BigNumber>;
 
     maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nextAssetToTickerHash(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
 
     nonce(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1312,12 +1308,6 @@ export interface AssetsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    routerCredits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     settlementStrategies(
       arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BytesLike>,
@@ -1354,11 +1344,6 @@ export interface AssetsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    tickerHashToNextAsset(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     tokenConfigs(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -1391,15 +1376,19 @@ export interface AssetsManager extends BaseContract {
   };
 
   populateTransaction: {
-    acceptanceDelay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    approvedRelayers(
-      arg0: PromiseOrValue<string>,
+    LIQUIDITY_FEE_NUMERATOR(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    approvedSequencers(
-      arg0: PromiseOrValue<string>,
+    acceptanceDelay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    "approvedAssets(bytes32)"(
+      _key: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    "approvedAssets((uint32,bytes32))"(
+      _canonical: TokenIdStruct,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1413,7 +1402,18 @@ export interface AssetsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    credits(
+      arg0: PromiseOrValue<string>,
+      arg1: PromiseOrValue<string>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     domain(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getCustodiedAmount(
+      _key: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     handle(
       _origin: PromiseOrValue<BigNumberish>,
@@ -1426,11 +1426,6 @@ export interface AssetsManager extends BaseContract {
     initialized(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     maxRoutersPerTransfer(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    nextAssetToTickerHash(
-      arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1495,12 +1490,6 @@ export interface AssetsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    routerCredits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     settlementStrategies(
       arg0: PromiseOrValue<BytesLike>,
       arg1: PromiseOrValue<BytesLike>,
@@ -1533,11 +1522,6 @@ export interface AssetsManager extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    tickerHashToNextAsset(
       arg0: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
