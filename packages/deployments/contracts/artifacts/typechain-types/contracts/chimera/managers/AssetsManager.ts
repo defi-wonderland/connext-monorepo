@@ -39,94 +39,34 @@ export type TokenIdStructOutput = [number, string] & {
 
 export interface AssetsManagerInterface extends utils.Interface {
   functions: {
-    "LIQUIDITY_FEE_NUMERATOR()": FunctionFragment;
-    "acceptanceDelay()": FunctionFragment;
     "approvedAssets(bytes32)": FunctionFragment;
     "approvedAssets((uint32,bytes32))": FunctionFragment;
-    "assetCanonicalIds(address)": FunctionFragment;
-    "assetIdToTickerHash(address)": FunctionFragment;
-    "credits(address,address)": FunctionFragment;
-    "domain()": FunctionFragment;
+    "delay()": FunctionFragment;
     "getCustodiedAmount(bytes32)": FunctionFragment;
     "handle(uint32,uint32,bytes32,bytes)": FunctionFragment;
-    "initialized()": FunctionFragment;
-    "maxRoutersPerTransfer()": FunctionFragment;
-    "nonce()": FunctionFragment;
-    "owner()": FunctionFragment;
-    "proposed()": FunctionFragment;
-    "proposedOwnershipTimestamp()": FunctionFragment;
-    "relayerFeeVault()": FunctionFragment;
-    "remotes(uint32)": FunctionFragment;
     "removeAssetId((uint32,bytes32),address,address)": FunctionFragment;
     "removeAssetId(bytes32,address,address)": FunctionFragment;
-    "roles(address)": FunctionFragment;
-    "routedTransfers(bytes32,uint256)": FunctionFragment;
-    "routerAllowlistRemoved()": FunctionFragment;
-    "routerAllowlistTimestamp()": FunctionFragment;
-    "routerBalances(address,address)": FunctionFragment;
-    "routerConfigs(address)": FunctionFragment;
-    "settlementStrategies(bytes32,bytes)": FunctionFragment;
     "setupAsset((uint32,bytes32),uint8,string,string,address,address,uint256)": FunctionFragment;
     "setupAssetWithDeployedRepresentation((uint32,bytes32),address,address,address)": FunctionFragment;
-    "supportedAssetDomains(bytes32,uint32)": FunctionFragment;
-    "tickerHashToAssetId(bytes32)": FunctionFragment;
-    "tokenConfigs(bytes32)": FunctionFragment;
-    "transferStatus(bytes32)": FunctionFragment;
-    "unclaimedAssets(address)": FunctionFragment;
     "updateDetails((uint32,bytes32),string,string)": FunctionFragment;
     "updateLiquidityCap((uint32,bytes32),uint256)": FunctionFragment;
-    "xAppConnectionManager()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
-      | "LIQUIDITY_FEE_NUMERATOR"
-      | "acceptanceDelay"
       | "approvedAssets(bytes32)"
       | "approvedAssets((uint32,bytes32))"
-      | "assetCanonicalIds"
-      | "assetIdToTickerHash"
-      | "credits"
-      | "domain"
+      | "delay"
       | "getCustodiedAmount"
       | "handle"
-      | "initialized"
-      | "maxRoutersPerTransfer"
-      | "nonce"
-      | "owner"
-      | "proposed"
-      | "proposedOwnershipTimestamp"
-      | "relayerFeeVault"
-      | "remotes"
       | "removeAssetId((uint32,bytes32),address,address)"
       | "removeAssetId(bytes32,address,address)"
-      | "roles"
-      | "routedTransfers"
-      | "routerAllowlistRemoved"
-      | "routerAllowlistTimestamp"
-      | "routerBalances"
-      | "routerConfigs"
-      | "settlementStrategies"
       | "setupAsset"
       | "setupAssetWithDeployedRepresentation"
-      | "supportedAssetDomains"
-      | "tickerHashToAssetId"
-      | "tokenConfigs"
-      | "transferStatus"
-      | "unclaimedAssets"
       | "updateDetails"
       | "updateLiquidityCap"
-      | "xAppConnectionManager"
   ): FunctionFragment;
 
-  encodeFunctionData(
-    functionFragment: "LIQUIDITY_FEE_NUMERATOR",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "acceptanceDelay",
-    values?: undefined
-  ): string;
   encodeFunctionData(
     functionFragment: "approvedAssets(bytes32)",
     values: [PromiseOrValue<BytesLike>]
@@ -135,19 +75,7 @@ export interface AssetsManagerInterface extends utils.Interface {
     functionFragment: "approvedAssets((uint32,bytes32))",
     values: [TokenIdStruct]
   ): string;
-  encodeFunctionData(
-    functionFragment: "assetCanonicalIds",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "assetIdToTickerHash",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "credits",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(functionFragment: "domain", values?: undefined): string;
+  encodeFunctionData(functionFragment: "delay", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "getCustodiedAmount",
     values: [PromiseOrValue<BytesLike>]
@@ -162,29 +90,6 @@ export interface AssetsManagerInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "initialized",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "maxRoutersPerTransfer",
-    values?: undefined
-  ): string;
-  encodeFunctionData(functionFragment: "nonce", values?: undefined): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(functionFragment: "proposed", values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: "proposedOwnershipTimestamp",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "relayerFeeVault",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "remotes",
-    values: [PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "removeAssetId((uint32,bytes32),address,address)",
     values: [TokenIdStruct, PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
@@ -195,34 +100,6 @@ export interface AssetsManagerInterface extends utils.Interface {
       PromiseOrValue<string>,
       PromiseOrValue<string>
     ]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "roles",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "routedTransfers",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "routerAllowlistRemoved",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "routerAllowlistTimestamp",
-    values?: undefined
-  ): string;
-  encodeFunctionData(
-    functionFragment: "routerBalances",
-    values: [PromiseOrValue<string>, PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "routerConfigs",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "settlementStrategies",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BytesLike>]
   ): string;
   encodeFunctionData(
     functionFragment: "setupAsset",
@@ -246,26 +123,6 @@ export interface AssetsManagerInterface extends utils.Interface {
     ]
   ): string;
   encodeFunctionData(
-    functionFragment: "supportedAssetDomains",
-    values: [PromiseOrValue<BytesLike>, PromiseOrValue<BigNumberish>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "tickerHashToAssetId",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "tokenConfigs",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "transferStatus",
-    values: [PromiseOrValue<BytesLike>]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "unclaimedAssets",
-    values: [PromiseOrValue<string>]
-  ): string;
-  encodeFunctionData(
     functionFragment: "updateDetails",
     values: [TokenIdStruct, PromiseOrValue<string>, PromiseOrValue<string>]
   ): string;
@@ -273,19 +130,7 @@ export interface AssetsManagerInterface extends utils.Interface {
     functionFragment: "updateLiquidityCap",
     values: [TokenIdStruct, PromiseOrValue<BigNumberish>]
   ): string;
-  encodeFunctionData(
-    functionFragment: "xAppConnectionManager",
-    values?: undefined
-  ): string;
 
-  decodeFunctionResult(
-    functionFragment: "LIQUIDITY_FEE_NUMERATOR",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "acceptanceDelay",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(
     functionFragment: "approvedAssets(bytes32)",
     data: BytesLike
@@ -294,41 +139,12 @@ export interface AssetsManagerInterface extends utils.Interface {
     functionFragment: "approvedAssets((uint32,bytes32))",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "assetCanonicalIds",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "assetIdToTickerHash",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "credits", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "domain", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "delay", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getCustodiedAmount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "handle", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "initialized",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "maxRoutersPerTransfer",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "nonce", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "proposed", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "proposedOwnershipTimestamp",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "relayerFeeVault",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(functionFragment: "remotes", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "removeAssetId((uint32,bytes32),address,address)",
     data: BytesLike
@@ -337,54 +153,9 @@ export interface AssetsManagerInterface extends utils.Interface {
     functionFragment: "removeAssetId(bytes32,address,address)",
     data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: "roles", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "routedTransfers",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "routerAllowlistRemoved",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "routerAllowlistTimestamp",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "routerBalances",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "routerConfigs",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "settlementStrategies",
-    data: BytesLike
-  ): Result;
   decodeFunctionResult(functionFragment: "setupAsset", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "setupAssetWithDeployedRepresentation",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "supportedAssetDomains",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "tickerHashToAssetId",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "tokenConfigs",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferStatus",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "unclaimedAssets",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -393,10 +164,6 @@ export interface AssetsManagerInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "updateLiquidityCap",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "xAppConnectionManager",
     data: BytesLike
   ): Result;
 
@@ -526,10 +293,6 @@ export interface AssetsManager extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    acceptanceDelay(overrides?: CallOverrides): Promise<[BigNumber]>;
-
     "approvedAssets(bytes32)"(
       _key: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -540,23 +303,7 @@ export interface AssetsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
-    assetCanonicalIds(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    assetIdToTickerHash(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    credits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    domain(overrides?: CallOverrides): Promise<[number]>;
+    delay(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getCustodiedAmount(
       _key: PromiseOrValue<BytesLike>,
@@ -571,25 +318,6 @@ export interface AssetsManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    initialized(overrides?: CallOverrides): Promise<[boolean]>;
-
-    maxRoutersPerTransfer(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    nonce(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    owner(overrides?: CallOverrides): Promise<[string]>;
-
-    proposed(overrides?: CallOverrides): Promise<[string]>;
-
-    proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    relayerFeeVault(overrides?: CallOverrides): Promise<[string]>;
-
-    remotes(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
     "removeAssetId((uint32,bytes32),address,address)"(
       _canonical: TokenIdStruct,
       _adoptedAssetId: PromiseOrValue<string>,
@@ -603,47 +331,6 @@ export interface AssetsManager extends BaseContract {
       _representation: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    roles(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[number]>;
-
-    routedTransfers(
-      arg0: PromiseOrValue<BytesLike>,
-      arg1: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    routerAllowlistRemoved(overrides?: CallOverrides): Promise<[boolean]>;
-
-    routerAllowlistTimestamp(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    routerBalances(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
-    routerConfigs(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<
-      [boolean, boolean, string, string, string, BigNumber] & {
-        approved: boolean;
-        portalApproved: boolean;
-        owner: string;
-        recipient: string;
-        proposed: string;
-        proposedTimestamp: BigNumber;
-      }
-    >;
-
-    settlementStrategies(
-      arg0: PromiseOrValue<BytesLike>,
-      arg1: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
 
     setupAsset(
       _canonical: TokenIdStruct,
@@ -664,52 +351,6 @@ export interface AssetsManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    supportedAssetDomains(
-      arg0: PromiseOrValue<BytesLike>,
-      arg1: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<[boolean]>;
-
-    tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[string]>;
-
-    tokenConfigs(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        string,
-        number,
-        string,
-        number,
-        string,
-        boolean,
-        BigNumber,
-        BigNumber
-      ] & {
-        representation: string;
-        representationDecimals: number;
-        adopted: string;
-        adoptedDecimals: number;
-        adoptedToLocalExternalPools: string;
-        approval: boolean;
-        cap: BigNumber;
-        custodied: BigNumber;
-      }
-    >;
-
-    transferStatus(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<[number]>;
-
-    unclaimedAssets(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
-
     updateDetails(
       _canonical: TokenIdStruct,
       _name: PromiseOrValue<string>,
@@ -722,13 +363,7 @@ export interface AssetsManager extends BaseContract {
       _updated: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
-
-    xAppConnectionManager(overrides?: CallOverrides): Promise<[string]>;
   };
-
-  LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<BigNumber>;
-
-  acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
 
   "approvedAssets(bytes32)"(
     _key: PromiseOrValue<BytesLike>,
@@ -740,23 +375,7 @@ export interface AssetsManager extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
-  assetCanonicalIds(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  assetIdToTickerHash(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  credits(
-    arg0: PromiseOrValue<string>,
-    arg1: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  domain(overrides?: CallOverrides): Promise<number>;
+  delay(overrides?: CallOverrides): Promise<BigNumber>;
 
   getCustodiedAmount(
     _key: PromiseOrValue<BytesLike>,
@@ -771,25 +390,6 @@ export interface AssetsManager extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  initialized(overrides?: CallOverrides): Promise<boolean>;
-
-  maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
-  nonce(overrides?: CallOverrides): Promise<BigNumber>;
-
-  owner(overrides?: CallOverrides): Promise<string>;
-
-  proposed(overrides?: CallOverrides): Promise<string>;
-
-  proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
-
-  relayerFeeVault(overrides?: CallOverrides): Promise<string>;
-
-  remotes(
-    arg0: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
   "removeAssetId((uint32,bytes32),address,address)"(
     _canonical: TokenIdStruct,
     _adoptedAssetId: PromiseOrValue<string>,
@@ -803,47 +403,6 @@ export interface AssetsManager extends BaseContract {
     _representation: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
-
-  roles(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<number>;
-
-  routedTransfers(
-    arg0: PromiseOrValue<BytesLike>,
-    arg1: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  routerAllowlistRemoved(overrides?: CallOverrides): Promise<boolean>;
-
-  routerAllowlistTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
-
-  routerBalances(
-    arg0: PromiseOrValue<string>,
-    arg1: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
-  routerConfigs(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<
-    [boolean, boolean, string, string, string, BigNumber] & {
-      approved: boolean;
-      portalApproved: boolean;
-      owner: string;
-      recipient: string;
-      proposed: string;
-      proposedTimestamp: BigNumber;
-    }
-  >;
-
-  settlementStrategies(
-    arg0: PromiseOrValue<BytesLike>,
-    arg1: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
 
   setupAsset(
     _canonical: TokenIdStruct,
@@ -864,43 +423,6 @@ export interface AssetsManager extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  supportedAssetDomains(
-    arg0: PromiseOrValue<BytesLike>,
-    arg1: PromiseOrValue<BigNumberish>,
-    overrides?: CallOverrides
-  ): Promise<boolean>;
-
-  tickerHashToAssetId(
-    arg0: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<string>;
-
-  tokenConfigs(
-    arg0: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<
-    [string, number, string, number, string, boolean, BigNumber, BigNumber] & {
-      representation: string;
-      representationDecimals: number;
-      adopted: string;
-      adoptedDecimals: number;
-      adoptedToLocalExternalPools: string;
-      approval: boolean;
-      cap: BigNumber;
-      custodied: BigNumber;
-    }
-  >;
-
-  transferStatus(
-    arg0: PromiseOrValue<BytesLike>,
-    overrides?: CallOverrides
-  ): Promise<number>;
-
-  unclaimedAssets(
-    arg0: PromiseOrValue<string>,
-    overrides?: CallOverrides
-  ): Promise<BigNumber>;
-
   updateDetails(
     _canonical: TokenIdStruct,
     _name: PromiseOrValue<string>,
@@ -914,13 +436,7 @@ export interface AssetsManager extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  xAppConnectionManager(overrides?: CallOverrides): Promise<string>;
-
   callStatic: {
-    LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<BigNumber>;
-
-    acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
-
     "approvedAssets(bytes32)"(
       _key: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -931,23 +447,7 @@ export interface AssetsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
-    assetCanonicalIds(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    assetIdToTickerHash(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    credits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    domain(overrides?: CallOverrides): Promise<number>;
+    delay(overrides?: CallOverrides): Promise<BigNumber>;
 
     getCustodiedAmount(
       _key: PromiseOrValue<BytesLike>,
@@ -962,25 +462,6 @@ export interface AssetsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    initialized(overrides?: CallOverrides): Promise<boolean>;
-
-    maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nonce(overrides?: CallOverrides): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<string>;
-
-    proposed(overrides?: CallOverrides): Promise<string>;
-
-    proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
-
-    relayerFeeVault(overrides?: CallOverrides): Promise<string>;
-
-    remotes(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
     "removeAssetId((uint32,bytes32),address,address)"(
       _canonical: TokenIdStruct,
       _adoptedAssetId: PromiseOrValue<string>,
@@ -994,47 +475,6 @@ export interface AssetsManager extends BaseContract {
       _representation: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    roles(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<number>;
-
-    routedTransfers(
-      arg0: PromiseOrValue<BytesLike>,
-      arg1: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    routerAllowlistRemoved(overrides?: CallOverrides): Promise<boolean>;
-
-    routerAllowlistTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
-
-    routerBalances(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    routerConfigs(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<
-      [boolean, boolean, string, string, string, BigNumber] & {
-        approved: boolean;
-        portalApproved: boolean;
-        owner: string;
-        recipient: string;
-        proposed: string;
-        proposedTimestamp: BigNumber;
-      }
-    >;
-
-    settlementStrategies(
-      arg0: PromiseOrValue<BytesLike>,
-      arg1: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
 
     setupAsset(
       _canonical: TokenIdStruct,
@@ -1055,52 +495,6 @@ export interface AssetsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
-    supportedAssetDomains(
-      arg0: PromiseOrValue<BytesLike>,
-      arg1: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<boolean>;
-
-    tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<string>;
-
-    tokenConfigs(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<
-      [
-        string,
-        number,
-        string,
-        number,
-        string,
-        boolean,
-        BigNumber,
-        BigNumber
-      ] & {
-        representation: string;
-        representationDecimals: number;
-        adopted: string;
-        adoptedDecimals: number;
-        adoptedToLocalExternalPools: string;
-        approval: boolean;
-        cap: BigNumber;
-        custodied: BigNumber;
-      }
-    >;
-
-    transferStatus(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<number>;
-
-    unclaimedAssets(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     updateDetails(
       _canonical: TokenIdStruct,
       _name: PromiseOrValue<string>,
@@ -1113,8 +507,6 @@ export interface AssetsManager extends BaseContract {
       _updated: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
-
-    xAppConnectionManager(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -1204,10 +596,6 @@ export interface AssetsManager extends BaseContract {
   };
 
   estimateGas: {
-    LIQUIDITY_FEE_NUMERATOR(overrides?: CallOverrides): Promise<BigNumber>;
-
-    acceptanceDelay(overrides?: CallOverrides): Promise<BigNumber>;
-
     "approvedAssets(bytes32)"(
       _key: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -1218,23 +606,7 @@ export interface AssetsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    assetCanonicalIds(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    assetIdToTickerHash(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    credits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    domain(overrides?: CallOverrides): Promise<BigNumber>;
+    delay(overrides?: CallOverrides): Promise<BigNumber>;
 
     getCustodiedAmount(
       _key: PromiseOrValue<BytesLike>,
@@ -1249,25 +621,6 @@ export interface AssetsManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    initialized(overrides?: CallOverrides): Promise<BigNumber>;
-
-    maxRoutersPerTransfer(overrides?: CallOverrides): Promise<BigNumber>;
-
-    nonce(overrides?: CallOverrides): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
-
-    proposed(overrides?: CallOverrides): Promise<BigNumber>;
-
-    proposedOwnershipTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
-
-    relayerFeeVault(overrides?: CallOverrides): Promise<BigNumber>;
-
-    remotes(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     "removeAssetId((uint32,bytes32),address,address)"(
       _canonical: TokenIdStruct,
       _adoptedAssetId: PromiseOrValue<string>,
@@ -1280,38 +633,6 @@ export interface AssetsManager extends BaseContract {
       _adoptedAssetId: PromiseOrValue<string>,
       _representation: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<BigNumber>;
-
-    roles(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    routedTransfers(
-      arg0: PromiseOrValue<BytesLike>,
-      arg1: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    routerAllowlistRemoved(overrides?: CallOverrides): Promise<BigNumber>;
-
-    routerAllowlistTimestamp(overrides?: CallOverrides): Promise<BigNumber>;
-
-    routerBalances(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    routerConfigs(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    settlementStrategies(
-      arg0: PromiseOrValue<BytesLike>,
-      arg1: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     setupAsset(
@@ -1333,32 +654,6 @@ export interface AssetsManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    supportedAssetDomains(
-      arg0: PromiseOrValue<BytesLike>,
-      arg1: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    tokenConfigs(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    transferStatus(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
-    unclaimedAssets(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<BigNumber>;
-
     updateDetails(
       _canonical: TokenIdStruct,
       _name: PromiseOrValue<string>,
@@ -1371,17 +666,9 @@ export interface AssetsManager extends BaseContract {
       _updated: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
-
-    xAppConnectionManager(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    LIQUIDITY_FEE_NUMERATOR(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    acceptanceDelay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     "approvedAssets(bytes32)"(
       _key: PromiseOrValue<BytesLike>,
       overrides?: CallOverrides
@@ -1392,23 +679,7 @@ export interface AssetsManager extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    assetCanonicalIds(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    assetIdToTickerHash(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    credits(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    domain(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    delay(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getCustodiedAmount(
       _key: PromiseOrValue<BytesLike>,
@@ -1423,29 +694,6 @@ export interface AssetsManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    initialized(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    maxRoutersPerTransfer(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    nonce(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    proposed(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    proposedOwnershipTimestamp(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    relayerFeeVault(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    remotes(
-      arg0: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     "removeAssetId((uint32,bytes32),address,address)"(
       _canonical: TokenIdStruct,
       _adoptedAssetId: PromiseOrValue<string>,
@@ -1458,42 +706,6 @@ export interface AssetsManager extends BaseContract {
       _adoptedAssetId: PromiseOrValue<string>,
       _representation: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    roles(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    routedTransfers(
-      arg0: PromiseOrValue<BytesLike>,
-      arg1: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    routerAllowlistRemoved(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    routerAllowlistTimestamp(
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    routerBalances(
-      arg0: PromiseOrValue<string>,
-      arg1: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    routerConfigs(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    settlementStrategies(
-      arg0: PromiseOrValue<BytesLike>,
-      arg1: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     setupAsset(
@@ -1515,32 +727,6 @@ export interface AssetsManager extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    supportedAssetDomains(
-      arg0: PromiseOrValue<BytesLike>,
-      arg1: PromiseOrValue<BigNumberish>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    tickerHashToAssetId(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    tokenConfigs(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    transferStatus(
-      arg0: PromiseOrValue<BytesLike>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
-    unclaimedAssets(
-      arg0: PromiseOrValue<string>,
-      overrides?: CallOverrides
-    ): Promise<PopulatedTransaction>;
-
     updateDetails(
       _canonical: TokenIdStruct,
       _name: PromiseOrValue<string>,
@@ -1552,10 +738,6 @@ export interface AssetsManager extends BaseContract {
       _canonical: TokenIdStruct,
       _updated: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
-    ): Promise<PopulatedTransaction>;
-
-    xAppConnectionManager(
-      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };
 }

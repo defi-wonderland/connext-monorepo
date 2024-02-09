@@ -10,4 +10,3 @@ export type { libraries };
 import type * as managers from "./managers";
 export type { managers };
 export type { ConnextCore } from "./ConnextCore";
-export type { ConnextStorage } from "./ConnextStorage";

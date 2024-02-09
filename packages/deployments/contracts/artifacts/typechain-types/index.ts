@@ -60,8 +60,6 @@ export type { IOutbox } from "./@openzeppelin/contracts/vendor/arbitrum/IOutbox"
 export { IOutbox__factory } from "./factories/@openzeppelin/contracts/vendor/arbitrum/IOutbox__factory";
 export type { ConnextCore } from "./contracts/chimera/ConnextCore";
 export { ConnextCore__factory } from "./factories/contracts/chimera/ConnextCore__factory";
-export type { ConnextStorage } from "./contracts/chimera/ConnextStorage";
-export { ConnextStorage__factory } from "./factories/contracts/chimera/ConnextStorage__factory";
 export type { BridgeToken } from "./contracts/chimera/helpers/BridgeToken";
 export { BridgeToken__factory } from "./factories/contracts/chimera/helpers/BridgeToken__factory";
 export type { ConnextProxyAdmin } from "./contracts/chimera/helpers/ConnextProxyAdmin";

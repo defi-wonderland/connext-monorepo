@@ -6,4 +6,3 @@ export * as interfaces from "./interfaces";
 export * as libraries from "./libraries";
 export * as managers from "./managers";
 export { ConnextCore__factory } from "./ConnextCore__factory";
-export { ConnextStorage__factory } from "./ConnextStorage__factory";
