@@ -24,14 +24,6 @@ abstract contract BaseManager is ConnextStorage {
   error BaseManager__handleOutgoingAsset_notNative();
   error BaseManager__getConfig_notRegistered();
 
-  /**
-   * @notice Returns the delay period before a new owner can be accepted.
-   */
-  /*
-  function delay() public view returns (uint256) {
-    return acceptanceDelay;
-  }
-  */
   // ============ Modifiers ============
 
   /**

@@ -12,20 +12,32 @@ import {TokenConfig, DestinationTransferStatus, Role, RouterConfig} from './libr
  * BE VERY CAREFUL MODIFYING THE VALUES IN THIS FILE!
  */
 abstract contract ConnextStorage {
+  /**
+   * @notice Owner of the contract.
+   */
   // 0
   address public owner;
 
+  /**
+   * @notice Initialization flag.
+   */
   // 0
   bool public initialized;
 
+  /**
+   * @notice The delay period before a new owner can be accepted.
+   */
   // 1
   uint256 public acceptanceDelay;
 
+  /**
+   * @notice The numerator for the liquidity fee.
+   */
   // 2
   uint256 public LIQUIDITY_FEE_NUMERATOR;
 
   /**
-   * @notice The local address that is custodying relayer fees
+   * @notice The local address that is custodying relayer fees.
    */
   // 3
   address public relayerFeeVault;
@@ -44,37 +56,56 @@ abstract contract ConnextStorage {
   // 5
   uint32 public domain;
 
+  /**
+   * @notice Mapping of asset addresses to the canonical ids.
+   */
   // 6
   // (address _asset => bytes32 _canonicalId);
   mapping(address => bytes32) public assetCanonicalIds;
 
+  /**
+   * @notice Mapping of the ticker hashes to the domains they are supported on.
+   */
   // 7
   // (bytes32 _tickerHash => mapping(uint32 _domain => bool _supported));
   mapping(bytes32 => mapping(uint32 => bool)) public supportedAssetDomains;
 
+  /**
+   * @notice Mapping of the ticker hashes and paths to the settlement strategies.
+   */
   // 8
   // (bytes32 _tickerHash => mapping(bytes _path => address _strategy));
   mapping(bytes32 => mapping(bytes => address)) public settlementStrategies;
 
+  /**
+   * @notice Mapping of ticker hashes to the fee configuration.
+   */
   // 9
   // mapping(bytes32 _tickerHash => struct FeeConfig) public feeConfig; // TODO: define fee config struct
 
-  // Assets - reverse lookups
-
+  /**
+   * @notice Mapping of ticker hashes to the asset addresses.
+   */
   // 10
   // (bytes32 _tickerHash => address _assetId);
   mapping(bytes32 => address) public tickerHashToAssetId;
 
+  /**
+   * @notice Mapping of asset addresses to the ticker hashes.
+   */
   // 11
   // (address _assetId => bytes32 _tickerHash);
   mapping(address => bytes32) public assetIdToTickerHash;
 
+  /**
+   * @notice Mapping of canonicalIds to the token configs.
+   */
   // 12
   // (bytes32 _canonicalId => TokenConfig config);
   mapping(bytes32 => TokenConfig) public tokenConfigs;
 
   /**
-   * @notice Mapping to track transfer status on destination domain
+   * @notice Mapping to track transfer status on destination domain.
    */
   // 13
   // (bytes32 _domain => DestinationTransferStatus _status);
@@ -87,6 +118,9 @@ abstract contract ConnextStorage {
   // (bytes32 _transferId => address[] _routers);
   mapping(bytes32 => address[]) public routedTransfers;
 
+  /**
+   * @notice Mapping of asset ids to the unclaimed amounts.
+   */
   // 15
   // (address _assetId => uint256 _amount);
   mapping(address => uint256) public unclaimedAssets;
@@ -100,6 +134,9 @@ abstract contract ConnextStorage {
   // (address _router => mapping(address _assetId => uint256 _amount));
   mapping(address => mapping(address => uint256)) public routerBalances;
 
+  /**
+   * @notice Mapping of the amount of credits of the routers.
+   */
   // 17
   // (address _assetId => mapping(address _router => uint256 _amount));
   mapping(address => mapping(address => uint256)) public credits;
@@ -120,42 +157,54 @@ abstract contract ConnextStorage {
   // (uint32 _domain => bytes32 _router);
   mapping(uint32 => bytes32) public remotes;
 
-  //
-  // ProposedOwnable
-  //
+  /**
+   * @notice The proposed owner for the contract.
+   */
   // 20
   address public proposed;
 
+  /**
+   * @notice The timestamp when a new owner was proposed.
+   */
   // 21
   uint256 public proposedOwnershipTimestamp;
 
+  /**
+   * @notice Stores whether or not the router allowlist has been removed.
+   */
   // 22
   bool public routerAllowlistRemoved;
 
+  /**
+   * @notice The timestamp when the router allowlist was proposed to be removed.
+   */
   // 23
   uint256 public routerAllowlistTimestamp;
 
   /**
-   * @notice Stores a mapping of address to Roles
-   * @dev returns uint representing the enum Role value
+   * @notice Mapping of addresses to Roles.
+   * @dev returns uint representing the enum Role value.
    */
   // 24
   // (address _account => Role _role);
   mapping(address => Role) public roles;
 
-  //
-  // RouterFacet
-  //
+  /**
+   * @notice Mapping of router configurations.
+   */
   // 25
   // (address _router => RouterConfig _config);
   mapping(address => RouterConfig) public routerConfigs;
 
-  //
-  // ReentrancyGuard
-  //
+  /**
+   * @notice Reentracy flag for nonReentrant calls.
+   */
   // 26
   uint256 internal _status;
 
+  /**
+   * @notice Reentrancy flag for nonXCallReentrant xcalls.
+   */
   // 27
   uint256 internal _xcallStatus;
 
