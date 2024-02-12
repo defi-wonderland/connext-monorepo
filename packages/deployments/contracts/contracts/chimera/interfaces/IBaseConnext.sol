@@ -20,8 +20,8 @@ interface IBaseConnext {
   }
 
   /**
-   * @notice Enum representing status of destination transfer
-   * @dev Status is only assigned on the destination domain, will always be `None` for the
+   * @notice Enum representing status of transfer
+   * @dev Status is only assigned on the destination and reconciliation domains, will always be `None` for the
    * origin domains
    * @param None       - 0
    * @param Reconciled - 1
@@ -29,7 +29,7 @@ interface IBaseConnext {
    * @param Completed  - 3 - executed + reconciled
    * @return uint8 - Index of value in enum
    */
-  enum DestinationTransferStatus {
+  enum TransferStatus {
     None,
     Reconciled,
     Executed,
@@ -129,25 +129,19 @@ interface IBaseConnext {
 
   /**
    * @notice Contains configurations for tokens
-   * @dev Struct will be stored on the hash of the `canonicalId` and `canonicalDomain`. There are also
-   * two separate reverse lookups, that deliver plaintext information based on the passed in address (can
-   * either be representation or adopted address passed in).
+   * @dev Struct will be stored on the hash of the `canonicalId` and `canonicalDomain`. There is also
+   * a separate reverse lookup, that delivers plaintext information based on the passed in asset address.
    *
    * If the decimals are updated in a future token upgrade, the transfers should fail. If that happens, the
    * asset must be removed, and then they can be readded
    *
-   * @param representation - Address of minted asset on this domain. If the token is of local origin (meaning it was
-   * originally deployed on this chain), this MUST map to address(0).
-   * @param representationDecimals - Decimals of minted asset on this domain
-   * @param adopted - Address of adopted asset on this domain
-   * @param adoptedDecimals - Decimals of adopted asset on this domain
+   * @param asset - Address of asset on this domain
+   * @param assetDecimals - Decimals of asset on this domain
    * @param approval - Allowed assets
    */
   struct TokenConfig {
-    address representation;
-    uint8 representationDecimals;
-    address adopted;
-    uint8 adoptedDecimals;
+    address asset;
+    uint8 assetDecimals;
     bool approval;
   }
 

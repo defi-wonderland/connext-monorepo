@@ -60,10 +60,10 @@ abstract contract ConnextStorage is BaseConnext {
   // 7
   mapping(bytes32 => TokenConfig) tokenConfigs;
   /**
-   * @notice Mapping to track transfer status on destination domain
+   * @notice Mapping to track transfer status on destination and reconciliation domains
    */
   // 8
-  mapping(bytes32 => DestinationTransferStatus) transferStatus;
+  mapping(bytes32 => TransferStatus) transferStatus;
   /**
    * @notice Mapping holding router address that provided fast liquidity.
    */

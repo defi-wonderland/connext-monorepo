@@ -34,7 +34,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
   error Connext__onlyDelegate_notDelegate();
   error Connext__xcall_nativeAssetNotSupported();
   error Connext__xcall_emptyTo();
-  error Connext_xcall__emptyLocalAsset();
   error Connext__execute_unapprovedSender();
   error Connext__execute_wrongDomain();
   error Connext__execute_notSupportedSequencer();
@@ -174,11 +173,9 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
    * reconciliation to occur.
    */
   function execute(ExecuteArgs calldata _args) external nonReentrant whenNotPaused returns (bytes32) {
-    (bytes32 transferId, DestinationTransferStatus status) = _executeSanityChecks(_args);
+    (bytes32 transferId, TransferStatus status) = _executeSanityChecks(_args);
 
-    DestinationTransferStatus updated = status == DestinationTransferStatus.Reconciled
-      ? DestinationTransferStatus.Completed
-      : DestinationTransferStatus.Executed;
+    TransferStatus updated = status == TransferStatus.Reconciled ? TransferStatus.Completed : TransferStatus.Executed;
 
     transferStatus[transferId] = updated;
 
@@ -187,7 +184,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     (uint256 amountOut, address asset) = _handleExecuteLiquidity(
       transferId,
       calculateCanonicalHash(_args.params.canonicalId, _args.params.canonicalDomain),
-      updated != DestinationTransferStatus.Completed,
+      updated != TransferStatus.Completed,
       _args
     );
 
@@ -197,7 +194,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       _amountOut: amountOut,
       _asset: asset,
       _transferId: transferId,
-      _reconciled: updated == DestinationTransferStatus.Completed
+      _reconciled: updated == TransferStatus.Completed
     });
 
     // Emit event.
@@ -270,8 +267,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     {
       // Not native asset.
       // NOTE: We support using address(0) as an intuitive default if you are sending a 0-value
-      // transfer. In that edge case, address(0) will not be registered as a supported asset, but should
-      // pass the `isLocalOrigin` check
+      // transfer. In that edge case, address(0) will not be registered as a supported asset.
       if (_asset.asset == address(0) && _asset.amount != 0) {
         revert Connext__xcall_nativeAssetNotSupported();
       }
@@ -306,12 +302,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
 
         // Set boolean flag
         isCanonical = _params.originDomain == canonical.domain;
-
-        // Get the local address
-        address local = isCanonical ? TypeCasts.bytes32ToAddress(canonical.id) : config.representation;
-        if (local == address(0)) {
-          revert Connext_xcall__emptyLocalAsset();
-        }
 
         // Update TransferInfo to reflect the canonical token information.
         _params.canonicalDomain = canonical.domain;
@@ -386,7 +376,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
    * @dev Need this to prevent stack too deep.
    * @param _args ExecuteArgs that were passed in to the `execute` call.
    */
-  function _executeSanityChecks(ExecuteArgs calldata _args) private view returns (bytes32, DestinationTransferStatus) {
+  function _executeSanityChecks(ExecuteArgs calldata _args) private view returns (bytes32, TransferStatus) {
     // // If the sender is not approved relayer, revert
     // if (!approvedRelayers[msg.sender] && msg.sender != _args.params.delegate) {
     //   revert Connext__execute_unapprovedSender();
@@ -405,7 +395,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     // bytes32 transferId = _calculateTransferId(_args.params);
 
     // // Retrieve the reconciled record.
-    // DestinationTransferStatus status = transferStatus[transferId];
+    // TransferStatus status = transferStatus[transferId];
 
     // if (pathLength != 0) {
     //   // Make sure number of routers is below the configured maximum.
@@ -413,7 +403,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
 
     //   // Check to make sure the transfer has not been reconciled (no need for routers if the transfer is
     //   // already reconciled; i.e. if there are routers provided, the transfer must *not* be reconciled).
-    //   if (status != DestinationTransferStatus.None) revert Connext__execute_badFastLiquidityStatus();
+    //   if (status != TransferStatus.None) revert Connext__execute_badFastLiquidityStatus();
 
     //   // NOTE: The sequencer address may be empty and no signature needs to be provided in the case of the
     //   // slow liquidity route (i.e. no routers involved). Additionally, the sequencer does not need to be the
@@ -456,7 +446,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     // } else {
     //   // If there are no routers for this transfer, this `execute` must be a slow liquidity route; in which
     //   // case, we must make sure the transfer's been reconciled.
-    //   if (status != DestinationTransferStatus.Reconciled) revert Connext__execute_notReconciled();
+    //   if (status != TransferStatus.Reconciled) revert Connext__execute_notReconciled();
     // }
 
     // return (transferId, status);
@@ -487,10 +477,10 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     // // Save the addresses of all routers providing liquidity for this transfer.
     // routedTransfers[_transferId] = _args.routers;
 
-    // // Get the local asset contract address.
+    // // Get the asset contract address.
     // address asset;
     // if (_args.params.canonicalDomain != 0) {
-    //   asset = _getLocalAsset(_key, _args.params.canonicalId, _args.params.canonicalDomain);
+    //   asset = _getAsset(_key, _args.params.canonicalId, _args.params.canonicalDomain);
     // }
 
     // // If this is a zero-value transfer, short-circuit remaining logic.

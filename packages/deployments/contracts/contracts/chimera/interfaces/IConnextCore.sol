@@ -7,19 +7,13 @@ import {IBaseConnext} from './IBaseConnext.sol';
 
 interface IConnextCore is IBaseConnext {
   // // TokenFacet
-  // function canonicalToAdopted(bytes32 _key) external view returns (address);
+  // function canonicalToAsset(bytes32 _key) external view returns (address);
 
-  // function canonicalToAdopted(TokenId calldata _canonical) external view returns (address);
+  // function canonicalToAsset(TokenId calldata _canonical) external view returns (address);
 
-  // function adoptedToCanonical(address _adopted) external view returns (TokenId memory);
+  // function assetToCanonical(address _asset) external view returns (TokenId memory);
 
-  // function canonicalToRepresentation(bytes32 _key) external view returns (address);
-
-  // function canonicalToRepresentation(TokenId calldata _canonical) external view returns (address);
-
-  // function representationToCanonical(address _adopted) external view returns (TokenId memory);
-
-  // function getLocalAndAdoptedToken(bytes32 _id, uint32 _domain) external view returns (address, address);
+  // function getToken(bytes32 _id, uint32 _domain) external view returns (address);
 
   // function approvedAssets(bytes32 _key) external view returns (bool);
 
@@ -52,7 +46,7 @@ interface IConnextCore is IBaseConnext {
   // // BridgeFacet
   // function routedTransfers(bytes32 _transferId) external view returns (address[] memory);
 
-  // function transferStatus(bytes32 _transferId) external view returns (DestinationTransferStatus);
+  // function transferStatus(bytes32 _transferId) external view returns (TransferStatus);
 
   // function remote(uint32 _domain) external view returns (address);
 
@@ -167,9 +161,9 @@ interface IConnextCore is IBaseConnext {
 
   // function acceptProposedRouterOwner(address _router) external;
 
-  // function addRouterLiquidityFor(uint256 _amount, address _local, address _router) external payable;
+  // function addRouterLiquidityFor(uint256 _amount, address _asset, address _router) external payable;
 
-  // function addRouterLiquidity(uint256 _amount, address _local) external payable;
+  // function addRouterLiquidity(uint256 _amount, address _asset) external payable;
 
   // function removeRouterLiquidityFor(
   //   TokenId memory _canonical,

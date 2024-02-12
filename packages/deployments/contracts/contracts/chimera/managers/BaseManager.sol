@@ -165,12 +165,7 @@ abstract contract BaseManager is ConnextStorage {
     TokenConfig storage config = tokenConfigs[_key];
 
     // Sanity check: not empty
-    // NOTE: adopted decimals will *always* be nonzero (or reflect what is onchain
-    // for the asset). The same is not true for the representation assets, which
-    // will always have 0 decimals on the canonical domain
-    if (config.adoptedDecimals < 1) {
-      revert BaseManager__getConfig_notRegistered();
-    }
+    if (!config.approval) revert BaseManager__getConfig_notRegistered();
 
     return config;
   }
