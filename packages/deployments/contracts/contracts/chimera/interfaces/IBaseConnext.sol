@@ -166,4 +166,20 @@ interface IBaseConnext {
     address asset;
     uint256 amount;
   }
+
+  /**
+   * @notice Contains configurations for fees
+   * @dev Struct will be stored on the hash of the `canonicalId` and `canonicalDomain`.
+   *
+   * @param routingFee - The routing fee
+   * @param protocolFee - The protocol fee
+   * @param externalFee - The external fee
+   * @param externalFeeAddress - The address of the external fee recipient
+   */
+  struct FeeConfig {
+    uint256 routingFee;
+    uint256 protocolFee;
+    uint256 externalFee;
+    address externalFeeAddress;
+  }
 }
