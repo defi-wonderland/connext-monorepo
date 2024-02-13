@@ -77,7 +77,8 @@ interface IBaseConnext {
    * @param delegate - An address who can execute txs on behalf of `to`, in addition to allowing relayers
    * @param callData - The data to execute on the receiving chain. If no crosschain call is needed, then leave empty.
    * @param originSender - The msg.sender of the xcall
-   * @param bridgedAmt - The amount sent over the bridge (after potential AMM on xcall)
+   * @param bridgedAmt - The amount sent over the bridge
+   * @param normalizedIn - The amount sent to `xcall`, normalized to 18 decimals
    * @param nonce - The nonce on the origin domain used to ensure the transferIds are unique
    * @param canonicalId - The unique identifier of the canonical token corresponding to bridge assets
    */
@@ -90,6 +91,7 @@ interface IBaseConnext {
     bytes callData;
     address originSender;
     uint256 bridgedAmt;
+    uint256 normalizedIn;
     uint256 nonce;
     bytes32 canonicalId;
   }

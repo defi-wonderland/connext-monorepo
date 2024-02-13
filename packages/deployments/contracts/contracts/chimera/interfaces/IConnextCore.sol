@@ -70,6 +70,7 @@ interface IConnextCore is IBaseConnext {
     address _asset,
     address _delegate,
     uint256 _amount,
+    uint256 _slippage,
     bytes calldata _callData
   ) external payable returns (bytes32);
 

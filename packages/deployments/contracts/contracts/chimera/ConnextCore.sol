@@ -110,11 +110,12 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     address _asset,
     address _delegate,
     uint256 _amount,
+    uint256 _slippage,
     bytes calldata _callData
   ) external payable nonXCallReentrant returns (bytes32) {
     // NOTE: Here, we fill in as much information as we can for the TransferInfo.
     // Some info is left blank and will be assigned in the internal `_xcall` function (e.g.
-    // `bridgedAmt`, canonical info, etc).
+    // `normalizedIn`, `bridgedAmt`, canonical info, etc).
     TransferInfo memory params = TransferInfo({
       to: _to,
       callData: _callData,
@@ -126,6 +127,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       nonce: 0,
       canonicalDomain: 0,
       bridgedAmt: 0,
+      normalizedIn: 0,
       canonicalId: bytes32(0)
     });
     return _xcall(params, AssetTransfer(_asset, _amount), AssetTransfer(address(0), msg.value));
@@ -137,12 +139,13 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     address _asset,
     address _delegate,
     uint256 _amount,
+    uint256 _slippage,
     bytes calldata _callData,
     uint256 _relayerFee
   ) external nonXCallReentrant returns (bytes32) {
     // NOTE: Here, we fill in as much information as we can for the TransferInfo.
     // Some info is left blank and will be assigned in the internal `_xcall` function (e.g.
-    // `bridgedAmt`, canonical info, etc).
+    // `normalizedIn`, `bridgedAmt`, canonical info, etc).
     TransferInfo memory params = TransferInfo({
       to: _to,
       callData: _callData,
@@ -154,6 +157,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       nonce: 0,
       canonicalDomain: 0,
       bridgedAmt: 0,
+      normalizedIn: 0,
       canonicalId: bytes32(0)
     });
     return _xcall(params, AssetTransfer(_asset, _amount), AssetTransfer(_asset, _relayerFee));
@@ -310,6 +314,15 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
         if (_asset.amount > 0) {
           // Transfer funds of input asset to the contract from the user.
           AssetLogic.handleIncomingAsset(_asset.asset, _asset.amount);
+
+          _params.bridgedAmt = _asset.amount;
+
+          // Get the normalized amount in (amount sent in by user in 18 decimals).
+          _params.normalizedIn = AssetLogic.normalizeDecimals(
+            config.assetDecimals,
+            Constants.DEFAULT_NORMALIZED_DECIMALS,
+            _asset.amount
+          );
         }
       }
 
