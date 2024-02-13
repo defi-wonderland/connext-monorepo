@@ -47,7 +47,7 @@ contract CreditsManager is BaseManager {
   ) private {
     bytes memory _messageBody =
     // solhint-disable-next-line func-named-parameters
-     abi.encodePacked(_canonical.domain, _canonical.id, Types.Transfer, _params.bridgedAmt, _transferId);
+     abi.encodePacked(_canonical.domain, _canonical.id, MessageType.Transfer, _params.bridgedAmt, _transferId);
 
     // Send message to destination chain bridge router.
     // return message hash and unhashed body

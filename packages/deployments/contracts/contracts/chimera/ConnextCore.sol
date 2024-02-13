@@ -110,7 +110,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     address _asset,
     address _delegate,
     uint256 _amount,
-    uint256 _slippage,
+    uint256, // _slippage
     bytes calldata _callData
   ) external payable nonXCallReentrant returns (bytes32) {
     // NOTE: Here, we fill in as much information as we can for the TransferInfo.
@@ -139,7 +139,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     address _asset,
     address _delegate,
     uint256 _amount,
-    uint256 _slippage,
+    uint256, // _slippage
     bytes calldata _callData,
     uint256 _relayerFee
   ) external nonXCallReentrant returns (bytes32) {

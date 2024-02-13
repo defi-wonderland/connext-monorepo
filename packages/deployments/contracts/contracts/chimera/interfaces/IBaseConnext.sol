@@ -6,16 +6,22 @@ interface IBaseConnext {
 
   /**
    * @notice Enum representing address role
-   * @param None        - 0
-   * @param RouterAdmin - 1
-   * @param Watcher     - 2
-   * @param Admin       - 3
+   * @param None         - 0
+   * @param Router       - 1
+   * @param Relayer      - 2
+   * @param Watcher      - 3
+   * @param Sequencer    - 4
+   * @param AssetManager - 5
+   * @param Admin        - 6
    * @return uint8 - Index of value in enum
    */
   enum Role {
     None,
-    RouterAdmin,
+    Router,
+    Relayer,
     Watcher,
+    Sequencer,
+    AssetManager,
     Admin
   }
 
@@ -53,13 +59,17 @@ interface IBaseConnext {
    * @param TokenId  - 1
    * @param Message  - 2
    * @param Transfer - 3
+   * @param Execute  - 4
+   * @param Credit   - 5
    * @return uint8 - Index of value in enum
    */
-  enum Types {
+  enum MessageType {
     Invalid,
     TokenId,
     Message,
-    Transfer
+    Transfer,
+    Execute,
+    Credit
   }
 
   // ============= Structs =============
@@ -71,7 +81,7 @@ interface IBaseConnext {
    * will receive funds if the call fails.
    *
    * @param originDomain - The originating domain (i.e. where `xcall` is called)
-   * @param destinationDomain - The final domain (i.e. where `execute` / `reconcile` are called)\
+   * @param destinationDomain - The receiving domain (i.e. where `execute` is called)
    * @param canonicalDomain - The canonical domain of the asset you are bridging
    * @param to - The address you are sending funds (and potentially data) to
    * @param delegate - An address who can execute txs on behalf of `to`, in addition to allowing relayers
@@ -99,6 +109,7 @@ interface IBaseConnext {
   /**
    * @notice These are the parameters supplied on `execute`
    * @param params - The TransferInfo. These are consistent across sending and receiving chains.
+   * @param reconciliationDomain - The reconciling domain (i.e. where `reconcile` is called)
    * @param routers - The routers who you are sending the funds on behalf of.
    * @param routerSignatures - Signatures belonging to the routers indicating permission to use funds
    * for the signed transfer ID.
@@ -108,6 +119,7 @@ interface IBaseConnext {
    */
   struct ExecuteArgs {
     TransferInfo params;
+    uint32 reconciliationDomain;
     address[] routers;
     bytes[] routerSignatures;
     address sequencer;
