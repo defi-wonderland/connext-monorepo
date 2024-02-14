@@ -31,7 +31,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
 
   // ========== Custom Errors ===========
 
-  error Connext__onlyDelegate_notDelegate();
   error Connext__xcall_nativeAssetNotSupported();
   error Connext__xcall_emptyTo();
   error Connext__execute_unapprovedSender();
@@ -92,23 +91,12 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
    */
   event TransferRelayerFeesIncreased(bytes32 indexed transferId, uint256 increase, address asset, address caller);
 
-  // ============ Modifiers ============
-
-  /**
-   * @notice Only accept a transfer's designated delegate.
-   * @param _params The TransferInfo of the transfer.
-   */
-  modifier onlyDelegate(TransferInfo calldata _params) {
-    if (_params.delegate != msg.sender) revert Connext__onlyDelegate_notDelegate();
-    _;
-  }
-
   // ============ Public Functions: Bridge ==============
   function xcall(
     uint32 _destination,
     address _to,
     address _asset,
-    address _delegate,
+    address, // _delegate
     uint256 _amount,
     uint256, // _slippage
     bytes calldata _callData
@@ -121,7 +109,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       callData: _callData,
       originDomain: domain,
       destinationDomain: _destination,
-      delegate: _delegate,
       originSender: msg.sender,
       // The following values should be assigned in _xcall.
       nonce: 0,
@@ -137,7 +124,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     uint32 _destination,
     address _to,
     address _asset,
-    address _delegate,
+    address, // _delegate
     uint256 _amount,
     uint256, // _slippage
     bytes calldata _callData,
@@ -151,7 +138,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       callData: _callData,
       originDomain: domain,
       destinationDomain: _destination,
-      delegate: _delegate,
       originSender: msg.sender,
       // The following values should be assigned in _xcall.
       nonce: 0,
@@ -389,7 +375,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
    */
   function _executeSanityChecks(ExecuteArgs calldata _args) private view returns (bytes32, TransferStatus) {
     // // If the sender is not approved relayer, revert
-    // if (!approvedRelayers[msg.sender] && msg.sender != _args.params.delegate) {
+    // if (!approvedRelayers[msg.sender]) {
     //   revert Connext__execute_unapprovedSender();
     // }
 
