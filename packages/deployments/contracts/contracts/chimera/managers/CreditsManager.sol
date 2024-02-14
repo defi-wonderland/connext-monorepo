@@ -2,11 +2,8 @@
 pragma solidity 0.8.17;
 
 import {BaseManager} from './BaseManager.sol';
-import {BridgeMessage} from '../libraries/BridgeMessage.sol';
 import {IOutbox} from '../../messaging/interfaces/IOutbox.sol';
 import {IBridgeToken} from '../interfaces/IBridgeToken.sol';
-
-import {TransferInfo, TokenId} from '../libraries/LibConnextStorage.sol';
 
 contract CreditsManager is BaseManager {
   // ============ Events ============
@@ -19,7 +16,6 @@ contract CreditsManager is BaseManager {
    * @param params - The `TransferInfo` provided to the function.
    * @param asset - The asset sent in with xcall
    * @param amount - The amount sent in with xcall
-   * @param local - The local asset that is controlled by the bridge and can be burned/minted
    */
   event XCalled(
     bytes32 indexed transferId,
@@ -28,7 +24,6 @@ contract CreditsManager is BaseManager {
     TransferInfo params,
     address asset,
     uint256 amount,
-    address local,
     bytes messageBody
   );
 
@@ -40,10 +35,7 @@ contract CreditsManager is BaseManager {
    * @param _params The TransferInfo.
    * @param _connextion The connext instance on the destination domain.
    * @param _canonical The canonical token ID/domain info.
-   * @param _local The local token address.
    * @param _amount The token amount.
-   * @param _isCanonical Whether or not the local token is the canonical asset (i.e. this is the token's
-   * "home" chain).
    */
   function _sendMessageAndEmit(
     bytes32 _transferId,
@@ -51,25 +43,11 @@ contract CreditsManager is BaseManager {
     address _asset,
     uint256 _amount,
     bytes32 _connextion,
-    TokenId memory _canonical,
-    address _local,
-    bool _isCanonical
+    TokenId memory _canonical
   ) private {
-    // Remove tokens from circulation on this chain if applicable.
-    uint256 bridgedAmt = _params.bridgedAmt;
-    if (bridgedAmt > 0) {
-      if (!_isCanonical) {
-        // If the token originates on a remote chain, burn the representational tokens on this chain.
-        IBridgeToken(_local).burn(address(this), bridgedAmt);
-      }
-      // IFF the token IS the canonical token (i.e. originates on this chain), we lock the input tokens in escrow
-      // in this contract, as an equal amount of representational assets will be minted on the destination chain.
-      // NOTE: The tokens should be in the contract already at this point from xcall.
-    }
-
     bytes memory _messageBody =
     // solhint-disable-next-line func-named-parameters
-     abi.encodePacked(_canonical.domain, _canonical.id, BridgeMessage.Types.Transfer, bridgedAmt, _transferId);
+     abi.encodePacked(_canonical.domain, _canonical.id, MessageType.Transfer, _params.bridgedAmt, _transferId);
 
     // Send message to destination chain bridge router.
     // return message hash and unhashed body
@@ -84,7 +62,6 @@ contract CreditsManager is BaseManager {
       params: _params,
       asset: _asset,
       amount: _amount,
-      local: _local,
       messageBody: messageBody
     });
   }

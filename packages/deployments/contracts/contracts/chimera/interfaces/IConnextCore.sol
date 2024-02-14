@@ -3,56 +3,37 @@ pragma solidity 0.8.17;
 
 import {IERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 
-import {ExecuteArgs, TokenId, DestinationTransferStatus, TransferInfo} from '../libraries/LibConnextStorage.sol';
+import {IBaseConnext} from './IBaseConnext.sol';
 
-interface IConnextCore {
+interface IConnextCore is IBaseConnext {
   // // TokenFacet
-  // function canonicalToAdopted(bytes32 _key) external view returns (address);
+  // function canonicalToAsset(bytes32 _key) external view returns (address);
 
-  // function canonicalToAdopted(TokenId calldata _canonical) external view returns (address);
+  // function canonicalToAsset(TokenId calldata _canonical) external view returns (address);
 
-  // function adoptedToCanonical(address _adopted) external view returns (TokenId memory);
+  // function assetToCanonical(address _asset) external view returns (TokenId memory);
 
-  // function canonicalToRepresentation(bytes32 _key) external view returns (address);
-
-  // function canonicalToRepresentation(TokenId calldata _canonical) external view returns (address);
-
-  // function representationToCanonical(address _adopted) external view returns (TokenId memory);
-
-  // function getLocalAndAdoptedToken(bytes32 _id, uint32 _domain) external view returns (address, address);
+  // function getToken(bytes32 _id, uint32 _domain) external view returns (address);
 
   // function approvedAssets(bytes32 _key) external view returns (bool);
 
   // function approvedAssets(TokenId calldata _canonical) external view returns (bool);
 
-  // //function adoptedToLocalExternalPools(bytes32 _key) external view returns (IStableSwap);
-
-  // //function adoptedToLocalExternalPools(TokenId calldata _canonical) external view returns (IStableSwap);
-
   // function getTokenId(address _candidate) external view returns (TokenId memory);
-
-  // function getCustodiedAmount(bytes32 _key) external view returns (uint256);
 
   // function setupAsset(
   //   TokenId calldata _canonical,
   //   uint8 _canonicalDecimals,
   //   string memory _representationName,
   //   string memory _representationSymbol,
-  //   address _adoptedAssetId,
-  //   address _stableSwapPool,
-  //   uint256 _cap
+  //   address _adoptedAssetId
   // ) external returns (address);
 
   // function setupAssetWithDeployedRepresentation(
   //   TokenId calldata _canonical,
   //   address _representation,
-  //   address _adoptedAssetId,
-  //   address _stableSwapPool
+  //   address _adoptedAssetId
   // ) external returns (address);
-
-  // function addStableSwapPool(TokenId calldata _canonical, address _stableSwapPool) external;
-
-  // function updateLiquidityCap(TokenId calldata _canonical, uint256 _updated) external;
 
   // function removeAssetId(bytes32 _key, address _adoptedAssetId, address _representation) external;
 
@@ -65,7 +46,7 @@ interface IConnextCore {
   // // BridgeFacet
   // function routedTransfers(bytes32 _transferId) external view returns (address[] memory);
 
-  // function transferStatus(bytes32 _transferId) external view returns (DestinationTransferStatus);
+  // function transferStatus(bytes32 _transferId) external view returns (TransferStatus);
 
   // function remote(uint32 _domain) external view returns (address);
 
@@ -93,19 +74,7 @@ interface IConnextCore {
     bytes calldata _callData
   ) external payable returns (bytes32);
 
-  function xcallIntoLocal(
-    uint32 _destination,
-    address _to,
-    address _asset,
-    address _delegate,
-    uint256 _amount,
-    uint256 _slippage,
-    bytes calldata _callData
-  ) external payable returns (bytes32);
-
   function execute(ExecuteArgs calldata _args) external returns (bytes32 transferId);
-
-  function forceReceiveLocal(TransferInfo calldata _params) external;
 
   function bumpTransfer(bytes32 _transferId) external payable;
 
@@ -177,8 +146,6 @@ interface IConnextCore {
 
   // function routerBalances(address _router, address _asset) external view returns (uint256);
 
-  // function getRouterApprovalForPortal(address _router) external view returns (bool);
-
   // function approveRouter(address _router) external;
 
   // function initializeRouter(address _owner, address _recipient) external;
@@ -189,19 +156,15 @@ interface IConnextCore {
 
   // function setLiquidityFeeNumerator(uint256 _numerator) external;
 
-  // function approveRouterForPortal(address _router) external;
-
-  // function unapproveRouterForPortal(address _router) external;
-
   // function setRouterRecipient(address _router, address _recipient) external;
 
   // function proposeRouterOwner(address _router, address _proposed) external;
 
   // function acceptProposedRouterOwner(address _router) external;
 
-  // function addRouterLiquidityFor(uint256 _amount, address _local, address _router) external payable;
+  // function addRouterLiquidityFor(uint256 _amount, address _asset, address _router) external payable;
 
-  // function addRouterLiquidity(uint256 _amount, address _local) external payable;
+  // function addRouterLiquidity(uint256 _amount, address _asset) external payable;
 
   // function removeRouterLiquidityFor(
   //   TokenId memory _canonical,
@@ -211,74 +174,4 @@ interface IConnextCore {
   // ) external;
 
   // function removeRouterLiquidity(TokenId memory _canonical, uint256 _amount, address payable _to) external;
-  // /*
-  // // PortalFacet
-  // function getAavePortalDebt(bytes32 _transferId) external view returns (uint256);
-
-  // function getAavePortalFeeDebt(bytes32 _transferId) external view returns (uint256);
-
-  // function aavePool() external view returns (address);
-
-  // function aavePortalFee() external view returns (uint256);
-
-  // function setAavePool(address _aavePool) external;
-
-  // function setAavePortalFee(uint256 _aavePortalFeeNumerator) external;
-
-  // function repayAavePortal(
-  //   TransferInfo calldata _params,
-  //   uint256 _backingAmount,
-  //   uint256 _feeAmount,
-  //   uint256 _maxIn
-  // ) external;
-
-  // function repayAavePortalFor(TransferInfo calldata _params, uint256 _backingAmount, uint256 _feeAmount) external;
-
-  // // StableSwapFacet
-
-  // function getSwapStorage(bytes32 canonicalId) external view returns (SwapUtils.Swap memory);
-
-  // function getSwapLPToken(bytes32 canonicalId) external view returns (address);
-
-  // function getSwapA(bytes32 canonicalId) external view returns (uint256);
-
-  // function getSwapAPrecise(bytes32 canonicalId) external view returns (uint256);
-
-  // function getSwapToken(bytes32 canonicalId, uint8 index) external view returns (IERC20);
-
-  // function getSwapTokenIndex(bytes32 canonicalId, address tokenAddress) external view returns (uint8);
-
-  // function getSwapTokenBalance(bytes32 canonicalId, uint8 index) external view returns (uint256);
-
-  // function getSwapVirtualPrice(bytes32 canonicalId) external view returns (uint256);
-  // */
-
-  // function calculateSwap(
-  //   bytes32 canonicalId,
-  //   uint8 tokenIndexFrom,
-  //   uint8 tokenIndexTo,
-  //   uint256 dx
-  // ) external view returns (uint256);
-
-  // function calculateSwapTokenAmount(
-  //   bytes32 canonicalId,
-  //   uint256[] calldata amounts,
-  //   bool deposit
-  // ) external view returns (uint256);
-
-  // function calculateRemoveSwapLiquidity(bytes32 canonicalId, uint256 amount) external view returns (uint256[] memory);
-
-  // function calculateRemoveSwapLiquidityOneToken(
-  //   bytes32 canonicalId,
-  //   uint256 tokenAmount,
-  //   uint8 tokenIndex
-  // ) external view returns (uint256);
-
-  // function rampA(bytes32 canonicalId, uint256 futureA, uint256 futureTime) external;
-
-  // function stopRampA(bytes32 canonicalId) external;
-
-  // function lpTokenTargetAddress() external view returns (address);
-
-  // function updateLpTokenTarget(address newAddress) external;
 }

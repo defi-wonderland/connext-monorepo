@@ -2,7 +2,7 @@
 pragma solidity 0.8.17;
 
 import {IConnectorManager} from '../messaging/interfaces/IConnectorManager.sol';
-import {TokenConfig, DestinationTransferStatus, Role, RouterConfig} from './libraries/LibConnextStorage.sol';
+import {BaseConnext} from './BaseConnext.sol';
 
 /**
  * @notice THIS FILE DEFINES OUR STORAGE LAYOUT AND ID GENERATION SCHEMA. IT CAN ONLY BE MODIFIED FREELY FOR FRESH
@@ -11,10 +11,8 @@ import {TokenConfig, DestinationTransferStatus, Role, RouterConfig} from './libr
  *
  * BE VERY CAREFUL MODIFYING THE VALUES IN THIS FILE!
  */
-abstract contract ConnextStorage {
-  /**
-   * @notice Owner of the contract.
-   */
+abstract contract ConnextStorage is BaseConnext {
+  //
   // 0
   address public owner;
 
@@ -71,13 +69,6 @@ abstract contract ConnextStorage {
   mapping(bytes32 => mapping(uint32 => bool)) public supportedAssetDomains;
 
   /**
-   * @notice Mapping of the ticker hashes and paths to the settlement strategies.
-   */
-  // 8
-  // (bytes32 _tickerHash => mapping(bytes _path => address _strategy));
-  mapping(bytes32 => mapping(bytes => address)) public settlementStrategies;
-
-  /**
    * @notice Mapping of ticker hashes to the fee configuration.
    */
   // 9
@@ -105,11 +96,11 @@ abstract contract ConnextStorage {
   mapping(bytes32 => TokenConfig) public tokenConfigs;
 
   /**
-   * @notice Mapping to track transfer status on destination domain.
+   * @notice Mapping to track transfer status on destination and reconciliation domains
    */
   // 13
-  // (bytes32 _domain => DestinationTransferStatus _status);
-  mapping(bytes32 => DestinationTransferStatus) public transferStatus;
+  // (bytes32 _domain => TransferStatus _status);
+  mapping(bytes32 => TransferStatus) public transferStatus;
 
   /**
    * @notice Mapping holding router address that provided fast liquidity.
