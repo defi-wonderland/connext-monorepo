@@ -2,7 +2,7 @@
 pragma solidity 0.8.17;
 
 import {IConnectorManager} from '../messaging/interfaces/IConnectorManager.sol';
-import {TokenId, TokenConfig, DestinationTransferStatus, Role, RouterConfig} from './libraries/LibConnextStorage.sol';
+import {IBaseConnext} from './interfaces/IBaseConnext.sol';
 
 /**
  * @notice THIS FILE DEFINES OUR STORAGE LAYOUT AND ID GENERATION SCHEMA. IT CAN ONLY BE MODIFIED FREELY FOR FRESH
@@ -11,7 +11,7 @@ import {TokenId, TokenConfig, DestinationTransferStatus, Role, RouterConfig} fro
  *
  * BE VERY CAREFUL MODIFYING THE VALUES IN THIS FILE!
  */
-abstract contract ConnextStorage {
+abstract contract ConnextStorage is IBaseConnext {
   //
   // 0
   bool initialized;
@@ -60,10 +60,10 @@ abstract contract ConnextStorage {
   // 7
   mapping(bytes32 => TokenConfig) tokenConfigs;
   /**
-   * @notice Mapping to track transfer status on destination domain
+   * @notice Mapping to track transfer status on destination and reconciliation domains
    */
   // 8
-  mapping(bytes32 => DestinationTransferStatus) transferStatus;
+  mapping(bytes32 => TransferStatus) transferStatus;
   /**
    * @notice Mapping holding router address that provided fast liquidity.
    */

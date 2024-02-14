@@ -3,8 +3,6 @@ pragma solidity 0.8.17;
 
 import {TypeCasts} from '../../shared/libraries/TypeCasts.sol';
 import {Constants} from '../libraries/Constants.sol';
-import {RouterConfig, Role} from '../libraries/LibConnextStorage.sol';
-import {TokenId} from '../libraries/TokenId.sol';
 import {BaseManager} from './BaseManager.sol';
 
 abstract contract RoutersManager is BaseManager {
@@ -23,7 +21,6 @@ abstract contract RoutersManager is BaseManager {
   error RoutersManager__addLiquidityForRouter_routerEmpty();
   error RoutersManager__addLiquidityForRouter_amountIsZero();
   error RoutersManager__addLiquidityForRouter_badRouter();
-  error RoutersManager__addLiquidityForRouter_capReached();
   error RoutersManager__removeRouterLiquidity_recipientEmpty();
   error RoutersManager__removeRouterLiquidity_amountIsZero();
   error RoutersManager__removeRouterLiquidity_insufficientFunds();
@@ -83,23 +80,23 @@ abstract contract RoutersManager is BaseManager {
   /**
    * @notice Emitted when a router adds liquidity to the contract
    * @param router - The address of the router the funds were credited to
-   * @param local - The address of the token added (all liquidity held in local asset)
+   * @param asset - The address of the token added
    * @param key - The hash of the canonical id and domain
    * @param amount - The amount of liquidity added
    * @param caller - The account that called the function
    */
-  event RouterLiquidityAdded(address indexed router, address local, bytes32 key, uint256 amount, address caller);
+  event RouterLiquidityAdded(address indexed router, address asset, bytes32 key, uint256 amount, address caller);
 
   /**
    * @notice Emitted when a router withdraws liquidity from the contract
    * @param router - The router you are removing liquidity from
    * @param to - The address the funds were withdrawn to
-   * @param local - The address of the token withdrawn
+   * @param asset - The address of the token withdrawn
    * @param amount - The amount of liquidity withdrawn
    * @param caller - The account that called the function
    */
   event RouterLiquidityRemoved(
-    address indexed router, address to, address local, bytes32 key, uint256 amount, address caller
+    address indexed router, address to, address asset, bytes32 key, uint256 amount, address caller
   );
 
   // ============ Modifiers ============
@@ -167,7 +164,7 @@ abstract contract RoutersManager is BaseManager {
    * @notice Used to allowlist a given router
    * @param _router Router address to setup
    */
-  function approveRouter(address _router) external onlyOwnerOrRole(Role.RouterAdmin) {
+  function approveRouter(address _router) external onlyOwnerOrRole(Role.Admin) {
     // Sanity check: not empty
     if (_router == address(0)) revert RoutersManager__approveRouter_routerEmpty();
 
@@ -185,7 +182,7 @@ abstract contract RoutersManager is BaseManager {
    * @notice Used to remove routers that can transact crosschain
    * @param _router Router address to remove
    */
-  function unapproveRouter(address _router) external onlyOwnerOrRole(Role.RouterAdmin) {
+  function unapproveRouter(address _router) external onlyOwnerOrRole(Role.Admin) {
     // Sanity check: not empty
     if (_router == address(0)) revert RoutersManager__unapproveRouter_routerEmpty();
 
@@ -195,9 +192,6 @@ abstract contract RoutersManager is BaseManager {
 
     // Update approvals in config mapping
     delete routerConfigs[_router].approved;
-
-    // TODO: check removed line below
-    //delete routerConfigs[_router].portalApproved;
 
     // Emit event
     emit RouterRemoved(_router, msg.sender);
@@ -302,40 +296,35 @@ abstract contract RoutersManager is BaseManager {
 
   /**
    * @notice This is used by anyone to increase a router's available liquidity for a given asset.
-   * @dev The liquidity will be held in the local asset, which is the representation if you
-   * are *not* on the canonical domain, and the canonical asset otherwise.
    * @param _amount - The amount of liquidity to add for the router
-   * @param _local - The address of the asset you're adding liquidity for. If adding liquidity of the
+   * @param _asset - The address of the asset you're adding liquidity for. If adding liquidity of the
    * native asset, routers may use `address(0)` or the wrapped asset
    * @param _router The router you are adding liquidity on behalf of
    */
   function addRouterLiquidityFor(
     uint256 _amount,
-    address _local,
+    address _asset,
     address _router
   ) external payable nonReentrant whenNotPaused {
-    _addLiquidityForRouter(_amount, _local, _router);
+    _addLiquidityForRouter(_amount, _asset, _router);
   }
 
   /**
    * @notice This is used by any router to increase their available liquidity for a given asset.
-   * @dev The liquidity will be held in the local asset, which is the representation if you
-   * are *not* on the canonical domain, and the canonical asset otherwise.
    * @param _amount - The amount of liquidity to add for the router
-   * @param _local - The address of the asset you're adding liquidity for. If adding liquidity of the
+   * @param _asset - The address of the asset you're adding liquidity for. If adding liquidity of the
    * native asset, routers may use `address(0)` or the wrapped asset
    */
-  function addRouterLiquidity(uint256 _amount, address _local) external payable nonReentrant whenNotPaused {
-    _addLiquidityForRouter(_amount, _local, msg.sender);
+  function addRouterLiquidity(uint256 _amount, address _asset) external payable nonReentrant whenNotPaused {
+    _addLiquidityForRouter(_amount, _asset, msg.sender);
   }
 
   /**
    * @notice This is used by any router owner to decrease their available liquidity for a given asset.
-   * @dev Using the `_canonical` information in the interface instead of the local asset to allow
+   * @dev Using the `_canonical` information in the interface instead of the asset to allow
    * routers to remove liquidity even if the asset is delisted
    * @param _canonical The canonical token information in plaintext
    * @param _amount - The amount of liquidity to remove for the router
-   * native asset, routers may use `address(0)` or the wrapped asset
    * @param _to The address that will receive the liquidity being removed
    * @param _router The address of the router
    */
@@ -355,7 +344,7 @@ abstract contract RoutersManager is BaseManager {
 
   /**
    * @notice This is used by any router to decrease their available liquidity for a given asset.
-   * @dev Using the `_canonical` information in the interface instead of the local asset to allow
+   * @dev Using the `_canonical` information in the interface instead of the asset to allow
    * routers to remove liquidity even if the asset is delisted
    * @param _canonical The canonical token information in plaintext
    * @param _amount - The amount of liquidity to remove for the router
@@ -407,31 +396,22 @@ abstract contract RoutersManager is BaseManager {
 
   /**
    * @notice Contains the logic to verify + increment a given routers liquidity
-   * @dev The liquidity will be held in the local asset, which is the representation if you
-   * are *not* on the canonical domain, and the canonical asset otherwise.
    * @param _amount - The amount of liquidity to add for the router
-   * @param _local - The address of the bridge representation of the asset
+   * @param _asset - The address of the asset
    * @param _router - The router you are adding liquidity on behalf of
    */
-  function _addLiquidityForRouter(uint256 _amount, address _local, address _router) internal {
+  function _addLiquidityForRouter(uint256 _amount, address _asset, address _router) internal {
     // Sanity check: router is sensible.
     if (_router == address(0)) revert RoutersManager__addLiquidityForRouter_routerEmpty();
 
     // Sanity check: nonzero amounts.
     if (_amount == 0) revert RoutersManager__addLiquidityForRouter_amountIsZero();
 
-    // Get the canonical asset ID from the representation.
+    // Get the canonical asset ID from the asset.
     // NOTE: not using `_getApprovedCanonicalId` because candidate can *only* be local
+    uint32 canonicalDomain; // = assetToCanonical[_asset].domain;
+    bytes32 canonicalId; // = assetToCanonical[_asset].id;
 
-    uint32 canonicalDomain = representationToCanonical[_local].domain;
-    bytes32 canonicalId = representationToCanonical[_local].id;
-
-    if (canonicalDomain == 0 && canonicalId == bytes32(0)) {
-      // Assume you are on the canonical domain, which does not update the above mapping
-      // If this is an incorrect assumption, the approval should fail
-      canonicalDomain = domain;
-      canonicalId = TypeCasts.addressToBytes32(_local);
-    }
     bytes32 key = calculateCanonicalHash(canonicalId, canonicalDomain);
     if (!tokenConfigs[key].approval) {
       revert RoutersManager__getApprovedCanonicalId_notAllowlisted();
@@ -443,13 +423,13 @@ abstract contract RoutersManager is BaseManager {
     }
 
     // Transfer funds to contract.
-    _handleIncomingAsset(_local, _amount);
+    _handleIncomingAsset(_asset, _amount);
 
     // Update the router balances. Happens after pulling funds to account for
     // the fee on transfer tokens.
-    routerBalances[_router][_local] += _amount;
+    routerBalances[_router][_asset] += _amount;
 
-    emit RouterLiquidityAdded({router: _router, local: _local, key: key, amount: _amount, caller: msg.sender});
+    emit RouterLiquidityAdded({router: _router, asset: _asset, key: key, amount: _amount, caller: msg.sender});
   }
 
   /**
@@ -475,32 +455,30 @@ abstract contract RoutersManager is BaseManager {
     // Sanity check: nonzero amounts.
     if (_amount == 0) revert RoutersManager__removeRouterLiquidity_amountIsZero();
 
-    bool onCanonical = _canonical.domain == domain;
-
-    // Get the local asset from canonical
+    // Get the asset from canonical
     // NOTE: allow getting unapproved assets to prevent lockup on approval status change
     // NOTE: not using `_getCanonicalTokenId` because candidate can *only* be local
     bytes32 key = calculateCanonicalHash(_canonical.id, _canonical.domain);
-    address local = onCanonical ? TypeCasts.bytes32ToAddress(_canonical.id) : tokenConfigs[key].representation;
+    address asset = tokenConfigs[key].asset; // BUG: Unapproved asset config will be empty
 
     // Get existing router balance.
-    uint256 routerBalance = routerBalances[_router][local];
+    uint256 routerBalance = routerBalances[_router][asset];
 
     // Sanity check: amount can be deducted for the router.
     if (routerBalance < _amount) revert RoutersManager__removeRouterLiquidity_insufficientFunds();
 
     // Update router balances.
     unchecked {
-      routerBalances[_router][local] = routerBalance - _amount;
+      routerBalances[_router][asset] = routerBalance - _amount;
     }
 
     // Transfer from contract to specified `to` address.
-    _handleOutgoingAsset(local, recipient, _amount);
+    _handleOutgoingAsset(asset, recipient, _amount);
 
     emit RouterLiquidityRemoved({
       router: _router,
       to: recipient,
-      local: local,
+      asset: asset,
       key: key,
       amount: _amount,
       caller: msg.sender

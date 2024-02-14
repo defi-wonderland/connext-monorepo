@@ -5,7 +5,6 @@ import {IERC20Metadata} from '@openzeppelin/contracts/token/ERC20/extensions/IER
 import {SafeERC20} from '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import {ConnextStorage} from '../ConnextStorage.sol';
 import {Constants} from '../libraries/Constants.sol';
-import {Role, TokenConfig} from '../libraries/LibConnextStorage.sol';
 
 abstract contract BaseManager is ConnextStorage {
   // ============ Libraries ============
@@ -162,16 +161,34 @@ abstract contract BaseManager is ConnextStorage {
     SafeERC20.safeTransfer(IERC20Metadata(_asset), _to, _amount);
   }
 
+  /**
+   * @notice This function translates the _amount in _in decimals
+   * to _out decimals
+   *
+   * @param _in The decimals of the asset in / amount in
+   * @param _out The decimals of the target asset
+   * @param _amount The value to normalize to the `_out` decimals
+   * @return uint256 Normalized decimals.
+   */
+  function _normalizeDecimals(uint8 _in, uint8 _out, uint256 _amount) internal pure returns (uint256) {
+    if (_in == _out) {
+      return _amount;
+    }
+    // Convert this value to the same decimals as _out
+    uint256 normalized;
+    if (_in < _out) {
+      normalized = _amount * (10 ** (_out - _in));
+    } else {
+      normalized = _amount / (10 ** (_in - _out));
+    }
+    return normalized;
+  }
+
   function _getConfig(bytes32 _key) internal view returns (TokenConfig storage) {
     TokenConfig storage config = tokenConfigs[_key];
 
     // Sanity check: not empty
-    // NOTE: adopted decimals will *always* be nonzero (or reflect what is onchain
-    // for the asset). The same is not true for the representation assets, which
-    // will always have 0 decimals on the canonical domain
-    if (config.adoptedDecimals < 1) {
-      revert BaseManager__getConfig_notRegistered();
-    }
+    if (!config.approval) revert BaseManager__getConfig_notRegistered();
 
     return config;
   }
