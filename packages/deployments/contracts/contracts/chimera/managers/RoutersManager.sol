@@ -164,7 +164,7 @@ abstract contract RoutersManager is BaseManager {
    * @notice Used to allowlist a given router
    * @param _router Router address to setup
    */
-  function approveRouter(address _router) external onlyOwnerOrRole(Role.Router) {
+  function approveRouter(address _router) external onlyOwnerOrRole(Role.Admin) {
     // Sanity check: not empty
     if (_router == address(0)) revert RoutersManager__approveRouter_routerEmpty();
 
@@ -182,7 +182,7 @@ abstract contract RoutersManager is BaseManager {
    * @notice Used to remove routers that can transact crosschain
    * @param _router Router address to remove
    */
-  function unapproveRouter(address _router) external onlyOwnerOrRole(Role.Router) {
+  function unapproveRouter(address _router) external onlyOwnerOrRole(Role.Admin) {
     // Sanity check: not empty
     if (_router == address(0)) revert RoutersManager__unapproveRouter_routerEmpty();
 
