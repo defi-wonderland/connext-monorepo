@@ -170,16 +170,6 @@ interface IBaseConnext {
   }
 
   /**
-   * @notice Defines the fields needed for an asset transfer
-   * @param asset - The address of the asset
-   * @param amount - The amount of the asset
-   */
-  struct AssetTransfer {
-    address asset;
-    uint256 amount;
-  }
-
-  /**
    * @notice Contains configurations for fees
    * @dev Struct will be stored on the hash of the `canonicalId` and `canonicalDomain`.
    *
