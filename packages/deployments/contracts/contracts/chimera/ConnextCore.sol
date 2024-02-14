@@ -117,7 +117,8 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       normalizedIn: 0,
       canonicalId: bytes32(0)
     });
-    return _xcall(params, _asset, _amount, address(0), msg.value);
+    return
+      _xcall({_params: params, _asset: _asset, _amount: _amount, _relayerFeeAsset: address(0), _relayerFee: msg.value});
   }
 
   function xcall(
@@ -146,7 +147,8 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       normalizedIn: 0,
       canonicalId: bytes32(0)
     });
-    return _xcall(params, _asset, _amount, _asset, _relayerFee);
+    return
+      _xcall({_params: params, _asset: _asset, _amount: _amount, _relayerFeeAsset: _asset, _relayerFee: _relayerFee});
   }
 
   /**

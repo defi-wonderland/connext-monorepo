@@ -55,16 +55,22 @@ abstract contract ConnextStorage is IBaseConnext {
   uint32 public domain;
 
   /**
-   * @notice Mapping of asset addresses to the canonical ids.
+   * @notice Mapping of adopted to canonical asset information.
    */
   // 6
+  mapping(address => TokenId) adoptedToCanonical;
+
+  /**
+   * @notice Mapping of asset addresses to the canonical ids.
+   */
+  // 7
   // (address _asset => bytes32 _canonicalId);
   mapping(address => bytes32) public assetCanonicalIds;
 
   /**
    * @notice Mapping of the ticker hashes to the domains they are supported on.
    */
-  // 7
+  // 8
   // (bytes32 _tickerHash => mapping(uint32 _domain => bool _supported));
   mapping(bytes32 => mapping(uint32 => bool)) public supportedAssetDomains;
 
@@ -72,7 +78,8 @@ abstract contract ConnextStorage is IBaseConnext {
    * @notice Mapping of ticker hashes to the fee configuration.
    */
   // 9
-  // mapping(bytes32 _tickerHash => struct FeeConfig) public feeConfig; // TODO: define fee config struct
+  // bytes32 _tickerHash => FeeConfig
+  mapping(bytes32 => FeeConfig) public feeConfig;
 
   /**
    * @notice Mapping of ticker hashes to the asset addresses.
@@ -152,7 +159,7 @@ abstract contract ConnextStorage is IBaseConnext {
    * @notice The proposed owner for the contract.
    */
   // 20
-  address public proposed;
+  address public proposedOwner;
 
   /**
    * @notice The timestamp when a new owner was proposed.

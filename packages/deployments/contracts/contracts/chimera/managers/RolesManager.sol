@@ -131,9 +131,8 @@ abstract contract RolesManager is BaseManager {
    * @param _relayer - The relayer address to add
    */
   function addRelayer(address _relayer) external onlyOwnerOrRole(Role.Admin) {
-    // TODO: replace with the correct role for relayer when struct ready
-    // if (approvedRelayers[_relayer]) revert RolesManager__addRelayer_alreadyApproved();
-    // approvedRelayers[_relayer] = true;
+    if (roles[_relayer] == Role.Relayer) revert RolesManager__addRelayer_alreadyApproved();
+    roles[_relayer] = Role.Relayer;
 
     emit RelayerAdded(_relayer, msg.sender);
   }
@@ -143,9 +142,8 @@ abstract contract RolesManager is BaseManager {
    * @param _relayer - The relayer address to remove
    */
   function removeRelayer(address _relayer) external onlyOwnerOrRole(Role.Admin) {
-    // TODO: replace with the correct role for relayer when struct ready
-    // if (!approvedRelayers[_relayer]) revert RolesManager__removeRelayer_notApproved();
-    // delete approvedRelayers[_relayer];
+    if (roles[_relayer] != Role.Relayer) revert RolesManager__removeRelayer_notApproved();
+    delete roles[_relayer];
 
     emit RelayerRemoved(_relayer, msg.sender);
   }
@@ -157,9 +155,8 @@ abstract contract RolesManager is BaseManager {
   function addSequencer(address _sequencer) external onlyOwnerOrRole(Role.Admin) {
     if (_sequencer == address(0)) revert RolesManager__addSequencer_invalidSequencer();
 
-    // TODO: replace with the correct role for sequencer when struct ready
-    // if (approvedSequencers[_sequencer]) revert RolesManager__addSequencer_alreadyApproved();
-    // approvedSequencers[_sequencer] = true;
+    if (roles[_sequencer] == Role.Sequencer) revert RolesManager__addSequencer_alreadyApproved();
+    roles[_sequencer] = Role.Sequencer;
 
     emit SequencerAdded(_sequencer, msg.sender);
   }
@@ -169,9 +166,8 @@ abstract contract RolesManager is BaseManager {
    * @param _sequencer - The sequencer address to remove.
    */
   function removeSequencer(address _sequencer) external onlyOwnerOrRole(Role.Admin) {
-    // TODO: replace with the correct role for sequencer when struct ready
-    // if (!approvedSequencers[_sequencer]) revert RolesManager__removeSequencer_notApproved();
-    // delete approvedSequencers[_sequencer];
+    if (roles[_sequencer] != Role.Sequencer) revert RolesManager__removeSequencer_notApproved();
+    delete roles[_sequencer];
 
     emit SequencerRemoved(_sequencer, msg.sender);
   }

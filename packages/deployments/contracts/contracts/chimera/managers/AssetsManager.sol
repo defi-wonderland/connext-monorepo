@@ -141,10 +141,22 @@ abstract contract AssetsManager is BaseManager {
       }
 
       // Enroll the asset.
-      _enrollAsset(true, _canonicalDecimals, _canonicalAddress, _canonical, key);
+      _enrollAsset({
+        _onCanonical: true,
+        _canonicalDecimals: _canonicalDecimals,
+        _asset: _canonicalAddress,
+        _canonical: _canonical,
+        _key: key
+      });
     } else {
       // Enroll the asset.
-      _enrollAsset(false, _canonicalDecimals, _assetId, _canonical, key);
+      _enrollAsset({
+        _onCanonical: false,
+        _canonicalDecimals: _canonicalDecimals,
+        _asset: _assetId,
+        _canonical: _canonical,
+        _key: key
+      });
     }
   }
 

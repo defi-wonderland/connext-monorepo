@@ -61,7 +61,7 @@ abstract contract ProtocolManager is BaseManager {
    */
   function proposeNewOwner(address newlyProposed) public onlyOwner {
     // Contract as source of truth
-    if (proposed == newlyProposed || newlyProposed == address(0)) {
+    if (proposedOwner == newlyProposed || newlyProposed == address(0)) {
       revert ProtocolManager__proposeNewOwner_invalidProposal();
     }
 
@@ -77,15 +77,15 @@ abstract contract ProtocolManager is BaseManager {
    */
   function acceptProposedOwner() public onlyProposed delayElapsed(proposedOwnershipTimestamp) {
     // Contract as source of truth
-    if (owner == proposed) revert ProtocolManager__acceptProposedOwner_noOwnershipChange();
+    if (owner == proposedOwner) revert ProtocolManager__acceptProposedOwner_noOwnershipChange();
 
     // NOTE: no need to check if _proposedOwnershipTimestamp > 0 because
     // the only time this would happen is if the _proposed was never
-    // set (will fail from modifier) or if the owner == _proposed (checked
+    // set (will fail from modifier) or if the owner == _proposedOwner (checked
     // above)
 
     // Emit event, set new owner, reset timestamp
-    _setOwner(proposed);
+    _setOwner(proposedOwner);
   }
 
   /**
@@ -131,7 +131,7 @@ abstract contract ProtocolManager is BaseManager {
    * @notice Throws if called by any account other than the proposed owner.
    */
   modifier onlyProposed() {
-    if (proposed != msg.sender) revert ProtocolManager__onlyProposed_notProposedOwner();
+    if (proposedOwner != msg.sender) revert ProtocolManager__onlyProposed_notProposedOwner();
     _;
   }
 
@@ -165,13 +165,13 @@ abstract contract ProtocolManager is BaseManager {
   ////// INTERNAL //////
   function _setOwner(address newOwner) private {
     delete proposedOwnershipTimestamp;
-    delete proposed;
+    delete proposedOwner;
     owner = newOwner;
   }
 
   function _setProposed(address newlyProposed) private {
     proposedOwnershipTimestamp = block.timestamp;
-    proposed = newlyProposed;
+    proposedOwner = newlyProposed;
     emit OwnershipProposed(newlyProposed);
   }
 }
