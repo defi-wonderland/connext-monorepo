@@ -74,6 +74,17 @@ interface IConnextCore is IBaseConnext {
     bytes calldata _callData
   ) external payable returns (bytes32);
 
+  function xcall(
+    uint32 _destination,
+    address _to,
+    address _asset,
+    address _delegate,
+    uint256 _amount,
+    uint256 _slippage,
+    bytes calldata _callData,
+    uint256 _relayerFee
+  ) external returns (bytes32);
+
   function execute(ExecuteArgs calldata _args) external returns (bytes32 transferId);
 
   function bumpTransfer(bytes32 _transferId) external payable;

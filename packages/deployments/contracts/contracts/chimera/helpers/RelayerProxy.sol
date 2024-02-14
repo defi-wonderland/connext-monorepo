@@ -9,7 +9,7 @@ import {GelatoRelayFeeCollector} from '@gelatonetwork/relay-context/contracts/Ge
 
 import {ProposedOwnable} from '../../shared/ProposedOwnable.sol';
 import {IConnextCore} from '../interfaces/IConnextCore.sol';
-import {BaseConnext} from '../BaseConnext.sol';
+import {IBaseConnext} from '../interfaces/IBaseConnext.sol';
 
 interface ISpokeConnector {
   struct Proof {
@@ -48,7 +48,7 @@ interface IKeep3rV2 {
  * @notice This is a temporary contract that wraps fast path functions in the Connext interface so that they can be called by
  * Gelato's legacy relayer network. The contract stores native assets and pays them to the relayer on function call.
  */
-contract RelayerProxy is BaseConnext, ProposedOwnable, ReentrancyGuard, GelatoRelayFeeCollector {
+contract RelayerProxy is IBaseConnext, ProposedOwnable, ReentrancyGuard, GelatoRelayFeeCollector {
   using ECDSA for bytes32;
   // ============ Properties ============
 

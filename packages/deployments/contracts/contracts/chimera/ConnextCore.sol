@@ -31,7 +31,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
 
   // ========== Custom Errors ===========
 
-  error Connext__onlyDelegate_notDelegate();
   error Connext__xcall_nativeAssetNotSupported();
   error Connext__xcall_emptyTo();
   error Connext__execute_unapprovedSender();
@@ -92,23 +91,12 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
    */
   event TransferRelayerFeesIncreased(bytes32 indexed transferId, uint256 increase, address asset, address caller);
 
-  // ============ Modifiers ============
-
-  /**
-   * @notice Only accept a transfer's designated delegate.
-   * @param _params The TransferInfo of the transfer.
-   */
-  modifier onlyDelegate(TransferInfo calldata _params) {
-    if (_params.delegate != msg.sender) revert Connext__onlyDelegate_notDelegate();
-    _;
-  }
-
   // ============ Public Functions: Bridge ==============
   function xcall(
     uint32 _destination,
     address _to,
     address _asset,
-    address _delegate,
+    address, // _delegate
     uint256 _amount,
     uint256, // _slippage
     bytes calldata _callData
@@ -121,7 +109,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       callData: _callData,
       originDomain: domain,
       destinationDomain: _destination,
-      delegate: _delegate,
       originSender: msg.sender,
       // The following values should be assigned in _xcall.
       nonce: 0,
@@ -130,14 +117,14 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       normalizedIn: 0,
       canonicalId: bytes32(0)
     });
-    return _xcall(params, AssetTransfer(_asset, _amount), AssetTransfer(address(0), msg.value));
+    return _xcall(params, _asset, _amount, address(0), msg.value);
   }
 
   function xcall(
     uint32 _destination,
     address _to,
     address _asset,
-    address _delegate,
+    address, // _delegate
     uint256 _amount,
     uint256, // _slippage
     bytes calldata _callData,
@@ -151,7 +138,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       callData: _callData,
       originDomain: domain,
       destinationDomain: _destination,
-      delegate: _delegate,
       originSender: msg.sender,
       // The following values should be assigned in _xcall.
       nonce: 0,
@@ -160,7 +146,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       normalizedIn: 0,
       canonicalId: bytes32(0)
     });
-    return _xcall(params, AssetTransfer(_asset, _amount), AssetTransfer(_asset, _relayerFee));
+    return _xcall(params, _asset, _amount, _asset, _relayerFee);
   }
 
   /**
@@ -251,28 +237,26 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
    * @dev For ERC20 transfers, this contract must have approval to transfer the input (transacting) assets.
    *
    * @param _params - The TransferInfo arguments.
+   * @param _asset - The address of the asset
+   * @param _amount - The amount of the asset
+   * @param _relayerFeeAsset - The address of the relayer fee asset
+   * @param _relayerFee - The amount of the relayer fee
    * @return bytes32 - The transfer ID of the newly created crosschain transfer.
    */
   function _xcall(
     TransferInfo memory _params,
-    AssetTransfer memory _asset,
-    AssetTransfer memory _relayer
-  )
-    internal
-    // address _asset,
-    // uint256 _amount,
-    // address _relayerFeeAsset,
-    // uint256 _relayerFee
-    whenNotPaused
-    returns (bytes32)
-  {
+    address _asset,
+    uint256 _amount,
+    address _relayerFeeAsset,
+    uint256 _relayerFee
+  ) internal whenNotPaused returns (bytes32) {
     /*  // Sanity checks.
     bytes32 remoteInstance;
     {
       // Not native asset.
       // NOTE: We support using address(0) as an intuitive default if you are sending a 0-value
       // transfer. In that edge case, address(0) will not be registered as a supported asset.
-      if (_asset.asset == address(0) && _asset.amount != 0) {
+      if (_asset == address(0) && _amount != 0) {
         revert Connext__xcall_nativeAssetNotSupported();
       }
 
@@ -296,10 +280,10 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       // 0-value transfer. Because 0-value transfers short-circuit all checks on mappings keyed on
       // hash(canonicalId, canonicalDomain), this is safe even when the address(0) asset is not
       // allowlisted.
-      if (_asset.asset != address(0)) {
+      if (_asset != address(0)) {
         // Retrieve the canonical token information.
         bytes32 key;
-        (canonical, key) = _getApprovedCanonicalId(_asset.asset);
+        (canonical, key) = _getApprovedCanonicalId(_asset);
 
         // Get the token config.
         TokenConfig storage config = _getConfig(key);
@@ -311,17 +295,17 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
         _params.canonicalDomain = canonical.domain;
         _params.canonicalId = canonical.id;
 
-        if (_asset.amount > 0) {
+        if (_amount > 0) {
           // Transfer funds of input asset to the contract from the user.
-          AssetLogic.handleIncomingAsset(_asset.asset, _asset.amount);
+          AssetLogic.handleIncomingAsset(_asset, _amount);
 
-          _params.bridgedAmt = _asset.amount;
+          _params.bridgedAmt = _amount;
 
           // Get the normalized amount in (amount sent in by user in 18 decimals).
           _params.normalizedIn = AssetLogic.normalizeDecimals(
             config.assetDecimals,
             Constants.DEFAULT_NORMALIZED_DECIMALS,
-            _asset.amount
+            _amount
           );
         }
       }
@@ -332,16 +316,16 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     }
 
     // Handle the relayer fee.
-    if (_relayer.amount > 0) {
-      _bumpTransfer(transferId, _relayer.asset, _relayer.amount);
+    if (_relayerFee > 0) {
+      _bumpTransfer(transferId, _relayerFeeAsset, _relayerFee);
     }
 
     // Send the crosschain message.
     _sendMessageAndEmit(
       transferId,
       _params,
-      _asset.asset,
-      _asset.amount,
+      _asset,
+      _amount,
       remoteInstance,
       canonical
     );
@@ -391,7 +375,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
    */
   function _executeSanityChecks(ExecuteArgs calldata _args) private view returns (bytes32, TransferStatus) {
     // // If the sender is not approved relayer, revert
-    // if (!approvedRelayers[msg.sender] && msg.sender != _args.params.delegate) {
+    // if (!approvedRelayers[msg.sender]) {
     //   revert Connext__execute_unapprovedSender();
     // }
     // // If this is not the destination domain revert

@@ -84,7 +84,6 @@ interface IBaseConnext {
    * @param destinationDomain - The receiving domain (i.e. where `execute` is called)
    * @param canonicalDomain - The canonical domain of the asset you are bridging
    * @param to - The address you are sending funds (and potentially data) to
-   * @param delegate - An address who can execute txs on behalf of `to`, in addition to allowing relayers
    * @param callData - The data to execute on the receiving chain. If no crosschain call is needed, then leave empty.
    * @param originSender - The msg.sender of the xcall
    * @param bridgedAmt - The amount sent over the bridge
@@ -97,7 +96,6 @@ interface IBaseConnext {
     uint32 destinationDomain;
     uint32 canonicalDomain;
     address to;
-    address delegate;
     bytes callData;
     address originSender;
     uint256 bridgedAmt;
@@ -167,16 +165,6 @@ interface IBaseConnext {
   struct TokenId {
     uint32 domain;
     bytes32 id;
-  }
-
-  /**
-   * @notice Defines the fields needed for an asset transfer
-   * @param asset - The address of the asset
-   * @param amount - The amount of the asset
-   */
-  struct AssetTransfer {
-    address asset;
-    uint256 amount;
   }
 
   /**

@@ -2,7 +2,7 @@
 pragma solidity 0.8.17;
 
 import {IConnectorManager} from '../messaging/interfaces/IConnectorManager.sol';
-import {BaseConnext} from './BaseConnext.sol';
+import {IBaseConnext} from './interfaces/IBaseConnext.sol';
 
 /**
  * @notice THIS FILE DEFINES OUR STORAGE LAYOUT AND ID GENERATION SCHEMA. IT CAN ONLY BE MODIFIED FREELY FOR FRESH
@@ -11,7 +11,7 @@ import {BaseConnext} from './BaseConnext.sol';
  *
  * BE VERY CAREFUL MODIFYING THE VALUES IN THIS FILE!
  */
-abstract contract ConnextStorage is BaseConnext {
+abstract contract ConnextStorage is IBaseConnext {
   //
   // 0
   address public owner;

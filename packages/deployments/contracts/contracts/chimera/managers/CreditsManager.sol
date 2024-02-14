@@ -27,7 +27,7 @@ contract CreditsManager is BaseManager {
     bytes messageBody
   );
 
-  // ============ Internal: Send & Emit Xcalled============
+  // ============ Internal: Send & Emit Xcalled ============
   /**
    * @notice Format and send transfer message to a remote chain.
    *
