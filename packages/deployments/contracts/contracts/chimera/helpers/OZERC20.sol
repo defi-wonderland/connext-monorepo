@@ -433,8 +433,9 @@ contract ERC20 is IERC20Metadata, IERC20Permit {
   ) public virtual override {
     require(block.timestamp <= _deadline, 'ERC20Permit: expired deadline');
 
-    bytes32 _structHash = keccak256( // solhint-disable-next-line func-named-parameters
-    abi.encode(_PERMIT_TYPEHASH, _owner, _spender, _value, _useNonce(_owner), _deadline));
+    bytes32 _structHash =
+    // solhint-disable-next-line func-named-parameters
+     keccak256(abi.encode(_PERMIT_TYPEHASH, _owner, _spender, _value, _useNonce(_owner), _deadline));
 
     bytes32 _hash = _hashTypedDataV4(_structHash);
 

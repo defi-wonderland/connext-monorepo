@@ -197,11 +197,6 @@ abstract contract AssetsManager is BaseManager {
     // Sanity check: needs approval
     if (tokenConfigs[_key].approval) revert AssetsManager__addAssetId_alreadyAdded();
 
-    /*
-  address asset;
-  uint8 assetDecimals;
-  bool approval;
-    */
     // Generate Config
     tokenConfigs[_key] = TokenConfig({
       asset: _asset,

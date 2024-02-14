@@ -380,15 +380,19 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     // if (!approvedRelayers[msg.sender]) {
     //   revert Connext__execute_unapprovedSender();
     // }
+
     // // If this is not the destination domain revert
     // if (_args.params.destinationDomain != domain) {
     //   revert Connext__execute_wrongDomain();
     // }
+
     // // Path length refers to the number of facilitating routers. A transfer is considered 'multipath'
     // // if multiple routers provide liquidity (in even 'shares') for it.
     // uint256 pathLength = _args.routers.length;
+
     // // Derive transfer ID based on given arguments.
     // bytes32 transferId = _calculateTransferId(_args.params);
+
     // // Retrieve the reconciled record.
     // TransferStatus status = transferStatus[transferId];
 
@@ -412,11 +416,13 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     //   ) {
     //     revert Connext__execute_invalidSequencerSignature();
     //   }
+
     //   // Hash the payload for which each router should have produced a signature.
     //   // Each router should have signed the `transferId` (which implicitly signs call params,
     //   // amount, and tokenId) as well as the `pathLength`, or the number of routers with which
     //   // they are splitting liquidity provision.
     //   bytes32 routerHash = keccak256(abi.encode(transferId, pathLength));
+
     //   for (uint256 i; i < pathLength; ) {
     //     // Make sure the router is approved, if applicable.
     //     // If router ownership is renounced (_RouterOwnershipRenounced() is true), then the router allowlist
@@ -424,11 +430,13 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     //     if (!_isRouterAllowlistRemoved() && !routerConfigs[_args.routers[i]].approved) {
     //       revert Connext__execute_notSupportedRouter();
     //     }
+
     //     // Validate the signature. We'll recover the signer's address using the expected payload and basic ECDSA
     //     // signature scheme recovery. The address for each signature must match the router's address.
     //     if (_args.routers[i] != _recoverSignature(routerHash, _args.routerSignatures[i])) {
     //       revert Connext__execute_invalidRouterSignature();
     //     }
+
     //     unchecked {
     //       ++i;
     //     }
@@ -438,6 +446,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     //   // case, we must make sure the transfer's been reconciled.
     //   if (status != TransferStatus.Reconciled) revert Connext__execute_notReconciled();
     // }
+
     // return (transferId, status);
   }
 
@@ -471,16 +480,19 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     // if (_args.params.canonicalDomain != 0) {
     //   asset = _getAsset(_key, _args.params.canonicalId, _args.params.canonicalDomain);
     // }
+
     // // If this is a zero-value transfer, short-circuit remaining logic.
     // if (_args.params.bridgedAmt == 0) {
     //   return (0, asset);
     // }
+
     // // If this is a fast liquidity path, we should handle deducting from applicable routers' liquidity.
     // // If this is a slow liquidity path, the transfer must have been reconciled (if we've reached this point),
     // // and the funds would have been custodied in this contract. The exact custodied amount is untracked in state
     // // (since the amount is hashed in the transfer ID itself) - thus, no updates are required.
     // if (_isFast) {
     //   uint256 pathLen = _args.routers.length;
+
     //   // Calculate amount that routers will provide with the fast-liquidity fee deducted.
     //   uint256 toTransfer = _muldiv(_args.params.bridgedAmt, LIQUIDITY_FEE_NUMERATOR, Constants.BPS_FEE_DENOMINATOR);
 
