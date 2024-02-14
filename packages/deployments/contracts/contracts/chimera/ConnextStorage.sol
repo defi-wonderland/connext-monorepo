@@ -58,7 +58,7 @@ abstract contract ConnextStorage is IBaseConnext {
    * @notice Mapping of asset addresses to the canonical token ids.
    */
   // 6
-  // (address _asset => bytes32 _canonical);
+  // (address _asset => TokenId _canonicalId);
   mapping(address => TokenId) assetToCanonical;
 
   /**
