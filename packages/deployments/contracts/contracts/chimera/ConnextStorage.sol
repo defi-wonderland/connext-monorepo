@@ -55,71 +55,65 @@ abstract contract ConnextStorage is IBaseConnext {
   uint32 public domain;
 
   /**
-   * @notice Mapping of adopted to canonical asset information.
+   * @notice Mapping of asset addresses to the canonical token ids.
    */
   // 6
-  mapping(address => TokenId) adoptedToCanonical;
-
-  /**
-   * @notice Mapping of asset addresses to the canonical ids.
-   */
-  // 7
-  // (address _asset => bytes32 _canonicalId);
-  mapping(address => bytes32) public assetCanonicalIds;
+  // (address _asset => bytes32 _canonical);
+  mapping(address => TokenId) assetToCanonical;
 
   /**
    * @notice Mapping of the ticker hashes to the domains they are supported on.
    */
-  // 8
+  // 7
   // (bytes32 _tickerHash => mapping(uint32 _domain => bool _supported));
   mapping(bytes32 => mapping(uint32 => bool)) public supportedAssetDomains;
 
   /**
    * @notice Mapping of ticker hashes to the fee configuration.
    */
-  // 9
+  // 8
   // bytes32 _tickerHash => FeeConfig
   mapping(bytes32 => FeeConfig) public feeConfig;
 
   /**
    * @notice Mapping of ticker hashes to the asset addresses.
    */
-  // 10
+  // 9
   // (bytes32 _tickerHash => address _assetId);
   mapping(bytes32 => address) public tickerHashToAssetId;
 
   /**
    * @notice Mapping of asset addresses to the ticker hashes.
    */
-  // 11
+  // 10
   // (address _assetId => bytes32 _tickerHash);
   mapping(address => bytes32) public assetIdToTickerHash;
 
   /**
    * @notice Mapping of canonicalIds to the token configs.
    */
-  // 12
+  // 11
   // (bytes32 _canonicalId => TokenConfig config);
   mapping(bytes32 => TokenConfig) public tokenConfigs;
 
   /**
    * @notice Mapping to track transfer status on destination and reconciliation domains
    */
-  // 13
+  // 12
   // (bytes32 _domain => TransferStatus _status);
   mapping(bytes32 => TransferStatus) public transferStatus;
 
   /**
    * @notice Mapping holding router address that provided fast liquidity.
    */
-  // 14
+  // 13
   // (bytes32 _transferId => address[] _routers);
   mapping(bytes32 => address[]) public routedTransfers;
 
   /**
    * @notice Mapping of asset ids to the unclaimed amounts.
    */
-  // 15
+  // 14
   // (address _assetId => uint256 _amount);
   mapping(address => uint256) public unclaimedAssets;
 
@@ -128,21 +122,21 @@ abstract contract ConnextStorage is IBaseConnext {
    * @dev Routers should always store liquidity that they can expect to receive via the bridge on
    * this domain (the local asset).
    */
-  // 16
+  // 15
   // (address _router => mapping(address _assetId => uint256 _amount));
   mapping(address => mapping(address => uint256)) public routerBalances;
 
   /**
    * @notice Mapping of the amount of credits of the routers.
    */
-  // 17
+  // 16
   // (address _assetId => mapping(address _router => uint256 _amount));
   mapping(address => mapping(address => uint256)) public credits;
 
   /**
    * @notice The max amount of routers a payment can be routed through.
    */
-  // 18
+  // 17
   uint256 public maxRoutersPerTransfer;
 
   /**
@@ -151,70 +145,70 @@ abstract contract ConnextStorage is IBaseConnext {
    * This mapping is required because the Connext now contains the BridgeRouter and must implement
    * the remotes interface.
    */
-  // 19
+  // 18
   // (uint32 _domain => bytes32 _router);
   mapping(uint32 => bytes32) public remotes;
 
   /**
    * @notice The proposed owner for the contract.
    */
-  // 20
+  // 19
   address public proposedOwner;
 
   /**
    * @notice The timestamp when a new owner was proposed.
    */
-  // 21
+  // 20
   uint256 public proposedOwnershipTimestamp;
 
   /**
    * @notice Stores whether or not the router allowlist has been removed.
    */
-  // 22
+  // 21
   bool public routerAllowlistRemoved;
 
   /**
    * @notice The timestamp when the router allowlist was proposed to be removed.
    */
-  // 23
+  // 22
   uint256 public routerAllowlistTimestamp;
 
   /**
    * @notice Mapping of addresses to Roles.
    * @dev returns uint representing the enum Role value.
    */
-  // 24
+  // 23
   // (address _account => Role _role);
   mapping(address => Role) public roles;
 
   /**
    * @notice Mapping of router configurations.
    */
-  // 25
+  // 24
   // (address _router => RouterConfig _config);
   mapping(address => RouterConfig) public routerConfigs;
 
   /**
    * @notice Reentracy flag for nonReentrant calls.
    */
-  // 26
+  // 25
   uint256 internal _status;
 
   /**
    * @notice Reentrancy flag for nonXCallReentrant xcalls.
    */
-  // 27
+  // 26
   uint256 internal _xcallStatus;
 
   /**
    * @notice Stores whether or not bribing, AMMs, have been paused.
    */
-  // 28
+  // 27
   bool internal _paused;
 
   /**
    * @notice Remote connection manager for xapp.
    */
-  // 28
+  // 27
   IConnectorManager public xAppConnectionManager;
 }

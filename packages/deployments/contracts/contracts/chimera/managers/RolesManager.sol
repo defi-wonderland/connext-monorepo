@@ -14,10 +14,10 @@ abstract contract RolesManager is BaseManager {
   error RolesManager__removeAssetAllowlist_noProposal();
   error RolesManager__revokeRole_invalidInput();
   error RolesManager__assignRole_invalidInput(address _account, Role _currentRole, Role _newRole);
-  error RolesManager__addRelayer_alreadyApproved();
+  error RolesManager__addRelayer_roleAlreadyAssigned(Role _role);
   error RolesManager__removeRelayer_notApproved();
   error RolesManager__addSequencer_invalidSequencer();
-  error RolesManager__addSequencer_alreadyApproved();
+  error RolesManager__addSequencer_roleAlreadyAssigned(Role _role);
   error RolesManager__removeSequencer_notApproved();
   error RolesManager__addRemote_invalidRouter();
   error RolesManager__addRemote_invalidDomain();
@@ -131,7 +131,7 @@ abstract contract RolesManager is BaseManager {
    * @param _relayer - The relayer address to add
    */
   function addRelayer(address _relayer) external onlyOwnerOrRole(Role.Admin) {
-    if (roles[_relayer] == Role.Relayer) revert RolesManager__addRelayer_alreadyApproved();
+    if (roles[_relayer] != Role.None) revert RolesManager__addRelayer_roleAlreadyAssigned(roles[_relayer]);
     roles[_relayer] = Role.Relayer;
 
     emit RelayerAdded(_relayer, msg.sender);
@@ -155,7 +155,8 @@ abstract contract RolesManager is BaseManager {
   function addSequencer(address _sequencer) external onlyOwnerOrRole(Role.Admin) {
     if (_sequencer == address(0)) revert RolesManager__addSequencer_invalidSequencer();
 
-    if (roles[_sequencer] == Role.Sequencer) revert RolesManager__addSequencer_alreadyApproved();
+    if (roles[_sequencer] != Role.None) revert RolesManager__addSequencer_roleAlreadyAssigned(roles[_sequencer]);
+
     roles[_sequencer] = Role.Sequencer;
 
     emit SequencerAdded(_sequencer, msg.sender);
