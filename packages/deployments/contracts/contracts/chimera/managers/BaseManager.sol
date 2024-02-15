@@ -8,7 +8,6 @@ import {Constants} from '../libraries/Constants.sol';
 
 abstract contract BaseManager is ConnextStorage {
   // ============ Libraries ============
-
   using SafeERC20 for IERC20Metadata;
 
   // ========== Custom Errors ===========
@@ -22,6 +21,12 @@ abstract contract BaseManager is ConnextStorage {
   error BaseManager__handleIncomingAsset_feeOnTransferNotSupported();
   error BaseManager__handleOutgoingAsset_notNative();
   error BaseManager__getConfig_notRegistered();
+
+  constructor() {
+    // TODO: for now setting the deploy msg.sender as the owner, this is going to be evaluated in future iterations
+    // Set the owner on contract creation
+    owner = msg.sender;
+  }
 
   // ============ Modifiers ============
 
