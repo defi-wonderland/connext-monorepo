@@ -53,28 +53,6 @@ abstract contract ProtocolManager is BaseManager {
    */
   event XAppConnectionManagerSet(address updated, address caller);
 
-  // ============ External: Getters ============
-  /**
-   * @notice Returns the address of the proposed owner.
-   */
-  function proposed() public view returns (address) {
-    return _proposed;
-  }
-
-  /**
-   * @notice Returns the address of the proposed owner.
-   */
-  function proposedTimestamp() public view returns (uint256) {
-    return _proposedOwnershipTimestamp;
-  }
-
-  /**
-   * @notice Returns if paused or not.
-   */
-  function paused() public view returns (bool) {
-    return _paused;
-  }
-
   // ============ External ============
 
   /**
@@ -83,7 +61,7 @@ abstract contract ProtocolManager is BaseManager {
    */
   function proposeNewOwner(address newlyProposed) public onlyOwner {
     // Contract as source of truth
-    if (_proposed == newlyProposed || newlyProposed == address(0)) {
+    if (proposedOwner == newlyProposed || newlyProposed == address(0)) {
       revert ProtocolManager__proposeNewOwner_invalidProposal();
     }
 
@@ -97,17 +75,17 @@ abstract contract ProtocolManager is BaseManager {
    * @notice Transfers ownership of the contract to a new account (`newOwner`).
    * Can only be called by the proposed owner.
    */
-  function acceptProposedOwner() public onlyProposed delayElapsed(_proposedOwnershipTimestamp) {
+  function acceptProposedOwner() public onlyProposed delayElapsed(proposedOwnershipTimestamp) {
     // Contract as source of truth
-    if (owner == _proposed) revert ProtocolManager__acceptProposedOwner_noOwnershipChange();
+    if (owner == proposedOwner) revert ProtocolManager__acceptProposedOwner_noOwnershipChange();
 
     // NOTE: no need to check if _proposedOwnershipTimestamp > 0 because
     // the only time this would happen is if the _proposed was never
-    // set (will fail from modifier) or if the owner == _proposed (checked
+    // set (will fail from modifier) or if the owner == _proposedOwner (checked
     // above)
 
     // Emit event, set new owner, reset timestamp
-    _setOwner(_proposed);
+    _setOwner(proposedOwner);
   }
 
   /**
@@ -137,23 +115,6 @@ abstract contract ProtocolManager is BaseManager {
   }
 
   /**
-   * @notice Sets the LIQUIDITY_FEE_NUMERATOR
-   * @dev Admin can set LIQUIDITY_FEE_NUMERATOR variable, Liquidity fee should be less than 5%
-   * @param _numerator new LIQUIDITY_FEE_NUMERATOR
-   */
-  function setLiquidityFeeNumerator(uint256 _numerator) external onlyOwnerOrRole(Role.Admin) {
-    // Slightly misleading: the liquidity fee numerator is not the amount charged,
-    // but the amount received after fees are deducted (e.g. 9995/10000 would be .005%).
-    uint256 denominator = Constants.BPS_FEE_DENOMINATOR;
-    if (_numerator < (denominator * 95) / 100) revert ProtocolManager__setLiquidityFeeNumerator_tooSmall();
-
-    if (_numerator > denominator) revert ProtocolManager__setLiquidityFeeNumerator_tooLarge();
-    LIQUIDITY_FEE_NUMERATOR = _numerator;
-
-    emit LiquidityFeeNumeratorUpdated(_numerator, msg.sender);
-  }
-
-  /**
    * @notice Modify the contract the xApp uses to validate Replica contracts
    * @param _xAppConnectionManager The address of the xAppConnectionManager contract
    */
@@ -170,8 +131,25 @@ abstract contract ProtocolManager is BaseManager {
    * @notice Throws if called by any account other than the proposed owner.
    */
   modifier onlyProposed() {
-    if (_proposed != msg.sender) revert ProtocolManager__onlyProposed_notProposedOwner();
+    if (proposedOwner != msg.sender) revert ProtocolManager__onlyProposed_notProposedOwner();
     _;
+  }
+
+  /**
+   * @notice Sets the LIQUIDITY_FEE_NUMERATOR
+   * @dev Admin can set LIQUIDITY_FEE_NUMERATOR variable, Liquidity fee should be less than 5%
+   * @param _numerator new LIQUIDITY_FEE_NUMERATOR
+   */
+  function setLiquidityFeeNumerator(uint256 _numerator) external onlyOwnerOrRole(Role.Admin) {
+    // Slightly misleading: the liquidity fee numerator is not the amount charged,
+    // but the amount received after fees are deducted (e.g. 9995/10000 would be .005%).
+    uint256 denominator = Constants.BPS_FEE_DENOMINATOR;
+    if (_numerator < (denominator * 95) / 100) revert ProtocolManager__setLiquidityFeeNumerator_tooSmall();
+
+    if (_numerator > denominator) revert ProtocolManager__setLiquidityFeeNumerator_tooLarge();
+    LIQUIDITY_FEE_NUMERATOR = _numerator;
+
+    emit LiquidityFeeNumeratorUpdated(_numerator, msg.sender);
   }
 
   function pause() public onlyOwnerOrRole(Role.Watcher) {
@@ -186,14 +164,14 @@ abstract contract ProtocolManager is BaseManager {
 
   ////// INTERNAL //////
   function _setOwner(address newOwner) private {
-    delete _proposedOwnershipTimestamp;
-    delete _proposed;
+    delete proposedOwnershipTimestamp;
+    delete proposedOwner;
     owner = newOwner;
   }
 
   function _setProposed(address newlyProposed) private {
-    _proposedOwnershipTimestamp = block.timestamp;
-    _proposed = newlyProposed;
+    proposedOwnershipTimestamp = block.timestamp;
+    proposedOwner = newlyProposed;
     emit OwnershipProposed(newlyProposed);
   }
 }

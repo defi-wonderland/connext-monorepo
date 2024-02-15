@@ -14,10 +14,10 @@ abstract contract RolesManager is BaseManager {
   error RolesManager__removeAssetAllowlist_noProposal();
   error RolesManager__revokeRole_invalidInput();
   error RolesManager__assignRole_invalidInput(address _account, Role _currentRole, Role _newRole);
-  error RolesManager__addRelayer_alreadyApproved();
+  error RolesManager__addRelayer_roleAlreadyAssigned(Role _role);
   error RolesManager__removeRelayer_notApproved();
   error RolesManager__addSequencer_invalidSequencer();
-  error RolesManager__addSequencer_alreadyApproved();
+  error RolesManager__addSequencer_roleAlreadyAssigned(Role _role);
   error RolesManager__removeSequencer_notApproved();
   error RolesManager__addRemote_invalidRouter();
   error RolesManager__addRemote_invalidDomain();
@@ -68,29 +68,6 @@ abstract contract RolesManager is BaseManager {
    */
   event RemoteAdded(uint32 domain, address remote, address caller);
 
-  /**
-   * @notice Returns if the router allowlist is removed.
-   */
-  function routerAllowlistRemoved() public view returns (bool) {
-    return _routerAllowlistRemoved;
-  }
-
-  /**
-   * @notice Returns the timestamp when router allowlist was last proposed to be removed
-   */
-  function routerAllowlistTimestamp() public view returns (uint256) {
-    return _routerAllowlistTimestamp;
-  }
-
-  /**
-   * @notice Returns the Role of the address
-   * @dev returns uint value of representing enum value of Role
-   * @param _role The address for which Role need to be queried
-   */
-  function queryRole(address _role) public view returns (Role) {
-    return roles[_role];
-  }
-
   // ============ External ============
 
   /**
@@ -100,7 +77,7 @@ abstract contract RolesManager is BaseManager {
   function proposeRouterAllowlistRemoval() public onlyOwnerOrRole(Role.Admin) {
     // Use contract as source of truth
     // Will fail if all ownership is renounced by modifier
-    if (_routerAllowlistRemoved) revert RolesManager__proposeRouterAllowlistRemoval_noOwnershipChange();
+    if (routerAllowlistRemoved) revert RolesManager__proposeRouterAllowlistRemoval_noOwnershipChange();
 
     // Begin delay, emit event
     _setRouterAllowlistTimestamp();
@@ -110,13 +87,13 @@ abstract contract RolesManager is BaseManager {
    * @notice Indicates if the ownership of the asset allowlist has
    * been renounced
    */
-  function removeRouterAllowlist() public onlyOwnerOrRole(Role.Admin) delayElapsed(_routerAllowlistTimestamp) {
+  function removeRouterAllowlist() public onlyOwnerOrRole(Role.Admin) delayElapsed(routerAllowlistTimestamp) {
     // Contract as sounce of truth
     // Will fail if all ownership is renounced by modifier
-    if (_routerAllowlistRemoved) revert RolesManager__removeRouterAllowlist_noOwnershipChange();
+    if (routerAllowlistRemoved) revert RolesManager__removeRouterAllowlist_noOwnershipChange();
 
     // Ensure there has been a proposal cycle started
-    if (_routerAllowlistTimestamp == 0) revert RolesManager__removeRouterAllowlist_noProposal();
+    if (routerAllowlistTimestamp == 0) revert RolesManager__removeRouterAllowlist_noProposal();
 
     // Set renounced, emit event, reset timestamp to 0
     _setRouterAllowlistRemoved(true);
@@ -154,8 +131,8 @@ abstract contract RolesManager is BaseManager {
    * @param _relayer - The relayer address to add
    */
   function addRelayer(address _relayer) external onlyOwnerOrRole(Role.Admin) {
-    if (approvedRelayers[_relayer]) revert RolesManager__addRelayer_alreadyApproved();
-    approvedRelayers[_relayer] = true;
+    if (roles[_relayer] != Role.None) revert RolesManager__addRelayer_roleAlreadyAssigned(roles[_relayer]);
+    roles[_relayer] = Role.Relayer;
 
     emit RelayerAdded(_relayer, msg.sender);
   }
@@ -165,8 +142,8 @@ abstract contract RolesManager is BaseManager {
    * @param _relayer - The relayer address to remove
    */
   function removeRelayer(address _relayer) external onlyOwnerOrRole(Role.Admin) {
-    if (!approvedRelayers[_relayer]) revert RolesManager__removeRelayer_notApproved();
-    delete approvedRelayers[_relayer];
+    if (roles[_relayer] != Role.Relayer) revert RolesManager__removeRelayer_notApproved();
+    delete roles[_relayer];
 
     emit RelayerRemoved(_relayer, msg.sender);
   }
@@ -178,8 +155,9 @@ abstract contract RolesManager is BaseManager {
   function addSequencer(address _sequencer) external onlyOwnerOrRole(Role.Admin) {
     if (_sequencer == address(0)) revert RolesManager__addSequencer_invalidSequencer();
 
-    if (approvedSequencers[_sequencer]) revert RolesManager__addSequencer_alreadyApproved();
-    approvedSequencers[_sequencer] = true;
+    if (roles[_sequencer] != Role.None) revert RolesManager__addSequencer_roleAlreadyAssigned(roles[_sequencer]);
+
+    roles[_sequencer] = Role.Sequencer;
 
     emit SequencerAdded(_sequencer, msg.sender);
   }
@@ -189,8 +167,8 @@ abstract contract RolesManager is BaseManager {
    * @param _sequencer - The sequencer address to remove.
    */
   function removeSequencer(address _sequencer) external onlyOwnerOrRole(Role.Admin) {
-    if (!approvedSequencers[_sequencer]) revert RolesManager__removeSequencer_notApproved();
-    delete approvedSequencers[_sequencer];
+    if (roles[_sequencer] != Role.Sequencer) revert RolesManager__removeSequencer_notApproved();
+    delete roles[_sequencer];
 
     emit SequencerRemoved(_sequencer, msg.sender);
   }
@@ -214,13 +192,13 @@ abstract contract RolesManager is BaseManager {
 
   ////// INTERNAL //////
   function _setRouterAllowlistTimestamp() private {
-    _routerAllowlistTimestamp = block.timestamp;
+    routerAllowlistTimestamp = block.timestamp;
     emit RouterAllowlistRemovalProposed(block.timestamp);
   }
 
   function _setRouterAllowlistRemoved(bool value) private {
-    _routerAllowlistRemoved = value;
-    delete _routerAllowlistTimestamp;
+    routerAllowlistRemoved = value;
+    delete routerAllowlistTimestamp;
     emit RouterAllowlistRemoved(value);
   }
 }

@@ -141,10 +141,22 @@ abstract contract AssetsManager is BaseManager {
       }
 
       // Enroll the asset.
-      _enrollAsset(true, _canonicalDecimals, _canonicalAddress, _canonical, key);
+      _enrollAsset({
+        _onCanonical: true,
+        _canonicalDecimals: _canonicalDecimals,
+        _asset: _canonicalAddress,
+        _canonical: _canonical,
+        _key: key
+      });
     } else {
       // Enroll the asset.
-      _enrollAsset(false, _canonicalDecimals, _assetId, _canonical, key);
+      _enrollAsset({
+        _onCanonical: false,
+        _canonicalDecimals: _canonicalDecimals,
+        _asset: _assetId,
+        _canonical: _canonical,
+        _key: key
+      });
     }
   }
 
@@ -176,6 +188,7 @@ abstract contract AssetsManager is BaseManager {
     TokenId calldata _canonical,
     bytes32 _key
   ) internal {
+    // TODO: implement
     // Sanity check: canonical ID and domain are not 0.
     if (_canonical.domain == 0 || _canonical.id == bytes32('')) {
       revert AssetsManager__enrollAsset_emptyCanonical();
@@ -184,11 +197,6 @@ abstract contract AssetsManager is BaseManager {
     // Sanity check: needs approval
     if (tokenConfigs[_key].approval) revert AssetsManager__addAssetId_alreadyAdded();
 
-    /*
-  address asset;
-  uint8 assetDecimals;
-  bool approval;
-    */
     // Generate Config
     tokenConfigs[_key] = TokenConfig({
       asset: _asset,

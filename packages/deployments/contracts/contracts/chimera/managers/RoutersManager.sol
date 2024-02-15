@@ -446,7 +446,7 @@ abstract contract RoutersManager is BaseManager {
     address _router
   ) internal {
     // Transfer to specified recipient IF recipient not set.
-    address recipient = getRouterRecipient(_router);
+    address recipient = routerConfigs[_router].recipient;
     recipient = recipient == address(0) ? _to : recipient;
 
     // Sanity check: to is sensible.
@@ -489,6 +489,6 @@ abstract contract RoutersManager is BaseManager {
    * @notice Indicates if the router allowlist has been removed
    */
   function _isRouterAllowlistRemoved() internal view returns (bool) {
-    return owner == address(0) || _routerAllowlistRemoved;
+    return owner == address(0) || routerAllowlistRemoved;
   }
 }

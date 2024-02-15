@@ -117,7 +117,8 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       normalizedIn: 0,
       canonicalId: bytes32(0)
     });
-    return _xcall(params, _asset, _amount, address(0), msg.value);
+    return
+      _xcall({_params: params, _asset: _asset, _amount: _amount, _relayerFeeAsset: address(0), _relayerFee: msg.value});
   }
 
   function xcall(
@@ -146,7 +147,8 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
       normalizedIn: 0,
       canonicalId: bytes32(0)
     });
-    return _xcall(params, _asset, _amount, _asset, _relayerFee);
+    return
+      _xcall({_params: params, _asset: _asset, _amount: _amount, _relayerFeeAsset: _asset, _relayerFee: _relayerFee});
   }
 
   /**
@@ -397,7 +399,6 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     // if (pathLength != 0) {
     //   // Make sure number of routers is below the configured maximum.
     //   if (pathLength > maxRoutersPerTransfer) revert Connext__execute_maxRoutersExceeded();
-
     //   // Check to make sure the transfer has not been reconciled (no need for routers if the transfer is
     //   // already reconciled; i.e. if there are routers provided, the transfer must *not* be reconciled).
     //   if (status != TransferStatus.None) revert Connext__execute_badFastLiquidityStatus();
