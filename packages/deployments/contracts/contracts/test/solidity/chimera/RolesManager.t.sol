@@ -45,6 +45,7 @@ abstract contract Base is TestExtended {
   }
 
   modifier setAdmin(address _account) {
+    vm.assume(_account != owner);
     _validAccount(_account);
     _setRole(_account, IBaseConnext.Role.Admin);
     _;
