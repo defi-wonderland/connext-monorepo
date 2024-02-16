@@ -13,7 +13,8 @@ abstract contract RolesManager is BaseManager, IRolesManager {
     if (routerAllowlistRemoved) revert RolesManager__proposeRouterAllowlistRemoval_noOwnershipChange();
 
     // Begin delay, emit event
-    _setRouterAllowlistTimestamp();
+    routerAllowlistTimestamp = block.timestamp;
+    emit RouterAllowlistRemovalProposed(block.timestamp);
   }
 
   /// @inheritdoc IRolesManager
@@ -26,7 +27,9 @@ abstract contract RolesManager is BaseManager, IRolesManager {
     if (routerAllowlistTimestamp == 0) revert RolesManager__removeRouterAllowlist_noProposal();
 
     // Set renounced, emit event, reset timestamp to 0
-    _setRouterAllowlistRemoved(true);
+    delete routerAllowlistTimestamp;
+    routerAllowlistRemoved = true;
+    emit RouterAllowlistRemoved(true);
   }
 
   /// @inheritdoc IRolesManager
@@ -69,17 +72,5 @@ abstract contract RolesManager is BaseManager, IRolesManager {
 
     remotes[_domain] = _router;
     emit RemoteAdded(_domain, TypeCasts.bytes32ToAddress(_router), msg.sender);
-  }
-
-  // ========== Internal ===========
-  function _setRouterAllowlistTimestamp() private {
-    routerAllowlistTimestamp = block.timestamp;
-    emit RouterAllowlistRemovalProposed(block.timestamp);
-  }
-
-  function _setRouterAllowlistRemoved(bool _value) private {
-    routerAllowlistRemoved = _value;
-    delete routerAllowlistTimestamp;
-    emit RouterAllowlistRemoved(_value);
   }
 }
