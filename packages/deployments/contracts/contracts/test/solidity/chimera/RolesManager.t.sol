@@ -283,7 +283,7 @@ contract Unit_AssignRole is Base {
     _setRole(address(0), IBaseConnext.Role(_role));
   }
 
-  function test_Revert_OnlyOwnerCanAssignAdmin(address _admin, address _account) public setAdmin(_admin) {
+  function test_Revert_OnlyOwnerCanAssignAdmin(address _admin, address _account) public validAccount(_account) setAdmin(_admin) {
     vm.expectRevert(IRolesManager.RolesManager__assignRole_onlyOwnerCanAssignAdmin.selector);
 
     vm.prank(_admin);
