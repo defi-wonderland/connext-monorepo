@@ -4,61 +4,12 @@ pragma solidity 0.8.17;
 import {BaseManager} from './BaseManager.sol';
 import {Constants} from '../libraries/Constants.sol';
 import {IConnectorManager} from '../../messaging/interfaces/IConnectorManager.sol';
+import {IProtocolManager} from '../interfaces/IProtocolManager.sol';
 
-abstract contract ProtocolManager is BaseManager {
-  // ========== Custom Errors ===========
-  error ProtocolManager__proposeNewOwner_invalidProposal();
-  error ProtocolManager__proposeNewOwner_noOwnershipChange();
-  error ProtocolManager__acceptProposedOwner_noOwnershipChange();
-  error ProtocolManager__setMaxRoutersPerTransfer_invalidMaxRoutersPerTransfer();
-  error ProtocolManager__onlyProposed_notProposedOwner();
-  error ProtocolManager__setRelayerFeeVault_invalidRelayerFeeVault();
-  error ProtocolManager__setLiquidityFeeNumerator_tooSmall();
-  error ProtocolManager__setLiquidityFeeNumerator_tooLarge();
-  error ProtocolManager__setXAppConnectionManager_domainsDontMatch();
-
-  // ============ Events ============
-  event Paused();
-  event Unpaused();
-
-  // Added
-  event OwnershipProposed(address indexed proposedOwner);
-
-  /**
-   * @notice Emitted when the maxRoutersPerTransfer variable is updated
-   * @param maxRoutersPerTransfer - The maxRoutersPerTransfer new value
-   * @param caller - The account that called the function
-   */
-  event MaxRoutersPerTransferUpdated(uint256 maxRoutersPerTransfer, address caller);
-
-  /**
-   * @notice Emitted when the relayerFeeVault variable is updated
-   * @param oldVault - The relayerFeeVault old value
-   * @param newVault - The relayerFeeVault new value
-   * @param caller - The account that called the function
-   */
-  event RelayerFeeVaultUpdated(address oldVault, address newVault, address caller);
-
-  /**
-   * @notice Emitted when the LIQUIDITY_FEE_NUMERATOR variable is updated
-   * @param liquidityFeeNumerator - The LIQUIDITY_FEE_NUMERATOR new value
-   * @param caller - The account that called the function
-   */
-  event LiquidityFeeNumeratorUpdated(uint256 liquidityFeeNumerator, address caller);
-
-  /**
-   * @notice Emitted `xAppConnectionManager` is updated
-   * @param updated - The updated address
-   * @param caller - The account that called the function
-   */
-  event XAppConnectionManagerSet(address updated, address caller);
-
+abstract contract ProtocolManager is BaseManager, IProtocolManager {
   // ============ External ============
 
-  /**
-   * @notice Sets the timestamp for an owner to be proposed, and sets the
-   * newly proposed owner as step 1 in a 2-step process
-   */
+  /// @inheritdoc IProtocolManager
   function proposeNewOwner(address newlyProposed) public onlyOwner {
     // Contract as source of truth
     if (proposedOwner == newlyProposed || newlyProposed == address(0)) {
@@ -71,10 +22,7 @@ abstract contract ProtocolManager is BaseManager {
     _setProposed(newlyProposed);
   }
 
-  /**
-   * @notice Transfers ownership of the contract to a new account (`newOwner`).
-   * Can only be called by the proposed owner.
-   */
+  /// @inheritdoc IProtocolManager
   function acceptProposedOwner() public onlyProposed delayElapsed(proposedOwnershipTimestamp) {
     // Contract as source of truth
     if (owner == proposedOwner) revert ProtocolManager__acceptProposedOwner_noOwnershipChange();
@@ -88,10 +36,7 @@ abstract contract ProtocolManager is BaseManager {
     _setOwner(proposedOwner);
   }
 
-  /**
-   * @notice Used to set the max amount of routers a payment can be routed through
-   * @param _newMaxRouters The new max amount of routers
-   */
+  /// @inheritdoc IProtocolManager
   function setMaxRoutersPerTransfer(uint256 _newMaxRouters) external onlyOwnerOrRole(Role.Admin) {
     if (_newMaxRouters == 0 || _newMaxRouters == maxRoutersPerTransfer) {
       revert ProtocolManager__setMaxRoutersPerTransfer_invalidMaxRoutersPerTransfer();
@@ -102,10 +47,7 @@ abstract contract ProtocolManager is BaseManager {
     maxRoutersPerTransfer = _newMaxRouters;
   }
 
-  /**
-   * @notice Updates the relayer fee router
-   * @param _relayerFeeVault The address of the new router
-   */
+  /// @inheritdoc IProtocolManager
   function setRelayerFeeVault(address _relayerFeeVault) external onlyOwnerOrRole(Role.Admin) {
     address old = address(relayerFeeVault);
     if (old == _relayerFeeVault) revert ProtocolManager__setRelayerFeeVault_invalidRelayerFeeVault();
@@ -114,10 +56,7 @@ abstract contract ProtocolManager is BaseManager {
     emit RelayerFeeVaultUpdated(old, _relayerFeeVault, msg.sender);
   }
 
-  /**
-   * @notice Modify the contract the xApp uses to validate Replica contracts
-   * @param _xAppConnectionManager The address of the xAppConnectionManager contract
-   */
+  /// @inheritdoc IProtocolManager
   function setXAppConnectionManager(address _xAppConnectionManager) external onlyOwnerOrRole(Role.Admin) {
     IConnectorManager manager = IConnectorManager(_xAppConnectionManager);
     if (manager.localDomain() != domain) {
@@ -135,11 +74,7 @@ abstract contract ProtocolManager is BaseManager {
     _;
   }
 
-  /**
-   * @notice Sets the LIQUIDITY_FEE_NUMERATOR
-   * @dev Admin can set LIQUIDITY_FEE_NUMERATOR variable, Liquidity fee should be less than 5%
-   * @param _numerator new LIQUIDITY_FEE_NUMERATOR
-   */
+  /// @inheritdoc IProtocolManager
   function setLiquidityFeeNumerator(uint256 _numerator) external onlyOwnerOrRole(Role.Admin) {
     // Slightly misleading: the liquidity fee numerator is not the amount charged,
     // but the amount received after fees are deducted (e.g. 9995/10000 would be .005%).
@@ -152,11 +87,13 @@ abstract contract ProtocolManager is BaseManager {
     emit LiquidityFeeNumeratorUpdated(_numerator, msg.sender);
   }
 
+  /// @inheritdoc IProtocolManager
   function pause() public onlyOwnerOrRole(Role.Watcher) {
     _paused = true;
     emit Paused();
   }
 
+  /// @inheritdoc IProtocolManager
   function unpause() public onlyOwnerOrRole(Role.Watcher) {
     delete _paused;
     emit Unpaused();
