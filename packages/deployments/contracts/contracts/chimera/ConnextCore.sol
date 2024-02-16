@@ -399,6 +399,7 @@ contract ConnextCore is IConnextCore, ProtocolManager, RolesManager, AssetsManag
     // if (pathLength != 0) {
     //   // Make sure number of routers is below the configured maximum.
     //   if (pathLength > maxRoutersPerTransfer) revert Connext__execute_maxRoutersExceeded();
+
     //   // Check to make sure the transfer has not been reconciled (no need for routers if the transfer is
     //   // already reconciled; i.e. if there are routers provided, the transfer must *not* be reconciled).
     //   if (status != TransferStatus.None) revert Connext__execute_badFastLiquidityStatus();

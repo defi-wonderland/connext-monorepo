@@ -12,7 +12,9 @@ abstract contract BaseManager is ConnextStorage {
   using SafeERC20 for IERC20Metadata;
 
   // ========== Custom Errors ===========
+
   error BaseManager__onlyOwner_notOwner();
+  error BaseManager__onlyProposedOwner_notProposedOwner();
   error BaseManager__onlyOwnerOrRole_notOwnerOrRole(Role _role);
   error BaseManager__whenNotPaused_paused();
   error BaseManager__nonReentrant_reentrantCall();
@@ -68,6 +70,14 @@ abstract contract BaseManager is ConnextStorage {
     _;
   }
 
+  /**
+   * @notice Throws if called by any account other than the proposed owner.
+   */
+  modifier onlyProposedOwner() {
+    if (proposedOwner != msg.sender) revert BaseManager__onlyProposedOwner_notProposedOwner();
+    _;
+  }
+
   modifier onlyOwnerOrRole(Role _role) {
     if (owner != msg.sender && roles[msg.sender] != _role) {
       revert BaseManager__onlyOwnerOrRole_notOwnerOrRole(_role);
@@ -83,7 +93,6 @@ abstract contract BaseManager is ConnextStorage {
     _;
   }
 
-  // ============ Modifier ============
   /**
    * @notice Reverts the call if the expected delay has not elapsed.
    * @param start Timestamp marking the beginning of the delay period.

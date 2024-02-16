@@ -2,52 +2,53 @@
 pragma solidity 0.8.17;
 
 interface IProtocolManager {
+  // ============ Events ============
+
+  event OwnershipProposed(address indexed _proposedOwner);
+  event OwnershipAccepted(address indexed _newOwner);
+
+  /**
+   * @notice Emitted when the maxRoutersPerTransfer variable is updated
+   * @param _maxRoutersPerTransfer - The maxRoutersPerTransfer new value
+   * @param _caller - The account that called the function
+   */
+  event MaxRoutersPerTransferUpdated(uint256 _maxRoutersPerTransfer, address _caller);
+
+  /**
+   * @notice Emitted when the relayerFeeVault variable is updated
+   * @param _oldVault - The relayerFeeVault old value
+   * @param _newVault - The relayerFeeVault new value
+   * @param _caller - The account that called the function
+   */
+  event RelayerFeeVaultUpdated(address _oldVault, address _newVault, address _caller);
+
+  /**
+   * @notice Emitted when the LIQUIDITY_FEE_NUMERATOR variable is updated
+   * @param _liquidityFeeNumerator - The LIQUIDITY_FEE_NUMERATOR new value
+   * @param _caller - The account that called the function
+   */
+  event LiquidityFeeNumeratorUpdated(uint256 _liquidityFeeNumerator, address _caller);
+
+  /**
+   * @notice Emitted `xAppConnectionManager` is updated
+   * @param _updated - The updated address
+   * @param _caller - The account that called the function
+   */
+  event XAppConnectionManagerSet(address _updated, address _caller);
+
+  event Paused();
+  event Unpaused();
+
   // ============ Custom Errors ============
+
   error ProtocolManager__proposeNewOwner_invalidProposal();
   error ProtocolManager__proposeNewOwner_noOwnershipChange();
   error ProtocolManager__acceptProposedOwner_noOwnershipChange();
   error ProtocolManager__setMaxRoutersPerTransfer_invalidMaxRoutersPerTransfer();
-  error ProtocolManager__onlyProposed_notProposedOwner();
   error ProtocolManager__setRelayerFeeVault_invalidRelayerFeeVault();
   error ProtocolManager__setLiquidityFeeNumerator_tooSmall();
   error ProtocolManager__setLiquidityFeeNumerator_tooLarge();
   error ProtocolManager__setXAppConnectionManager_domainsDontMatch();
-
-  // ============ Events ============
-  event Paused();
-  event Unpaused();
-
-  // Added
-  event OwnershipProposed(address indexed proposedOwner);
-
-  /**
-   * @notice Emitted when the maxRoutersPerTransfer variable is updated
-   * @param maxRoutersPerTransfer - The maxRoutersPerTransfer new value
-   * @param caller - The account that called the function
-   */
-  event MaxRoutersPerTransferUpdated(uint256 maxRoutersPerTransfer, address caller);
-
-  /**
-   * @notice Emitted when the relayerFeeVault variable is updated
-   * @param oldVault - The relayerFeeVault old value
-   * @param newVault - The relayerFeeVault new value
-   * @param caller - The account that called the function
-   */
-  event RelayerFeeVaultUpdated(address oldVault, address newVault, address caller);
-
-  /**
-   * @notice Emitted when the LIQUIDITY_FEE_NUMERATOR variable is updated
-   * @param liquidityFeeNumerator - The LIQUIDITY_FEE_NUMERATOR new value
-   * @param caller - The account that called the function
-   */
-  event LiquidityFeeNumeratorUpdated(uint256 liquidityFeeNumerator, address caller);
-
-  /**
-   * @notice Emitted `xAppConnectionManager` is updated
-   * @param updated - The updated address
-   * @param caller - The account that called the function
-   */
-  event XAppConnectionManagerSet(address updated, address caller);
 
   // ============ External ============
 
@@ -55,7 +56,7 @@ interface IProtocolManager {
    * @notice Sets the timestamp for an owner to be proposed, and sets the
    * newly proposed owner as step 1 in a 2-step process
    */
-  function proposeNewOwner(address newlyProposed) external;
+  function proposeNewOwner(address _newlyProposed) external;
 
   /**
    * @notice Transfers ownership of the contract to a new account (`newOwner`).
@@ -76,19 +77,18 @@ interface IProtocolManager {
   function setRelayerFeeVault(address _relayerFeeVault) external;
 
   /**
-   * @notice Modify the contract the xApp uses to validate Replica contracts
-   * @param _xAppConnectionManager The address of the xAppConnectionManager contract
-   */
-  function setXAppConnectionManager(address _xAppConnectionManager) external;
-
-  /**
    * @notice Sets the LIQUIDITY_FEE_NUMERATOR
    * @dev Admin can set LIQUIDITY_FEE_NUMERATOR variable, Liquidity fee should be less than 5%
    * @param _numerator new LIQUIDITY_FEE_NUMERATOR
    */
   function setLiquidityFeeNumerator(uint256 _numerator) external;
 
-  function pause() external;
+  /**
+   * @notice Modify the contract the xApp uses to validate Replica contracts
+   * @param _xAppConnectionManager The address of the xAppConnectionManager contract
+   */
+  function setXAppConnectionManager(address _xAppConnectionManager) external;
 
+  function pause() external;
   function unpause() external;
 }
