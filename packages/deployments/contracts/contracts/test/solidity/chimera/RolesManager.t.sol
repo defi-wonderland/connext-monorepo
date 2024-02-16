@@ -5,18 +5,18 @@ import {TestExtended} from '../utils/TestExtended.sol';
 
 import {IRolesManager, RolesManager} from '@contracts/chimera/managers/RolesManager.sol';
 import {BaseManager} from '@contracts/chimera/managers/BaseManager.sol';
-import {ConnextStorage} from '@contracts/chimera/ConnextStorage.sol';
 import {IBaseConnext} from '@contracts/chimera/interfaces/IBaseConnext.sol';
+import {TypeCasts} from '@contracts/shared/libraries/TypeCasts.sol';
 
 contract RolesManagerForTest is RolesManager {
-  function mock_setRouterAllowlistRemoved(bool _removed) public {
+  function test_setRouterAllowlistRemoved(bool _removed) public {
     routerAllowlistRemoved = _removed;
   }
 }
 
 abstract contract Base is TestExtended {
   RolesManager public rolesManager;
-  address owner = makeAddr('owner');
+  address public owner = makeAddr('owner');
 
   function setUp() public virtual {
     vm.prank(owner);
@@ -75,7 +75,7 @@ abstract contract Base is TestExtended {
 }
 
 contract Unit_ProposeRouterAllowlistRemoval is Base {
-  event RouterAllowlistRemovalProposed(uint256 timestamp);
+  event RouterAllowlistRemovalProposed(uint256 _timestamp);
 
   function test_Set_RouterAllowlistTimestamp(uint48 _timestamp) public {
     vm.warp(_timestamp);
@@ -117,7 +117,7 @@ contract Unit_ProposeRouterAllowlistRemoval is Base {
   }
 
   function test_Revert_RouterAllowlistRemoved() public {
-    RolesManagerForTest(address(rolesManager)).mock_setRouterAllowlistRemoved(true);
+    RolesManagerForTest(address(rolesManager)).test_setRouterAllowlistRemoved(true);
 
     vm.expectRevert(IRolesManager.RolesManager__proposeRouterAllowlistRemoval_noOwnershipChange.selector);
 
@@ -127,7 +127,7 @@ contract Unit_ProposeRouterAllowlistRemoval is Base {
 }
 
 contract Unit_RemoveRouterAllowlist is Base {
-  event RouterAllowlistRemoved(bool renounced);
+  event RouterAllowlistRemoved(bool _renounced);
 
   function _proposeRouterAllowlistRemoval() internal {
     vm.prank(owner);
@@ -192,7 +192,7 @@ contract Unit_RemoveRouterAllowlist is Base {
   }
 
   function test_Revert_RouterAllowlistRemoved() public {
-    RolesManagerForTest(address(rolesManager)).mock_setRouterAllowlistRemoved(true);
+    RolesManagerForTest(address(rolesManager)).test_setRouterAllowlistRemoved(true);
 
     vm.expectRevert(IRolesManager.RolesManager__removeRouterAllowlist_noOwnershipChange.selector);
 
@@ -209,7 +209,7 @@ contract Unit_RemoveRouterAllowlist is Base {
 }
 
 contract Unit_AssignRole is Base {
-  event AssignRole(address account, IBaseConnext.Role role);
+  event AssignRole(address _account, IBaseConnext.Role _role);
 
   function test_Set_Role(address _account, uint8 _role) public validRoleAndAccount(_role, _account) {
     _setRole(_account, IBaseConnext.Role(_role));
@@ -291,7 +291,7 @@ contract Unit_AssignRole is Base {
 }
 
 contract Unit_RevokeRole is Base {
-  event RevokeRole(address revokedAddress, IBaseConnext.Role revokedRole);
+  event RevokeRole(address _revokedAddress, IBaseConnext.Role _revokedRole);
 
   function _revokeRole(address _account) internal {
     vm.prank(owner);
@@ -359,5 +359,61 @@ contract Unit_RevokeRole is Base {
 
     vm.prank(_admin);
     rolesManager.revokeRole(_account);
+  }
+}
+
+contract Unit_EnrollRemoteRouter is Base {
+  event RemoteAdded(uint32 _domain, address _remote, address _caller);
+
+  modifier validDomain(uint32 _domain) {
+    vm.assume(_domain > 0 && _domain != rolesManager.domain());
+    _;
+  }
+
+  modifier validRouter(bytes32 _router) {
+    vm.assume(_router != bytes32(''));
+    _;
+  }
+
+  function test_Set_Remote(uint32 _domain, bytes32 _router) public validDomain(_domain) validRouter(_router) {
+    vm.prank(owner);
+    rolesManager.enrollRemoteRouter(_domain, _router);
+
+    assertEq(rolesManager.remotes(_domain), _router);
+  }
+
+  function test_Emit_RemoteAdded(uint32 _domain, bytes32 _router) public validDomain(_domain) validRouter(_router) {
+    _expectEmit(address(rolesManager));
+    emit RemoteAdded(_domain, TypeCasts.bytes32ToAddress(_router), address(owner));
+
+    vm.prank(owner);
+    rolesManager.enrollRemoteRouter(_domain, _router);
+  }
+
+  function test_Admin_AddsRemote(
+    uint32 _domain,
+    bytes32 _router,
+    address _admin
+  ) public validDomain(_domain) validRouter(_router) setAdmin(_admin) {
+    _expectEmit(address(rolesManager));
+    emit RemoteAdded(_domain, TypeCasts.bytes32ToAddress(_router), address(_admin));
+
+    vm.prank(_admin);
+    rolesManager.enrollRemoteRouter(_domain, _router);
+  }
+
+  function test_Revert_InvalidRouter(uint32 _domain) public validDomain(_domain) {
+    vm.expectRevert(IRolesManager.RolesManager__addRemote_invalidRouter.selector);
+
+    vm.prank(owner);
+    rolesManager.enrollRemoteRouter(_domain, bytes32(''));
+  }
+
+  function test_Revert_InvalidDomain_SameDomain(bytes32 _router) public validRouter(_router) {
+    uint32 _domain = rolesManager.domain();
+    vm.expectRevert(IRolesManager.RolesManager__addRemote_invalidDomain.selector);
+
+    vm.prank(owner);
+    rolesManager.enrollRemoteRouter(_domain, _router);
   }
 }

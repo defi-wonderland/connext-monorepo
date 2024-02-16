@@ -48,14 +48,14 @@ abstract contract RolesManager is BaseManager, IRolesManager {
   function revokeRole(address _revoke) external onlyOwnerOrRole(Role.Admin) {
     // Use contract as source of truth
     // Will fail if candidate isn't assinged any Role OR input address is addressZero
-    Role revokedRole = roles[_revoke];
-    if (revokedRole == Role.None || _revoke == address(0)) revert RolesManager__revokeRole_invalidInput();
+    Role _revokedRole = roles[_revoke];
+    if (_revokedRole == Role.None || _revoke == address(0)) revert RolesManager__revokeRole_invalidInput();
 
     // Only owner can revoke admin
-    if (revokedRole == Role.Admin && msg.sender != owner) revert RolesManager__assignRole_onlyOwnerCanRevokeAdmin();
+    if (_revokedRole == Role.Admin && msg.sender != owner) revert RolesManager__assignRole_onlyOwnerCanRevokeAdmin();
 
     roles[_revoke] = Role.None;
-    emit RevokeRole(_revoke, revokedRole);
+    emit RevokeRole(_revoke, _revokedRole);
   }
 
   /// @inheritdoc IRolesManager
@@ -77,9 +77,9 @@ abstract contract RolesManager is BaseManager, IRolesManager {
     emit RouterAllowlistRemovalProposed(block.timestamp);
   }
 
-  function _setRouterAllowlistRemoved(bool value) private {
-    routerAllowlistRemoved = value;
+  function _setRouterAllowlistRemoved(bool _value) private {
+    routerAllowlistRemoved = _value;
     delete routerAllowlistTimestamp;
-    emit RouterAllowlistRemoved(value);
+    emit RouterAllowlistRemoved(_value);
   }
 }

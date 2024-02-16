@@ -8,37 +8,37 @@ interface IRolesManager is IBaseConnext {
 
   /**
    * @notice Emitted when the router allowlist is proposed to be removed
-   * @param timestamp - The timestamp when proposal was made
+   * @param _timestamp - The timestamp when proposal was made
    */
-  event RouterAllowlistRemovalProposed(uint256 timestamp);
+  event RouterAllowlistRemovalProposed(uint256 _timestamp);
 
   /**
    * @notice Emitted when the router allowlist is removed
-   * @param renounced - Boolean indicating if the ownership of the asset allowlist has been renounced
+   * @param _renounced - Boolean indicating if the ownership of the asset allowlist has been renounced
    */
-  event RouterAllowlistRemoved(bool renounced);
+  event RouterAllowlistRemoved(bool _renounced);
 
   /**
    * @notice Emitted when an address is revoked from a role
-   * @param revokedAddress - The address that was revoked
-   * @param revokedRole - The role that was revoked
+   * @param _revokedAddress - The address that was revoked
+   * @param _revokedRole - The role that was revoked
    */
-  event RevokeRole(address revokedAddress, Role revokedRole);
+  event RevokeRole(address _revokedAddress, Role _revokedRole);
 
   /**
    * @notice Emitted when an address is assigned a role
-   * @param account - The address that was assigned a role
-   * @param role - The role that was assigned
+   * @param _account - The address that was assigned a role
+   * @param _role - The role that was assigned
    */
-  event AssignRole(address account, Role role);
+  event AssignRole(address _account, Role _role);
 
   /**
    * @notice Emitted when a new remote instance is added
-   * @param domain - The domain the remote instance is on
-   * @param remote - The address of the remote instance
-   * @param caller - The account that called the function
+   * @param _domain - The domain the remote instance is on
+   * @param _remote - The address of the remote instance
+   * @param _caller - The account that called the function
    */
-  event RemoteAdded(uint32 domain, address remote, address caller);
+  event RemoteAdded(uint32 _domain, address _remote, address _caller);
 
   // ========== Custom Errors ===========
 
