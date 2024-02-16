@@ -46,7 +46,6 @@ abstract contract Base is TestExtended {
 
   modifier setAdmin(address _account) {
     vm.assume(_account != owner);
-    _validAccount(_account);
     _setRole(_account, IBaseConnext.Role.Admin);
     _;
   }
@@ -71,6 +70,11 @@ abstract contract Base is TestExtended {
     _validAccount(_account);
     _validRole(_role);
     _setRole(_account, IBaseConnext.Role(_role));
+    _;
+  }
+
+  modifier differentAccounts(address _account1, address _account2) {
+    vm.assume(_account1 != _account2);
     _;
   }
 }
@@ -283,7 +287,10 @@ contract Unit_AssignRole is Base {
     _setRole(address(0), IBaseConnext.Role(_role));
   }
 
-  function test_Revert_OnlyOwnerCanAssignAdmin(address _admin, address _account) public validAccount(_account) setAdmin(_admin) {
+  function test_Revert_OnlyOwnerCanAssignAdmin(
+    address _admin,
+    address _account
+  ) public differentAccounts(_admin, _account) validAccount(_account) setAdmin(_admin) {
     vm.expectRevert(IRolesManager.RolesManager__assignRole_onlyOwnerCanAssignAdmin.selector);
 
     vm.prank(_admin);
@@ -355,7 +362,7 @@ contract Unit_RevokeRole is Base {
   function test_Revert_OnlyOwnerCanRevokeAdmin(
     address _admin,
     address _account
-  ) public setAdmin(_admin) setAdmin(_account) {
+  ) public differentAccounts(_admin, _account) setAdmin(_admin) setAdmin(_account) {
     vm.expectRevert(IRolesManager.RolesManager__assignRole_onlyOwnerCanRevokeAdmin.selector);
 
     vm.prank(_admin);
